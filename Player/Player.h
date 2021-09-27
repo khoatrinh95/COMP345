@@ -10,9 +10,9 @@
 
 using namespace std;
 
-#include "Map.h"
-#include "Cards.h"
-#include "Orders.h"
+#include "../Map.h"
+#include "../Cards.h"
+#include "../Orders.h"
 
 class Player {
 private:
