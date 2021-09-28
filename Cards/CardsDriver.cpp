@@ -38,8 +38,6 @@ void CardsDriver(){
     cardDeckptr->addCard(diplomacyCardptr);
     cardDeckptr->addCard(diplomacyCard2ptr);
 
-    cout << cardDeckptr->printDeck();
-
     for (int i = 0; i < 6; i++){
         cardHandptr->drawFromDeck(cardDeckptr);
     }
