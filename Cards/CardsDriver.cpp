@@ -40,12 +40,9 @@ void CardsDriver(){
 
     cout << cardDeckptr->printDeck();
 
-    Hand* cardHandptr = new Hand();
-
     for (int i = 0; i < 6; i++){
         cardHandptr->drawFromDeck(cardDeckptr);
     }
-    cout << cardHandptr->printHand();
     cardHandptr->playAllCards(cardDeckptr);
 
 }
