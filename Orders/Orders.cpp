@@ -1,8 +1,8 @@
 #include "../game_engine/GameEngine.h"
 #include "../orders/Orders.h"
-#include <algorithm>
 #include <iterator>
 #include <math.h>
+#include <algorithm>
 
 namespace
 {

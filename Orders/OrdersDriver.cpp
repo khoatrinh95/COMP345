@@ -4,8 +4,7 @@
 
 #include "../orders/Orders.h"
 #include "../cards/Cards.h"
-#include "../gameengine/Context.h"
-#include "../gameengine/State.h"
+#include "../gameengine/GameEngine.h"
 int main()
 {
     // Setup
