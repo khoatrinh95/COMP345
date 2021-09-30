@@ -1,38 +1,30 @@
-//
-// Created by Thong Tran on 2021-09-26.
-//
-
-#include "orders.h"
-//#include "../game_engine/GameEngine.h"
-#include "Orders.h"
+#include "../game_engine/GameEngine.h"
+#include "../orders/Orders.h"
 #include <algorithm>
 #include <iterator>
 #include <math.h>
 
 namespace
 {
-    // Custom comparator to sort Orders by priority
-    bool compareOrders(Order* order1, Order* order2)
+    // Orders are sorted by priority using a custom comparator.
+    bool compareTwoOrders(Order* order1, Order* order2)
     {
         return order1->getPriority() < order2->getPriority();
     }
 
-    // Helper function to check whether a territory can be attacked by a specific player.
-    // Returns `true` if the attacker already owns the target territory
-    // OR
-    // if there is no diplomacy between the attacker and the owner of the target.
-    bool canAttack(Player* attacker, Territory* target)
+
+    bool checkIfPossibleToAttack(Player* attacker, Territory* target)
     {
         Player* ownerOfTarget = GameEngine::getOwnerOf(target);
-        std::vector<Player*> diplomaticRelations = attacker->getDiplomaticRelations();
-        bool diplomacyWithOwnerOfTarget = find(diplomaticRelations.begin(), diplomaticRelations.end(), ownerOfTarget) != diplomaticRelations.end();
+        std::vector<Player*> relations = attacker->getRelations();
+        bool relationsWithHostOfTarget = find(relations.begin(), relations.end(), ownerOfTarget) != relations.end();
 
-        if (diplomacyWithOwnerOfTarget)
+        if (relationsWithHostOfTarget)
         {
             std::cout << attacker->getName() << " and " << ownerOfTarget->getName() << " cannot attack each other for the rest of this turn. ";
         }
 
-        return attacker == ownerOfTarget || !diplomacyWithOwnerOfTarget;
+        return attacker == ownerOfTarget || !relationsWithHostOfTarget;
     }
 }
 
@@ -89,9 +81,9 @@ int Order::getPriority() const
     return priority_;
 }
 
-// Reverse the pre-orders-execution game state back to before the order was created.
-// The default behavior is to do nothing if there is no meta-state to reset
-// (e.g. resetting pending incoming/outgoing armies from territories)
+// Reset the pre-orders-execution game state to the state it was in before the order was placed.
+// If there is no meta-state to reset, the default behaviour is to do nothing.
+
 void Order::undo_() {}
 
 
@@ -122,7 +114,6 @@ OrdersList::~OrdersList()
     orders_.clear();
 }
 
-// Operator overloading
 const OrdersList &OrdersList::operator=(const OrdersList &orders)
 {
     if (this != &orders)
@@ -175,7 +166,7 @@ Order* OrdersList::peek()
         return nullptr;
     }
 
-    sort(orders_.begin(), orders_.end(), compareOrders);
+    sort(orders_.begin(), orders_.end(), compareTwoOrders);
 
     return orders_.front();
 }
@@ -192,31 +183,31 @@ void OrdersList::add(Order* order)
     orders_.push_back(order);
 }
 
-// Move an order within the OrderList from `source` position to `destination` position.
-void OrdersList::move(int source, int destination)
+// Move an order within the OrderList from `area` position to `targetRange` position.
+void OrdersList::move(int area, int targetRange)
 {
-    bool sourceInRange = source >= 0 && source < orders_.size();
-    bool destinationInRange = destination >= 0 && destination < orders_.size();
+    bool currentAreaInRange = area >= 0 && area < orders_.size();
+    bool destinationInRange = targetRange >= 0 && targetRange < orders_.size();
 
-    if (sourceInRange && destinationInRange)
+    if (currentAreaInRange && destinationInRange)
     {
-        auto orderPosition = next(orders_.begin(), source);
-        auto destinationPosition = next(orders_.begin(), destination);
+        auto orderPosition = next(orders_.begin(), area);
+        auto targetPosition = next(orders_.begin(), targetRange);
 
-        // If the order is before its destination, move it forwards
-        if (destinationPosition > orderPosition)
+        // If the order is before its targetRange, move it forwards
+        if (targetPosition > orderPosition)
         {
-            while (orderPosition != destinationPosition)
+            while (orderPosition != targetPosition)
             {
                 std::swap(*orderPosition, *next(orderPosition, 1));
                 orderPosition++;
             }
         }
 
-        // If the order is ahead of its destination, move it backwards
-        if (destinationPosition < orderPosition)
+        // If the order is ahead of its targetRange, move it backwards
+        if (targetPosition < orderPosition)
         {
-            while (orderPosition != destinationPosition)
+            while (orderPosition != targetPosition)
             {
                 std::swap(*orderPosition, *prev(orderPosition, 1));
                 orderPosition--;
@@ -291,7 +282,7 @@ bool DeployOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getOwnedTerritories();
+    std::vector<Territory*> currentPlayerTerritories = issuer_->getPossessedTerritories();
     return find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), destination_) != currentPlayerTerritories.end();
 }
 
@@ -303,8 +294,8 @@ void DeployOrder::execute_()
     std::cout << "Deployed " << numberOfArmies_ << " armies to " << destination_->getName() << "." << std::endl;
 }
 
-// Reverse the pre-orders-execution game state back to before the order was created.
-// Resets the contribution of this order to the number of pending incoming armies on the destination territory.
+// Reset the pre-orders-execution game state to the state it was in before the order was placed.
+// This order's contribution to the number of pending arriving armies on the target territory is reset.
 void DeployOrder::undo_()
 {
     int newPendingIncomingArmies = destination_->getPendingIncomingArmies() - numberOfArmies_;
@@ -358,13 +349,13 @@ std::ostream &AdvanceOrder::print_(std::ostream &output) const
     return output;
 }
 
-// Return a pointer to a new instace of AdvanceOrder
+// Return a pointer of the clone of Advance Order
 Order* AdvanceOrder::clone() const
 {
     return new AdvanceOrder(*this);
 }
 
-// Checks that the AdvanceOrder is valid.
+// Checks if Advance Order function is valid
 bool AdvanceOrder::validate() const
 {
     if (issuer_ == nullptr || source_ == nullptr || destination_ == nullptr)
@@ -372,20 +363,20 @@ bool AdvanceOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getOwnedTerritories();
-    bool validSourceTerritory = find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), source_) != currentPlayerTerritories.end();
+    std::vector<Territory*> currentTerritoriesOfPlayer = issuer_->getPossessedTerritories();
+    bool validSourceTerritory = find(currentTerritoriesOfPlayer.begin(), currentTerritoriesOfPlayer.end(), source_) != currentTerritoriesOfPlayer.end();
     bool hasAnyArmiesToAdvance = source_->getNumberOfArmies() > 0;
 
-    return validSourceTerritory && hasAnyArmiesToAdvance && canAttack(issuer_, destination_);
+    return validSourceTerritory && hasAnyArmiesToAdvance && checkIfPossibleToAttack(issuer_, destination_);
 }
 
-// Executes the AdvanceOrder.
+// Executes the Advance Order.
 void AdvanceOrder::execute_()
 {
     Player* defender = GameEngine::getOwnerOf(destination_);
     bool offensive = issuer_ != defender;
 
-    // Recalculate how many armies could actually be moved (in case the state of the territory has changed due to an attack)
+    // Recalculate what number of armies may want to truely be moved if the kingdom of the territory has modified because of an attack
     int movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
 
     if (offensive)
@@ -499,9 +490,9 @@ bool BombOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getOwnedTerritories();
+    std::vector<Territory*> currentPlayerTerritories = issuer_->getPossessedTerritories();
     bool validTargetTerritory = find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), target_) == currentPlayerTerritories.end();
-    return validTargetTerritory && canAttack(issuer_, target_);
+    return validTargetTerritory && checkIfPossibleToAttack(issuer_, target_);
 }
 
 // Executes the BombOrder.
@@ -570,7 +561,7 @@ bool BlockadeOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getOwnedTerritories();
+    std::vector<Territory*> currentPlayerTerritories = issuer_->getPossessedTerritories();
     return find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), territory_) != currentPlayerTerritories.end();
 }
 
@@ -643,7 +634,7 @@ bool AirliftOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getOwnedTerritories();
+    std::vector<Territory*> currentPlayerTerritories = issuer_->getPossessedTerritories();
 
     bool validSourceTerritory = find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), source_) != currentPlayerTerritories.end();
     bool validDestinationTerritory = find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), destination_) != currentPlayerTerritories.end();

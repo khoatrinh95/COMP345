@@ -1,14 +1,10 @@
 //
-// Created by Thong Tran on 2021-09-26.
+// Created by Thong Tran on 2021-09-25.
 //
 
 #ifndef COMP345_N11_ORDERS_H
 #define COMP345_N11_ORDERS_H
 
-
-class orders {
-
-};
 
 #pragma once
 
@@ -34,8 +30,13 @@ enum OrderType : short
 class Order
 {
 public:
+    /**
+     *
+     */
     virtual ~Order();
-    friend std::ostream &operator<<(std::ostream &output, const Order &order);
+    friend std::ostream &operator<<(std::ostream &output, const Order &order);\
+//    ???
+
     void execute();
     int getPriority() const;
     virtual Order* clone() const = 0;
@@ -56,10 +57,13 @@ private:
     int priority_;
 };
 
-
+/***
+ * The OrderList class contains...
+ */
 class OrdersList
 {
 public:
+
     OrdersList();
     OrdersList(const OrdersList &orders);
     ~OrdersList();
@@ -71,13 +75,16 @@ public:
     Order* peek();
     int size() const;
     void add(Order* order);
-    void move(int source, int destination);
+    void move(int area, int targetRange);
     void remove(int target);
 
 private:
     std::vector<Order*> orders_;
 };
 
+/**
+ * DeployOrder class contains
+ */
 
 class DeployOrder : public Order
 {
@@ -102,68 +109,9 @@ private:
 };
 
 
-class AdvanceOrder : public Order
-{
-public:
-    AdvanceOrder();
-    AdvanceOrder(Player* issuer, int numberOfArmies, Territory* source, Territory* destination);
-    AdvanceOrder(const AdvanceOrder &order);
-    const AdvanceOrder &operator=(const AdvanceOrder &order);
-    Order* clone() const;
-    bool validate() const;
-    OrderType getType() const;
-
-protected:
-    void execute_();
-    void undo_();
-    std::ostream &print_(std::ostream &output) const;
-
-private:
-    int numberOfArmies_;
-    Territory* source_;
-    Territory* destination_;
-};
-
-
-class BombOrder : public Order
-{
-public:
-    BombOrder();
-    BombOrder(Player* issuer, Territory* target);
-    BombOrder(const BombOrder &order);
-    const BombOrder &operator=(const BombOrder &order);
-    Order* clone() const;
-    bool validate() const;
-    OrderType getType() const;
-
-protected:
-    void execute_();
-    std::ostream &print_(std::ostream &output) const;
-
-private:
-    Territory* target_;
-};
-
-
-class BlockadeOrder : public Order
-{
-public:
-    BlockadeOrder();
-    BlockadeOrder(Player* issuer, Territory* territory);
-    BlockadeOrder(const BlockadeOrder &order);
-    const BlockadeOrder &operator=(const BlockadeOrder &order);
-    Order* clone() const;
-    bool validate() const;
-    OrderType getType() const;
-
-protected:
-    void execute_();
-    std::ostream &print_(std::ostream &output) const;
-
-private:
-    Territory* territory_;
-};
-
+/**
+ * AirLiftOrder contains
+ */
 
 class AirliftOrder : public Order
 {
@@ -206,4 +154,75 @@ protected:
 private:
     Player* target_;
 };
-#endif //COMP345_N11_ORDERS_H
+
+/**
+ * AdvanceOrder class contains
+ */
+
+class AdvanceOrder : public Order
+{
+public:
+    AdvanceOrder();
+    AdvanceOrder(Player* issuer, int numberOfArmies, Territory* source, Territory* destination);
+    AdvanceOrder(const AdvanceOrder &order);
+    const AdvanceOrder &operator=(const AdvanceOrder &order);
+    Order* clone() const;
+    bool validate() const;
+    OrderType getType() const;
+
+protected:
+    void execute_();
+    void undo_();
+    std::ostream &print_(std::ostream &output) const;
+
+private:
+    int numberOfArmies_;
+    Territory* source_;
+    Territory* destination_;
+};
+
+/**
+ * BomOrder class contains
+ */
+
+class BombOrder : public Order
+{
+public:
+    BombOrder();
+    BombOrder(Player* issuer, Territory* target);
+    BombOrder(const BombOrder &order);
+    const BombOrder &operator=(const BombOrder &order);
+    Order* clone() const;
+    bool validate() const;
+    OrderType getType() const;
+
+protected:
+    void execute_();
+    std::ostream &print_(std::ostream &output) const;
+
+private:
+    Territory* target_;
+};
+
+/**
+ * BlockadeOrder class contains
+ */
+
+class BlockadeOrder : public Order
+{
+public:
+    BlockadeOrder();
+    BlockadeOrder(Player* issuer, Territory* territory);
+    BlockadeOrder(const BlockadeOrder &order);
+    const BlockadeOrder &operator=(const BlockadeOrder &order);
+    Order* clone() const;
+    bool validate() const;
+    OrderType getType() const;
+
+protected:
+    void execute_();
+    std::ostream &print_(std::ostream &output) const;
+
+private:
+    Territory* territory_;
+};
