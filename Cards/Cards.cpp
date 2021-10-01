@@ -5,6 +5,7 @@
 #include<iostream>
 #include <sstream>
 #include "Cards.h"
+#include <ctime>
 
 using namespace std;
 
@@ -95,22 +96,26 @@ Deck& Deck::operator=(const Deck& d){
 }
 
 std::ostream& operator<<(std::ostream& stream, const Deck& d){
-    return stream << "Deck details, size: " << d.getSize() << endl << "Cards in deck: " << d.printDeck();
+    return stream << "Deck details, size: " << d.getSize() << endl << "Cards in deck: \n" << d.printDeck();
 }
 
 int Deck::getSize() const { return cards.size(); }
 
 string Deck::printDeck() const{
     std::ostringstream buffer;
+    bool newLine = false;
     if (cards.size() <= 0) {
         return "Deck is empty!";
     }
-    for (int i = 0; i < cards.size()+1; i++) {
-        buffer << "[Card " << (i + 1) << ": " << cards[i]->getType() << "]\t";
-        if (i != 0 && i % 3 == 0) {
+    for (int i = 0; i < cards.size(); i++) {
+        newLine = false;
+        buffer << "[Card " << (i + 1) << ": " << cards[i]->getType() << "]\t\t";
+        if ((i+1) % 3 == 0) {
             buffer << "\n";
+            newLine = true;
         }
     }
+    if (!newLine) { buffer << "\n"; }
     return buffer.str();
 }
 
@@ -126,6 +131,7 @@ void Deck::addCard(string type) {
 }
 
 Card* Deck::draw() {
+    srand((int)time(0));
     int random(rand() % cards.size());
     Card* toReturn = cards[random];
     cards.erase(cards.begin() + random);
@@ -156,22 +162,26 @@ Hand& Hand::operator=(const Hand& h){
 }
 
 std::ostream& operator<<(std::ostream& stream, const Hand& h){
-    return stream << "Hand details, size: " << h.getSize() << endl << "Cards in hand: " << h.printHand();
+    return stream << "Hand details, size: " << h.getSize() << endl << "Cards in hand: \n" << h.printHand();
 }
 
 int Hand::getSize() const { return hand.size(); }
 
 string Hand::printHand() const{
+    bool newLine = false;
     std::ostringstream buffer;
     if (hand.size() <= 0) {
         return "Hand is empty!";
     }
-    for (int i = 0; i < hand.size()+1; i++) {
-        buffer << "[Card " << (i + 1) << ": " << hand[i]->getType() << "]\t";
-        if (i != 0 && i % 3 == 0) {
+    for (int i = 0; i < hand.size(); i++) {
+        newLine = false;
+        buffer << "[Card " << (i + 1) << ": " << hand[i]->getType() << "]\t\t";
+        if ((i+1)% 3 == 0) {
             buffer << "\n";
+            newLine = true;
         }
     }
+    if (!newLine) { buffer << "\n"; }
     return buffer.str();
 }
 
@@ -187,4 +197,16 @@ void Hand::playAllCards(Deck* deck) {
         deck->addCard(hand[0]->play());
         hand.erase(hand.begin());
     }
+}
+
+bool Hand::play(int position, Deck* deck) {
+    if (position > hand.size() || position < 1) {
+        cout << "Invalid position entered.\n";
+        return false;
+    } else {
+        deck->addCard(hand[position-1]->play());
+        hand.erase(hand.begin() + position-1);
+        return true;
+    }
+
 }

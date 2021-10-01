@@ -2,7 +2,10 @@
 // Created by Ricky Lam on 2021-09-27.
 //
 
-#include "CardsDriver.h"
+#include <iostream>
+#include "Cards.cpp"
+
+using namespace std;
 
 void CardsDriver(){
     Card* bombCardptr = new Card("bomb");
@@ -37,10 +40,19 @@ void CardsDriver(){
     cardDeckptr->addCard(airliftCard2ptr);
     cardDeckptr->addCard(diplomacyCardptr);
     cardDeckptr->addCard(diplomacyCard2ptr);
+    cout << *cardDeckptr;
+
+    Hand* cardHandptr = new Hand();
 
     for (int i = 0; i < 6; i++){
         cardHandptr->drawFromDeck(cardDeckptr);
     }
-    cardHandptr->playAllCards(cardDeckptr);
+    cout << *cardHandptr;
 
+    cardHandptr->play(6, cardDeckptr); //playing an individual card by position in hand
+    cardHandptr->playAllCards(cardDeckptr);
+};
+
+int main() {
+    CardsDriver();
 }
