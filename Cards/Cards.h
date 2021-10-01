@@ -53,7 +53,7 @@ public:
     string printDeck() const; //debugging function to see all cards in deck
 
 private:
-    vector<Card *> cards;
+    vector<Card*> cards;
 };
 
 class Hand{
@@ -69,6 +69,7 @@ public:
 
     void drawFromDeck(Deck* deck); //removes a card randomly from the deck and adds it to the player's hand
     void playAllCards(Deck* deck); //plays all cards in the player's hand
+    bool play(int position, Deck* deck); //plays a specific card, use printHand or << operator to find out which cards are at what position
 
     int getSize() const; //debugging function to see the size of the player's hand
     string printHand() const; //prints out all cards on hand
