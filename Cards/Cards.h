@@ -7,7 +7,7 @@
 
 #endif //COMP345_CARDS_H
 
-#include<string>
+#include <string>
 #include <vector>
 using namespace std;
 
@@ -18,9 +18,10 @@ public:
     Card(string type);
     ~Card();
 
-    //copy constructor and = operator
+    //copy constructor and operator overloads
     Card(const Card& c);
     Card& operator =(const Card& c);
+    friend std::ostream& operator<<(std::ostream& stream, const Card& c);
 
     Card* play(); //play function as per assignment handout
     void testType(); //guard function for constructor
@@ -38,19 +39,20 @@ class Deck{
 public:
     //constructors and destructors
     Deck();
-    Deck(vector<Card*> cards);
+    Deck(vector<Card*> &cards);
     ~Deck();
 
-    //copy constructor and = operator
+    //copy constructor and operator overloads
     Deck(const Deck& d);
     Deck& operator =(const Deck& d);
+    friend std::ostream& operator<<(std::ostream& stream, const Deck& d);
 
-    void addCard(Card* carder); //adds a card from the deck manually
+    void addCard(Card* carder); //adds a card to the deck manually
     void addCard(string type); //creates a card of the type passed in parameter then adds to deck
     Card* draw(); //draws a card from the deck as requested from the assignment handout
 
-    int getSize() const; //debugging function to see how big the deck is at the moment
-    string printDeck() const; //debugging function to see all cards in deck
+    int getSize() const; //function to see how big the deck is at the moment
+    string printDeck() const; //function to see all cards in deck, also used in << operator
 
 private:
     vector<Card*> cards;
@@ -60,18 +62,19 @@ class Hand{
 public:
     //constructors and destructors
     Hand();
-    Hand(const vector<Card*> cards);
+    Hand(const vector<Card*> &cards);
     ~Hand();
 
-    //copy constructor and = operator
+    //copy constructor and operator overloads
     Hand(const Hand& h);
     Hand& operator =(const Hand& h);
+    friend std::ostream& operator<<(std::ostream& stream, const Hand& h);
 
     void drawFromDeck(Deck* deck); //removes a card randomly from the deck and adds it to the player's hand
     void playAllCards(Deck* deck); //plays all cards in the player's hand
     bool play(int position, Deck* deck); //plays a specific card, use printHand or << operator to find out which cards are at what position
 
-    int getSize() const; //debugging function to see the size of the player's hand
+    int getSize() const; //function to see the size of the player's hand
     string printHand() const; //prints out all cards on hand
 
 private:

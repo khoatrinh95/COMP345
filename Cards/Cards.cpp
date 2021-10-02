@@ -76,7 +76,7 @@ void Card::testType() {
 Deck::Deck(){
 }
 
-Deck::Deck(vector<Card*> cards) : cards(cards){
+Deck::Deck(vector<Card*> &cards) : cards(cards){
 }
 
 Deck::Deck(const Deck& d){
@@ -152,7 +152,7 @@ Card* Deck::draw() {
 Hand::Hand(){
 }
 
-Hand::Hand(const vector<Card*> cards) : hand(cards){
+Hand::Hand(const vector<Card*> &cards) : hand(cards){
 }
 
 Hand::Hand(const Hand& h){
