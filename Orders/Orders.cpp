@@ -1,4 +1,4 @@
-#include "../game_engine/GameEngine.h"
+#include "../GameEngine/GameEngine.h"
 #include "../orders/Orders.h"
 #include <iterator>
 #include <math.h>
@@ -12,6 +12,10 @@ namespace
         return order1->getPriority() < order2->getPriority();
     }
 
+    //     Helper function to check whether a territory can be attacked by a specific player.
+//     Returns `true` if the attacker already owns the target territory
+//     OR
+//     if there is no diplomacy between the attacker and the owner of the target.
 
     bool checkIfPossibleToAttack(Player* attacker, Territory* target)
     {

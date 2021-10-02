@@ -6,6 +6,7 @@
 #define COMP345_CARDS_H
 
 #include <string>
+#include "../Orders/Orders.h"
 #include <vector>
 using namespace std;
 
@@ -83,5 +84,15 @@ private:
     vector<Card*> hand;
 };
 
-#endif //COMP345_CARDS_H
+class DiplomacyCard : public Card
+{
+public:
+    Order* play() const;
+    Card* clone() const;
 
+protected:
+    std::ostream &print_(std::ostream &output) const;
+    Order* buildOrder_() const;
+};
+
+#endif //COMP345_CARDS_H

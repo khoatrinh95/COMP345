@@ -54,6 +54,23 @@ private:
 class Territory{
 public:
     Territory();
+    Territory(int id, string name, int army);
+    void addAdjTerritories(Territory* adjTer);
+
+
+    // Thong
+    int getNumberOfArmies() const;
+    int getPendingIncomingArmies() const;
+    int getPendingOutgoingArmies() const;
+    void setName(std::string name);
+    void setPendingIncomingArmies(int armies);
+    void setPendingOutgoingArmies(int armies);
+    void removeArmies(int armies);
+    void addArmies(int armies);
+    void addPendingIncomingArmies(int armies);
+    void addPendingOutgoingArmies(int armies);
+    int getNumberOfMovableArmies();
+
     Territory(int id, string name, int armies, Continent *continent);
     Territory(Territory const &anotherTerritory);
     Territory& operator = (Territory const &anotherTerritory);
@@ -76,6 +93,11 @@ private:
     friend Continent;
     friend MapLoader;
     friend ostream& operator << (ostream &stream, const Territory &territory);
+
+    // thong
+    int numberOfArmies_;
+    int pendingIncomingArmies_;
+    int pendingOutgoingArmies_;
 };
 
 class Continent{

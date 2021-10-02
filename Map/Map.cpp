@@ -502,6 +502,71 @@ void Territory::addAdjTerritories(int numAdjTer, Territory **adjTers) {
     this->adjTerritories = adjTers;
 }
 
+// Add a number of armies to the current territory
+void Territory::addArmies(int armies)
+{
+    numberOfArmies_ += armies;
+}
+int Territory::getNumberOfArmies() const
+{
+    return numberOfArmies_;
+}
+
+int Territory::getPendingIncomingArmies() const
+{
+    return pendingIncomingArmies_;
+}
+
+int Territory::getPendingOutgoingArmies() const
+{
+    return pendingOutgoingArmies_;
+}
+
+// Setters
+void Territory::setName(std::string name)
+{
+    name_ = name;
+}
+
+void Territory::setPendingIncomingArmies(int armies)
+{
+    pendingIncomingArmies_ = armies;
+}
+
+void Territory::setPendingOutgoingArmies(int armies)
+{
+    pendingOutgoingArmies_ = armies;
+}
+
+// Remove a number of armies to the current territory
+void Territory::removeArmies(int armies)
+{
+    numberOfArmies_ -= armies;
+    if (numberOfArmies_ < 0)
+    {
+        numberOfArmies_ = 0;
+    }
+}
+
+// Add a number of armies pending deployment to the current territory
+void Territory::addPendingIncomingArmies(int armies)
+{
+    pendingIncomingArmies_ += armies;
+}
+
+// Mark a number of armies that will be moving off the current territory
+void Territory::addPendingOutgoingArmies(int armies)
+{
+    pendingOutgoingArmies_ += armies;
+}
+
+// Get the number of armies on the territory that are available for moving (advance/airlift).
+// This number represents the armies already present + the incoming armies from deployment - the armies that will be used for an advance/airlift.
+int Territory::getNumberOfMovableArmies()
+{
+    return numberOfArmies_ + pendingIncomingArmies_ - pendingOutgoingArmies_;
+}
+
 Continent::Continent() {
     id = -1;
     name = "";

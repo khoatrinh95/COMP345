@@ -4,6 +4,11 @@
 
 #include "Player.h"
 #include <iostream>
+#include "../Map/Map.h"
+#include "../Cards/Cards.h"
+#include "../Orders/Orders.h"
+#include "../GameEngine/GameEngine.h"
+#include <algorithm>
 
 // Player default constructor
 Player::Player() {
@@ -66,7 +71,7 @@ void Player::setPlayerOrdersList(OrdersList *&ordersList) {
     this->playerOrdersList = ordersList;
 }
 
-OrdersList *Player::getPlayerOrdersList() const {
+OrdersList *Player::getPlayerOrdersList()const {
     return playerOrdersList;
 }
 
@@ -76,6 +81,17 @@ void Player::setTerritories(vector<Territory*> territories) {
 
 vector<Territory*> Player::getTerritories() const {
     return territories;
+}
+
+// Add an enemy player to the list of diplomatic relations for this player
+void Player::addDiplomaticRelation(Player* player)
+{
+    diplomaticRelations_.push_back(player);
+}
+
+//Getter
+std::vector<Territory*> Player::getPossessedTerritories() const{
+    return ownedTerritories_;
 }
 
 vector<Territory*> Player::toDefend() {
@@ -98,6 +114,7 @@ vector<Territory*> Player::toAttack() {
     return territories_to_be_attacked;
 }
 
+// Thong's part
 void Player::issueOrder() {
     DeployOrder *anOrder = new DeployOrder();
     playerOrdersList->add(anOrder);
@@ -156,8 +173,10 @@ void Player::removeTerritory(Territory *A_Territory) {
     }
 }
 
-
-
+std::vector<Player*> Player::getRelations() const   // thong
+{
+    return diplomaticRelations_;
+}
 
 
 
