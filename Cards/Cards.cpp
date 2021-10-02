@@ -24,6 +24,7 @@ Card::Card(const Card& c){
 }
 
 Card::~Card() {
+    cout << "Inside destructor of Card of type " << type << endl;
 }
 
 Card& Card::operator=(const Card& c){
@@ -80,18 +81,29 @@ Deck::Deck(vector<Card*> cards) : cards(cards){
 
 Deck::Deck(const Deck& d){
     cout << "Inside copy constructor of Deck" << endl;
-    cards = d.cards;
+    vector<Card*> copyOfDeck;
+    for (int i = 0; i < d.cards.size(); i++) {
+        copyOfDeck.push_back(new Card(*d.cards[i]));
+    }
+    cards = copyOfDeck;
 }
 
 Deck::~Deck() {
+    cout << "Inside destructor of Deck" << endl;
+    /*
     for (int i = 0; i < cards.size(); i++) {
-        delete[] cards[i];
+        delete cards[i];
     }
+     */
 }
 
 Deck& Deck::operator=(const Deck& d){
     cout << "Inside operator = of Deck" << endl;
-    cards = d.cards;
+    vector<Card*> copyOfDeck;
+    for (int i = 0; i < d.cards.size(); i++) {
+        copyOfDeck.push_back(new Card(*d.cards[i]));
+    }
+    cards = copyOfDeck;
     return *this;
 }
 
@@ -127,7 +139,6 @@ void Deck::addCard(string type) {
     Card toAdd(type);
     Card* addPointer = &toAdd;
     cards.push_back(addPointer);
-    addPointer = nullptr;
 }
 
 Card* Deck::draw() {
@@ -146,18 +157,29 @@ Hand::Hand(const vector<Card*> cards) : hand(cards){
 
 Hand::Hand(const Hand& h){
     cout << "Inside copy constructor of Hand" << endl;
-    hand = h.hand;
+    vector<Card*> copyOfHand;
+    for (int i = 0; i < h.hand.size(); i++) {
+        copyOfHand.push_back(new Card(*h.hand[i]));
+    }
+    hand = copyOfHand;
 }
 
 Hand::~Hand() {
-    for (int i = 0; i < hand.size()+1; i++) {
-        delete[] hand[i];
+    cout << "Inside destructor of Hand" << endl;
+    /*
+    for (int i = 0; i < hand.size(); i++) {
+        delete hand[i];
     }
+     */
 }
 
 Hand& Hand::operator=(const Hand& h){
     cout << "Inside operator = of Hand" << endl;
-    hand = h.hand;
+    vector<Card*> copyOfHand;
+    for (int i = 0; i < h.hand.size(); i++) {
+        copyOfHand.push_back(new Card(*h.hand[i]));
+    }
+    hand = copyOfHand;
     return *this;
 }
 
