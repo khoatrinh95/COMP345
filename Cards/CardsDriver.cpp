@@ -24,8 +24,10 @@ void CardsDriver(){
     Card bombCard2(*bombCardptr);
     Card reinforcementCard2(*reinforcementCardptr);
     Card blockadeCard2(*blockadeCardptr);
-    Card airliftCard2(*airliftCardptr);
-    Card diplomacyCard2(*diplomacyCardptr);
+    Card airliftCard2;
+    airliftCard2 = airliftCard;
+    Card diplomacyCard2;
+    diplomacyCard2 = diplomacyCard;
     Card* bombCard2ptr = &bombCard2;
     Card* reinforcementCard2ptr = &reinforcementCard2;
     Card* blockadeCard2ptr = &blockadeCard2;
