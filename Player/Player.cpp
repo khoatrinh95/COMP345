@@ -37,7 +37,10 @@ Player::Player(const Player &anotherPlayer) {
 }
 
 Player::~Player(){
-    cout<<"inside destructor of "<<name<<endl;
+    for (auto territory: territories){
+        delete territory;
+    }
+    territories.clear();
     delete playerCards;
     delete playerOrdersList;
 }

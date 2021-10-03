@@ -56,8 +56,8 @@ void PlayerDriver(){
     cout<<*player3;
     // adding a territory to original player (player 2)
     cout<<"!!!Adding a territory to player No.2!!!"<<endl;
-    Territory newTerritory(25,"South Africa",3);
-    player2->addTerritory(&newTerritory);
+    Territory *newTerritory =new Territory(25,"South Africa",3);
+    player2->addTerritory(newTerritory);
     cout<< "This is the information about player No. 2"<<endl;
     cout<<*player2;
     cout<< "This is the information about player No. 3"<<endl;
@@ -125,15 +125,25 @@ void PlayerDriver(){
     cout <<"\t\t\t***Testing issueOrder Function***"<<endl;
     cout << "The list of player order is:"<< endl;
     player1->issueOrder();
-    cout << player1->getPlayerOrdersList()<<endl;
+    cout <<player1->getPlayerOrdersList()<<endl;
+
+    cout<<endl;
 
 
     // clearing the heap
     // deleting territories vector
+    delete newTerritory;
+    newTerritory = NULL;
+
     for(auto territory :territories ){
         delete territory;
     }
-//    territories.clear();
+    territories.clear();
+
+    for(auto territory :playerTerritory){
+        delete territory;
+    }
+    playerTerritory.clear();
 
     for(auto order : orders ){
         delete order;
