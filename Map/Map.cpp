@@ -111,3 +111,15 @@ Map::Map() {
 Territory::Territory() {
     adjTerritory = NULL;
 }
+
+Territory::Territory(int id, string name, int army) {
+    this->id =id;
+    this->name = name;
+    this->army = army;
+
+}
+
+ostream &operator<<(ostream &out, const Territory &ter) {
+    out<<"territory "<< ter.id<< " ,"<<ter.name<<endl;
+    return out;
+}

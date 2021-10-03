@@ -34,6 +34,8 @@ public:
     Territory();
     Territory(int id, string name, int army);
     void addAdjTerritories(Territory* adjTer);
+    friend ostream &operator << (ostream &out, const Territory &ter);
+
 private:
     Territory* adjTerritory;
     Continent* continent;

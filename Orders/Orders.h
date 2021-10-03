@@ -226,3 +226,5 @@ protected:
 private:
     Territory* territory_;
 };
+
+#endif

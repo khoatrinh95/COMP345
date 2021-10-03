@@ -5,7 +5,7 @@
 #ifndef COMP345_CARDS_H
 #define COMP345_CARDS_H
 
-#endif //COMP345_CARDS_H
+ //COMP345_CARDS_H
 
 #include <string>
 #include <vector>
@@ -81,3 +81,4 @@ private:
     vector<Card*> hand;
 };
 
+#endif
