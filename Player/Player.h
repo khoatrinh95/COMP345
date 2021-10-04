@@ -14,7 +14,7 @@ using namespace std;
 
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
-#include "../Orders.h"
+#include "../Orders/Orders.h"
 
 class Player {
 private:
@@ -51,6 +51,7 @@ public:
 
     void addTerritory(Territory*);
 
+    void removeTerritory(Territory*);
 
 
 
