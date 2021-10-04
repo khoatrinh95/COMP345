@@ -37,9 +37,6 @@ Player::Player(const Player &anotherPlayer) {
 }
 
 Player::~Player(){
-    for (auto territory: territories){
-        delete territory;
-    }
     territories.clear();
     delete playerCards;
     delete playerOrdersList;
@@ -103,7 +100,6 @@ void Player::issueOrder() {
 Player &Player::operator=(const Player &anotherPlayer) {
     if (this!=& anotherPlayer){
         this->~Player();
-        territories.clear();
 
         this->name = anotherPlayer.name +"_copy";
         this->playerCards = new Hand(*anotherPlayer.playerCards);
@@ -141,6 +137,10 @@ Player &Player::operator=(const Player &anotherPlayer) {
 
 void Player::addTerritory(Territory *newTerritory) {
     this->territories.push_back(newTerritory);
+}
+
+void Player::removeTerritory(Territory *) {
+
 }
 
 
