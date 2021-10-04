@@ -8,6 +8,7 @@
 using namespace std;
 
 void CardsDriver(){
+    //Testing card constructors and operators
     Card bombCard("bomb");
     Card reinforcementCard("reinforcement");
     Card blockadeCard("blockade");
@@ -18,8 +19,6 @@ void CardsDriver(){
     Card* blockadeCardptr = &blockadeCard;
     Card* airliftCardptr = &airliftCard;
     Card* diplomacyCardptr = &diplomacyCard;
-
-    //cout << bombCard << reinforcementCard << blockadeCard << airliftCard << diplomacyCard << endl;
 
     Card bombCard2(*bombCardptr);
     Card reinforcementCard2(*reinforcementCardptr);
@@ -34,8 +33,8 @@ void CardsDriver(){
     Card* airliftCard2ptr = &airliftCard2;
     Card* diplomacyCard2ptr = &diplomacyCard2;
 
-    //cout << bombCard2 << reinforcementCard2 << blockadeCard2 << airliftCard2 << diplomacyCard2 << endl;
 
+    //Testing card constructors and operators
     Deck cardDeck;
     Deck* cardDeckptr = &cardDeck;
     cardDeckptr->addCard(bombCardptr);
@@ -58,6 +57,8 @@ void CardsDriver(){
     cout << *cardDeckCopyptr;
     cout << *cardDeckCopy2ptr;
 
+
+    //Testing hand constructors and operators
     Hand cardHand;
     Hand* cardHandptr = &cardHand;
 
@@ -73,9 +74,72 @@ void CardsDriver(){
     cout << *cardHandCopyptr;
     cout << *cardHandCopy2ptr;
 
-    cardHandptr->play(6, cardDeckptr); //playing an individual card by position in hand
-    cardHandptr->playAllCards(cardDeckptr);
+    cout << "============================================================================================" << endl;
+    cout << "=Testing play() functionality: playing card, adding order to player, returning card to deck=" << endl;
+    cout << "============================================================================================" << endl;
 
+    Player *player1 = new Player();
+    player1->setName("PlayerNO.1_newName");
+    player1->setPlayerCards(cardHandptr);
+    OrdersList *ordersList = new OrdersList();
+    player1->setPlayerOrdersList(ordersList);
+
+    cout << "Player1's order list before playing cards in their hand: " << endl;
+    cout << player1->getPlayerOrdersList() << endl;
+
+    cout << *cardDeckptr;
+    cout << *cardHandptr;
+
+    cardHandptr->playOneCard(6, cardDeckptr, player1); //playing an individual card by position in hand
+    cardHandptr->playAllCards(cardDeckptr, player1);
+
+    cout << "Player1's order list after playing cards in their hand: " << endl;
+    cout << player1->getPlayerOrdersList() << endl;
+
+    cout << *cardDeckptr;
+    cout << *cardHandptr;
+
+    //cleaning up memory
+    delete player1;
+    player1 = NULL;
+    delete ordersList;
+    ordersList = NULL;
+
+    delete cardHandptr;
+    cardHandptr = NULL;
+    delete cardHandCopyptr;
+    cardHandCopyptr = NULL;
+    delete cardHandCopy2ptr;
+    cardHandCopy2ptr = NULL;
+
+    delete cardDeckptr;
+    delete cardDeckCopyptr;
+    delete cardDeckCopy2ptr;
+    cardDeckptr = NULL;
+    cardDeckCopyptr = NULL;
+    cardDeckCopy2ptr = NULL;
+
+    delete bombCard2ptr;
+    delete reinforcementCard2ptr;
+    delete blockadeCard2ptr;
+    delete airliftCard2ptr;
+    delete diplomacyCard2ptr;
+    bombCard2ptr = NULL;
+    reinforcementCard2ptr = NULL;
+    blockadeCard2ptr = NULL;
+    airliftCard2ptr = NULL;
+    diplomacyCard2ptr = NULL;
+
+    delete bombCardptr;
+    delete reinforcementCardptr;
+    delete blockadeCardptr;
+    delete airliftCardptr;
+    delete diplomacyCardptr;
+    bombCardptr = NULL;
+    reinforcementCardptr = NULL;
+    blockadeCardptr = NULL;
+    airliftCardptr = NULL;
+    diplomacyCardptr = NULL;
 };
 
 int main() {
