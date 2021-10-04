@@ -32,11 +32,15 @@ Player::Player(const Player &anotherPlayer) {
     vector<Territory*>temp_Territory = anotherPlayer.territories;
     for (vector<Territory*>::iterator iter = temp_Territory.begin(); iter!=temp_Territory.end(); ++iter){
         Territory* newTerritory = new Territory(**iter);
+        newTerritory->setOwner(this);
         addTerritory(newTerritory);
     }
 }
 
 Player::~Player(){
+    for (auto territory :territories){
+        territory->removeOwner();
+    }
     territories.clear();
     delete playerCards;
     delete playerOrdersList;
@@ -75,18 +79,21 @@ vector<Territory*> Player::getTerritories() const {
 }
 
 vector<Territory*> Player::toDefend() {
+    Continent *continent = new Continent(12,"South America",7);
+
     vector<Territory*> territories_to_be_defended;
-    territories_to_be_defended.push_back(new Territory(12,"Portugal", 4));
-    territories_to_be_defended.push_back(new Territory(21,"Brazil", 2));
-    territories_to_be_defended.push_back(new Territory(100,"India", 1));
+    territories_to_be_defended.push_back(new Territory(12,"Colombia", 4,continent));
+    territories_to_be_defended.push_back(new Territory(21,"Brazil", 2,continent));
+    territories_to_be_defended.push_back(new Territory(100,"Argentina", 1,continent));
     return territories_to_be_defended;
 }
 
 vector<Territory*> Player::toAttack() {
+    Continent *continent = new Continent(10,"Europe",5);
     vector<Territory*> territories_to_be_attacked;
-    territories_to_be_attacked.push_back(new Territory(3,"Egypt", 5));
-    territories_to_be_attacked.push_back(new Territory(7,"Italy", 3));
-    territories_to_be_attacked.push_back(new Territory(10,"Greece", 2));
+    territories_to_be_attacked.push_back(new Territory(3,"England", 5,continent));////////////ask fadi
+    territories_to_be_attacked.push_back(new Territory(7,"Italy", 3,continent));
+    territories_to_be_attacked.push_back(new Territory(10,"Greece", 2,continent));
 
     return territories_to_be_attacked;
 }
@@ -107,6 +114,7 @@ Player &Player::operator=(const Player &anotherPlayer) {
         vector<Territory*>temp_Territory = anotherPlayer.territories;
         for (vector<Territory*>::iterator iter = temp_Territory.begin(); iter!=temp_Territory.end(); ++iter){
             Territory* newTerritory = new Territory(**iter);
+            newTerritory->setOwner(this);
             addTerritory(newTerritory);
         }
 
@@ -120,7 +128,7 @@ Player &Player::operator=(const Player &anotherPlayer) {
     }else{
         out << "Player name is "<< player.name<< ", and he has the following territories:"<<endl<<"\t";
         for (auto &territory : player.territories){
-            out << *territory << "\t";
+//            out << *territory << "\t";
         }
         out<<endl;
     }
@@ -139,8 +147,13 @@ void Player::addTerritory(Territory *newTerritory) {
     this->territories.push_back(newTerritory);
 }
 
-void Player::removeTerritory(Territory *) {
+void Player::removeTerritory(Territory *A_Territory) {
+    for (int i = 0; i<territories.size();i++){
+        if (territories.at(i)==A_Territory){
+            cout<<"much";
+        }
 
+    }
 }
 
 

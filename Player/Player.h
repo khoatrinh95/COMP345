@@ -49,9 +49,9 @@ public:
     friend ostream &operator << (ostream &out, const Player &player);
 
 
-    void addTerritory(Territory*);
+    void addTerritory(Territory *newTerritory);
 
-    void removeTerritory(Territory*);
+    void removeTerritory(Territory *A_Territory);
 
 
 
