@@ -50,6 +50,9 @@ public:
 
 
     void addTerritory(Territory*);
+    void removeTerritory(Territory *newTerritory);
+
+
 
 
 

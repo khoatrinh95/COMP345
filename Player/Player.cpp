@@ -32,14 +32,15 @@ Player::Player(const Player &anotherPlayer) {
     vector<Territory*>temp_Territory = anotherPlayer.territories;
     for (vector<Territory*>::iterator iter = temp_Territory.begin(); iter!=temp_Territory.end(); ++iter){
         Territory* newTerritory = new Territory(**iter);
+//        newTerritory->setPlayer(this);
         addTerritory(newTerritory);
     }
 }
 
 Player::~Player(){
-    for (auto territory: territories){
-        delete territory;
-    }
+//    for (auto territory: territories){
+//        delete territory;
+//    }
     territories.clear();
     delete playerCards;
     delete playerOrdersList;
@@ -111,6 +112,7 @@ Player &Player::operator=(const Player &anotherPlayer) {
         vector<Territory*>temp_Territory = anotherPlayer.territories;
         for (vector<Territory*>::iterator iter = temp_Territory.begin(); iter!=temp_Territory.end(); ++iter){
             Territory* newTerritory = new Territory(**iter);
+//            newTerritory->setOwner(this);
             addTerritory(newTerritory);
         }
 
@@ -141,6 +143,16 @@ Player &Player::operator=(const Player &anotherPlayer) {
 
 void Player::addTerritory(Territory *newTerritory) {
     this->territories.push_back(newTerritory);
+}
+
+void Player::removeTerritory(Territory *newTerritory) {
+    for (int i=0; i<territories.size();i++){
+//        Territory* newTerritory = new Territory(**iter);
+        if (territories.at(i)== newTerritory){
+            cout<<*territories.at(i);
+    }
+    }
+
 }
 
 
