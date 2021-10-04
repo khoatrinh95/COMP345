@@ -12,11 +12,12 @@ using namespace std;
 #include "../Orders/Orders.h"
 
 void PlayerDriver(){
+    Continent *continent = new Continent(9,"Africa",10);
 
     vector<Territory*> territories;
-    territories.push_back(new Territory(99,"Lebanon",3));
-    territories.push_back(new Territory(98,"Morocco",1));
-    territories.push_back(new Territory(97,"Ireland",4));
+    territories.push_back(new Territory(99,"Lebanon",3,continent));
+    territories.push_back(new Territory(98,"Morocco",1,continent));
+    territories.push_back(new Territory(97,"Egypt",4,continent));
 
     vector<Card*>cards;
     cards.push_back(new Card("bomb"));
@@ -28,7 +29,7 @@ void PlayerDriver(){
 
 
 
-    vector<Orders*> orders;
+    vector<Order*> orders;
     orders.push_back(new AirliftOrder());
     orders.push_back(new NegotiateOrder());
     OrdersList *ordersList = new OrdersList(orders);
@@ -56,7 +57,7 @@ void PlayerDriver(){
     cout<<*player3;
     // adding a territory to original player (player 2)
     cout<<"!!!Adding a territory to player No.2!!!"<<endl;
-    Territory *newTerritory =new Territory(25,"South Africa",3);
+    Territory *newTerritory =new Territory(25,"South Africa",3,continent);
     player2->addTerritory(newTerritory);
     cout<< "This is the information about player No. 2"<<endl;
     cout<<*player2;
@@ -78,7 +79,7 @@ void PlayerDriver(){
     cout << "player no.1 territories are: "<<endl<<"\t";
     vector<Territory*> playerTerritory = player1->getTerritories();
     for (auto & territory : playerTerritory){
-        cout<<*territory<<"\t";
+//        cout<<*territory<<"\t";
     }
     cout<<endl;
     cout<<endl;
@@ -104,7 +105,7 @@ void PlayerDriver(){
     cout << "The list of to be defended territories is:"<< endl<<"\t";
     vector<Territory*> to_be_defended_territories = player1->toDefend();
     for (auto & territory : to_be_defended_territories){
-        cout<<*territory<<"\t";
+//        cout<<*territory<<"\t";
     }
     cout<<endl;
     cout<<endl;
@@ -115,7 +116,7 @@ void PlayerDriver(){
     cout << "The list of to be attacked territories is:"<< endl<<"\t";
     vector<Territory*> to_be_attacked_territories = player1->toAttack();
     for (auto & territory : to_be_attacked_territories){
-        cout<<*territory<<"\t";
+//        cout<<*territory<<"\t";
     }
     cout<<endl;
     cout<<endl;
