@@ -5,6 +5,8 @@
 #include<iostream>
 #include <sstream>
 #include "Cards.h"
+#include "../Player/Player.cpp"
+#include "../Orders/Orders.cpp"
 #include <ctime>
 
 using namespace std;
@@ -52,8 +54,20 @@ string Card::printCard() const{
     return buffer.str();
 }
 
-Card* Card::play() {
+Card* Card::play(Player *&player) {
     cout << "Played a card of type " << type << endl;
+    OrdersList* lister = player->getPlayerOrdersList();
+    if (type.compare("bomb") == 0) {
+        lister->add(new BombOrder());
+    } else if (type.compare("reinforcement") == 0) {
+        lister->add(new AdvanceOrder());
+    } else if (type.compare("blockade") == 0) {
+        lister->add(new BlockadeOrder());
+    } else if (type.compare("airlift") == 0) {
+        lister->add(new AirliftOrder());
+    } else if (type.compare("diplomacy") == 0) {
+        lister->add(new NegotiateOrder());
+    }
     return this;
 }
 
@@ -90,11 +104,10 @@ Deck::Deck(const Deck& d){
 
 Deck::~Deck() {
     cout << "Inside destructor of Deck" << endl;
-    /*
-    for (int i = 0; i < cards.size(); i++) {
-        delete cards[i];
+    for (auto card : cards) {
+        delete card;
     }
-     */
+    cards.clear();
 }
 
 Deck& Deck::operator=(const Deck& d){
@@ -166,11 +179,10 @@ Hand::Hand(const Hand& h){
 
 Hand::~Hand() {
     cout << "Inside destructor of Hand" << endl;
-    /*
-    for (int i = 0; i < hand.size(); i++) {
-        delete hand[i];
+    for (auto card : hand) {
+        delete card;
     }
-     */
+    hand.clear();
 }
 
 Hand& Hand::operator=(const Hand& h){
@@ -212,21 +224,21 @@ void Hand::drawFromDeck(Deck* deck) {
     hand.push_back(deck->draw());
 }
 
-void Hand::playAllCards(Deck* deck) {
+void Hand::playAllCards(Deck* deck, Player *&player) {
     cout << "Playing all cards in hand!" << endl;
     int size = hand.size();
     for (int i = 0; i < size; i++) {
-        deck->addCard(hand[0]->play());
+        deck->addCard(hand[0]->play(player));
         hand.erase(hand.begin());
     }
 }
 
-bool Hand::play(int position, Deck* deck) {
+bool Hand::playOneCard(int position, Deck* deck, Player *&player) {
     if (position > hand.size() || position < 1) {
         cout << "Invalid position entered.\n";
         return false;
     } else {
-        deck->addCard(hand[position-1]->play());
+        deck->addCard(hand[position-1]->play(player));
         hand.erase(hand.begin() + position-1);
         return true;
     }

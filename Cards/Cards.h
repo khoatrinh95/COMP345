@@ -5,12 +5,13 @@
 #ifndef COMP345_CARDS_H
 #define COMP345_CARDS_H
 
-#endif //COMP345_CARDS_H
-
 #include <string>
 #include <vector>
 using namespace std;
 
+class Player;
+
+#pragma once
 class Card{
 public:
     //constructors and destructors
@@ -23,18 +24,18 @@ public:
     Card& operator =(const Card& c);
     friend std::ostream& operator<<(std::ostream& stream, const Card& c);
 
-    Card* play(); //play function as per assignment handout
+    Card* play(Player *&player); //play function as per assignment handout
     void testType(); //guard function for constructor
     string printCard() const; //for debugging, unused
 
-    //accessor and mutator
-    string getType() const;
-    void setType(string typer);
+    string getType() const; //accessor
+    void setType(string typer); //mutator
 
 private:
     string type;
 };
 
+#pragma once
 class Deck{
 public:
     //constructors and destructors
@@ -58,6 +59,7 @@ private:
     vector<Card*> cards;
 };
 
+#pragma once
 class Hand{
 public:
     //constructors and destructors
@@ -71,8 +73,8 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const Hand& h);
 
     void drawFromDeck(Deck* deck); //removes a card randomly from the deck and adds it to the player's hand
-    void playAllCards(Deck* deck); //plays all cards in the player's hand
-    bool play(int position, Deck* deck); //plays a specific card, use printHand or << operator to find out which cards are at what position
+    void playAllCards(Deck* deck, Player *&player); //plays all cards in the player's hand
+    bool playOneCard(int position, Deck* deck, Player *&player); //plays a specific card, use printHand or << operator to find out which cards are at what position
 
     int getSize() const; //function to see the size of the player's hand
     string printHand() const; //prints out all cards on hand
@@ -80,4 +82,6 @@ public:
 private:
     vector<Card*> hand;
 };
+
+#endif //COMP345_CARDS_H
 
