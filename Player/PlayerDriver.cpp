@@ -79,7 +79,7 @@ void PlayerDriver(){
     cout << "player no.1 territories are: "<<endl<<"\t";
     vector<Territory*> playerTerritory = player1->getTerritories();
     for (auto & territory : playerTerritory){
-//        cout<<*territory<<"\t";
+        cout<<*territory<<"\t";
     }
     cout<<endl;
     cout<<endl;
@@ -105,7 +105,7 @@ void PlayerDriver(){
     cout << "The list of to be defended territories is:"<< endl<<"\t";
     vector<Territory*> to_be_defended_territories = player1->toDefend();
     for (auto & territory : to_be_defended_territories){
-//        cout<<*territory<<"\t";
+        cout<<*territory<<"\t";
     }
     cout<<endl;
     cout<<endl;
@@ -116,7 +116,7 @@ void PlayerDriver(){
     cout << "The list of to be attacked territories is:"<< endl<<"\t";
     vector<Territory*> to_be_attacked_territories = player1->toAttack();
     for (auto & territory : to_be_attacked_territories){
-//        cout<<*territory<<"\t";
+        cout<<*territory<<"\t";
     }
     cout<<endl;
     cout<<endl;
