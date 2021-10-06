@@ -14,20 +14,19 @@
 #include "../Cards/Cards.h"
 #include "../Orders/Orders.h"
 using namespace std;
+
 class Player {
 private:
-    std::string name;
-    std::vector<Territory*> territories;
+    sstring name;
+    vector<Territory*> territories;
     Hand *playerCards;
     OrdersList *playerOrdersList;
-    std::vector<Player*> diplomaticRelations_;
-    std::vector<Territory*> ownedTerritories_;
+    vector<Player*> diplomaticRelations_;
 public:
     Player();
+    Player(const string &name);
     Player(string Name, vector<Territory*> & territories);
     Player(const Player &anotherPlayer);
-
-    Player(const string &name);
 
     ~Player();
 
@@ -49,11 +48,12 @@ public:
 
     Player &operator = (const Player &anotherPlayer);
     friend ostream &operator << (ostream &out, const Player &player);
-    void addOwnedTerritory(Territory* territory);
+
     void addTerritory(Territory *newTerritory);
     void removeTerritory(Territory *A_Territory);
-    void removeOwnedTerritory(Territory* territory);
+
     void addDiplomaticRelation(Player* player);
+
     vector<Player*> getRelations() const;
 };
 
