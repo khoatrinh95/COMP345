@@ -17,7 +17,7 @@ using namespace std;
 
 class Player {
 private:
-    sstring name;
+    string name;
     vector<Territory*> territories;
     Hand *playerCards;
     OrdersList *playerOrdersList;
