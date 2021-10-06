@@ -9,14 +9,13 @@
 #include "../Orders/Orders.h"
 #include "../GameEngine/GameEngine.h"
 #include <algorithm>
-
+using namespace std;
 // Player default constructor
 Player::Player() {
     name = "anonymous";
-    vector<Territory*> Territory;
-    territories = Territory;
     playerCards = new Hand();
     playerOrdersList = new OrdersList();
+    vector<Territory*> territories;
 }
 
 // parameter constructor, that takes a name and assign it to the player's name, territories and assign it to player
@@ -27,8 +26,10 @@ Player::Player(string Name, vector<Territory *> &territories) {
     this->playerCards = new Hand();
     this->playerOrdersList = new OrdersList();
 
-
 }
+
+Player::Player(const string &name) : name(name) {}
+
 // Copy constructor that do a deep copy of a player's members
 Player::Player(const Player &anotherPlayer) {
     this->name = anotherPlayer.name +"_copy";
@@ -89,6 +90,11 @@ void Player::addDiplomaticRelation(Player* player)
     diplomaticRelations_.push_back(player);
 }
 
+// Add a territory to the Player's list of owned territories
+void Player::addOwnedTerritory(Territory* territory)
+{
+    ownedTerritories_.push_back(territory);
+}
 
 vector<Territory*> Player::toDefend() {
     Continent *continent = new Continent(12,"South America",7);
@@ -103,13 +109,14 @@ vector<Territory*> Player::toDefend() {
 vector<Territory*> Player::toAttack() {
     Continent *continent = new Continent(10,"Europe",5);
     vector<Territory*> territories_to_be_attacked;
-    territories_to_be_attacked.push_back(new Territory(3,"England", 5,continent));
+    territories_to_be_attacked.push_back(new Territory(3,"England", 5,continent));////////////ask fadi
     territories_to_be_attacked.push_back(new Territory(7,"Italy", 3,continent));
     territories_to_be_attacked.push_back(new Territory(10,"Greece", 2,continent));
 
     return territories_to_be_attacked;
 }
 
+// Thong's part
 void Player::issueOrder() {
     DeployOrder *anOrder = new DeployOrder();
     playerOrdersList->add(anOrder);
@@ -140,7 +147,7 @@ Player &Player::operator=(const Player &anotherPlayer) {
     }else{
         out << "Player name is "<< player.name<< ", and he has the following territories:"<<endl<<"\t";
         for (auto &territory : player.territories){
-            out << *territory << "\t";
+//            out << *territory << "\t";
         }
         out<<endl;
     }
@@ -162,19 +169,21 @@ void Player::addTerritory(Territory *newTerritory) {
 void Player::removeTerritory(Territory *A_Territory) {
     for (int i = 0; i<territories.size();i++){
         if (territories.at(i)==A_Territory){
-            territories.erase(next(begin(territories), + i));
+            cout<<"much";
         }
 
     }
 }
+// Remove a territory from the Player's list of owned territories
+void Player::removeOwnedTerritory(Territory* territory) {
+    auto removeIterator = remove(ownedTerritories_.begin(), ownedTerritories_.end(), territory);
+    ownedTerritories_.erase(removeIterator, ownedTerritories_.end());
+}
 
-std::vector<Player*> Player::getRelations() const
+std::vector<Player *> Player::getRelations() const   // thong
 {
     return diplomaticRelations_;
 }
-
-
-
 
 
 

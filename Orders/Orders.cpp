@@ -108,6 +108,9 @@ OrdersList::OrdersList(const OrdersList &orders)
     }
 }
 
+OrdersList::OrdersList(vector<Order*> orders) {
+    this->orders_ = orders;
+}
 // Destructor
 OrdersList::~OrdersList()
 {
@@ -286,7 +289,7 @@ bool DeployOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getPossessedTerritories();
+    std::vector<Territory*> currentPlayerTerritories = issuer_->getTerritories();
     return find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), destination_) != currentPlayerTerritories.end();
 }
 
@@ -367,7 +370,7 @@ bool AdvanceOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentTerritoriesOfPlayer = issuer_->getPossessedTerritories();
+    std::vector<Territory*> currentTerritoriesOfPlayer = issuer_->getTerritories();
     bool validSourceTerritory = find(currentTerritoriesOfPlayer.begin(), currentTerritoriesOfPlayer.end(), source_) != currentTerritoriesOfPlayer.end();
     bool hasAnyArmiesToAdvance = source_->getNumberOfArmies() > 0;
 
@@ -494,7 +497,7 @@ bool BombOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getPossessedTerritories();
+    std::vector<Territory*> currentPlayerTerritories = issuer_->getTerritories();
     bool validTargetTerritory = find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), target_) == currentPlayerTerritories.end();
     return validTargetTerritory && checkIfPossibleToAttack(issuer_, target_);
 }
@@ -565,7 +568,7 @@ bool BlockadeOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getPossessedTerritories();
+    std::vector<Territory*> currentPlayerTerritories = issuer_->getTerritories();
     return find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), territory_) != currentPlayerTerritories.end();
 }
 
@@ -638,7 +641,7 @@ bool AirliftOrder::validate() const
         return false;
     }
 
-    std::vector<Territory*> currentPlayerTerritories = issuer_->getPossessedTerritories();
+    std::vector<Territory*> currentPlayerTerritories = issuer_->getTerritories();
 
     bool validSourceTerritory = find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), source_) != currentPlayerTerritories.end();
     bool validDestinationTerritory = find(currentPlayerTerritories.begin(), currentPlayerTerritories.end(), destination_) != currentPlayerTerritories.end();
