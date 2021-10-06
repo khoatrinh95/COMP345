@@ -89,10 +89,6 @@ void Player::addDiplomaticRelation(Player* player)
     diplomaticRelations_.push_back(player);
 }
 
-//Getter
-std::vector<Territory*> Player::getPossessedTerritories() const{
-    return ownedTerritories_;
-}
 
 vector<Territory*> Player::toDefend() {
     Continent *continent = new Continent(12,"South America",7);
@@ -107,14 +103,13 @@ vector<Territory*> Player::toDefend() {
 vector<Territory*> Player::toAttack() {
     Continent *continent = new Continent(10,"Europe",5);
     vector<Territory*> territories_to_be_attacked;
-    territories_to_be_attacked.push_back(new Territory(3,"England", 5,continent));////////////ask fadi
+    territories_to_be_attacked.push_back(new Territory(3,"England", 5,continent));
     territories_to_be_attacked.push_back(new Territory(7,"Italy", 3,continent));
     territories_to_be_attacked.push_back(new Territory(10,"Greece", 2,continent));
 
     return territories_to_be_attacked;
 }
 
-// Thong's part
 void Player::issueOrder() {
     DeployOrder *anOrder = new DeployOrder();
     playerOrdersList->add(anOrder);
@@ -145,7 +140,7 @@ Player &Player::operator=(const Player &anotherPlayer) {
     }else{
         out << "Player name is "<< player.name<< ", and he has the following territories:"<<endl<<"\t";
         for (auto &territory : player.territories){
-//            out << *territory << "\t";
+            out << *territory << "\t";
         }
         out<<endl;
     }
@@ -167,13 +162,13 @@ void Player::addTerritory(Territory *newTerritory) {
 void Player::removeTerritory(Territory *A_Territory) {
     for (int i = 0; i<territories.size();i++){
         if (territories.at(i)==A_Territory){
-            cout<<"much";
+            territories.erase(next(begin(territories), + i));
         }
 
     }
 }
 
-std::vector<Player*> Player::getRelations() const   // thong
+std::vector<Player*> Player::getRelations() const
 {
     return diplomaticRelations_;
 }

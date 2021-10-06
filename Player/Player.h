@@ -22,8 +22,7 @@ private:
     vector<Territory*> territories;
     Hand *playerCards;
     OrdersList* playerOrdersList;
-    std::vector<Player*> diplomaticRelations_;
-    std::vector<Territory*> ownedTerritories_;
+    vector<Player*> diplomaticRelations_;
 public:
     Player();
     Player(string Name, vector<Territory*> & territories);
@@ -52,9 +51,9 @@ public:
 
     void addTerritory(Territory *newTerritory);
     void removeTerritory(Territory *A_Territory);
+
     void addDiplomaticRelation(Player* player);
-    std::vector<Player*> getRelations() const;
-    std::vector<Territory*> getPossessedTerritories() const;
+    vector<Player*> getRelations() const;
 };
 
 
