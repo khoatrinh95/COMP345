@@ -522,6 +522,11 @@ int Territory::getPendingOutgoingArmies() const
     return pendingOutgoingArmies_;
 }
 
+string Territory::getName() const
+{
+    return name_;
+}
+
 // Setters
 void Territory::setName(std::string name)
 {

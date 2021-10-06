@@ -50,13 +50,9 @@ namespace HelperFunctions {
 class GameEngine
 {
 public:
-    GameEngine();
-    GameEngine(const GameEngine &gameEngine);
-    const GameEngine &operator=(const GameEngine &gameEngine);
-    friend std::ostream &operator<<(std::ostream &output, const GameEngine &gameEngine);
+
     static Player* getOwnerOf(Territory* territory);
     static void assignToNeutralPlayer(Territory* territory);
-
 
 private:
 

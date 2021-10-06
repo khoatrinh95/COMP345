@@ -54,6 +54,7 @@ private:
 class Territory{
 public:
     Territory();
+    Territory(string name);
     Territory(int id, string name, int army);
     void addAdjTerritories(Territory* adjTer);
 
@@ -79,6 +80,7 @@ public:
     void setOwner(Player *owner);
     Player* getOwner();
     int getId();
+    std::string getName() const;
     void setArmies(int newArmies);
     int getArmies();
     void removeOwner();
@@ -98,6 +100,8 @@ private:
     int numberOfArmies_;
     int pendingIncomingArmies_;
     int pendingOutgoingArmies_;
+    std::string name_;
+
 };
 
 class Continent{

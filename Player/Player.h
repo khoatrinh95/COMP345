@@ -10,23 +10,24 @@
 #include <list>
 #include <iostream>
 
-using namespace std;
-
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
 #include "../Orders/Orders.h"
-
+using namespace std;
 class Player {
 private:
-    string name;
-    vector<Territory*> territories;
+    std::string name;
+    std::vector<Territory*> territories;
     Hand *playerCards;
-    OrdersList* playerOrdersList;
-    vector<Player*> diplomaticRelations_;
+    OrdersList *playerOrdersList;
+    std::vector<Player*> diplomaticRelations_;
+    std::vector<Territory*> ownedTerritories_;
 public:
     Player();
     Player(string Name, vector<Territory*> & territories);
     Player(const Player &anotherPlayer);
+
+    Player(const string &name);
 
     ~Player();
 
@@ -48,10 +49,10 @@ public:
 
     Player &operator = (const Player &anotherPlayer);
     friend ostream &operator << (ostream &out, const Player &player);
-
+    void addOwnedTerritory(Territory* territory);
     void addTerritory(Territory *newTerritory);
     void removeTerritory(Territory *A_Territory);
-
+    void removeOwnedTerritory(Territory* territory);
     void addDiplomaticRelation(Player* player);
     vector<Player*> getRelations() const;
 };

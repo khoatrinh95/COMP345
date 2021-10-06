@@ -48,6 +48,7 @@ protected:
     Order();
     Order(Player* issuer, int priority);
     Order(const Order &order);
+
     const Order &operator=(const Order &order);
     virtual std::ostream &print_(std::ostream &output) const = 0;
     virtual void execute_() = 0;
@@ -66,6 +67,7 @@ public:
 
     OrdersList();
     OrdersList(const OrdersList &orders);
+    OrdersList(vector<Order *> orders);
     ~OrdersList();
     const OrdersList &operator=(const OrdersList &orders);
     friend std::ostream &operator<<(std::ostream &output, const OrdersList &orders);

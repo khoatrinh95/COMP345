@@ -5,6 +5,7 @@
 #include "../orders/Orders.h"
 #include "../cards/Cards.h"
 #include "../gameengine/GameEngine.h"
+#include "../Player/Player.h"
 int main()
 {
     // Setup
