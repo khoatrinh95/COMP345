@@ -5,6 +5,10 @@
 #ifndef COMP345_N11_GAMEENGINE_H
 #define COMP345_N11_GAMEENGINE_H
 
+#include "../cards/Cards.h"
+#include "../Map/Map.h"
+#include "../Player/Player.h"
+#include "../Map/Map.h"
 #include <string>
 #include <iostream>
 #include <vector>
@@ -43,4 +47,20 @@ namespace HelperFunctions {
     void takeInput(Phases);
 }
 
+class GameEngine
+{
+public:
+    GameEngine();
+    GameEngine(const GameEngine &gameEngine);
+    const GameEngine &operator=(const GameEngine &gameEngine);
+    friend std::ostream &operator<<(std::ostream &output, const GameEngine &gameEngine);
+    static Player* getOwnerOf(Territory* territory);
+    static void assignToNeutralPlayer(Territory* territory);
+
+
+private:
+
+    static std::vector<Player*> players_;
+
+};
 #endif //COMP345_N11_GAMEENGINE_H
