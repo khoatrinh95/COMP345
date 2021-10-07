@@ -5,9 +5,9 @@
 #include "TestDriver.h"
 int main(){
     cout << "Hello COMP345" << endl;
-    PlayerDriver();
+//    PlayerDriver();
 //    CardDriver();
-//    orderDriver();
+    orderDriver();
 //    GameEngineDriver();
 //    mapDriver();
 
