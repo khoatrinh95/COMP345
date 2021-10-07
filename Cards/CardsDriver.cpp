@@ -85,16 +85,19 @@ void CardDriver(){
     player1->setPlayerOrdersList(ordersList);
 
     cout << "Player1's order list before playing cards in their hand: " << endl;
-    cout << player1->getPlayerOrdersList() << endl;
+    cout << *(player1->getPlayerOrdersList()) << endl;
 
     cout << *cardDeckptr;
     cout << *cardHandptr;
 
     cardHandptr->playOneCard(6, cardDeckptr, player1); //playing an individual card by position in hand
+
+    cout << *(player1->getPlayerOrdersList()) << endl;
+
     cardHandptr->playAllCards(cardDeckptr, player1);
 
     cout << "Player1's order list after playing cards in their hand: " << endl;
-    cout << player1->getPlayerOrdersList() << endl;
+    cout << *(player1->getPlayerOrdersList()) << endl;
 
     cout << *cardDeckptr;
     cout << *cardHandptr;
