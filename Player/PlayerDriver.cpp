@@ -13,12 +13,16 @@ using namespace std;
 
 void PlayerDriver(){
     Continent *continent = new Continent(9,"Africa",10);
-    Territory * a_Territory = new Territory(99,"Lebanon",3,continent);
 
     vector<Territory*> territories;
-    territories.push_back(new Territory(99,"Lebanon",3,continent));
+    territories.push_back(new Territory(99,"Kenya",3,continent));
     territories.push_back(new Territory(98,"Morocco",1,continent));
     territories.push_back(new Territory(97,"Egypt",4,continent));
+
+    vector<Territory*> another_territories;
+    another_territories.push_back(new Territory(99,"China",3,continent));
+    another_territories.push_back(new Territory(98,"Japan",1,continent));
+    another_territories.push_back(new Territory(97,"India",4,continent));
 
     vector<Card*>cards;
     cards.push_back(new Card("bomb"));
@@ -26,7 +30,7 @@ void PlayerDriver(){
     cards.push_back(new Card("blockade"));
     cards.push_back(new Card("airlift"));
     cards.push_back(new Card("diplomacy"));
-    Hand * handOfCards=new Hand(cards);
+    Hand * handOfCards = new Hand(cards);
 
 
 
@@ -66,7 +70,7 @@ void PlayerDriver(){
     cout<<*player3;
 
     // testing all getters
-    // testing get  and set player's name functions
+    // testing get and set player's name functions
     cout << "\t\t\t***Testing set and get function for player name***"<<endl;
     cout<<"player no.1 name old name is "<< player1->getName()<<endl;
     player1->setName("PlayerNO.1_newName");
@@ -76,11 +80,10 @@ void PlayerDriver(){
 
     // testing get and set player's territories functions
     cout << "\t\t\t***Testing set and get territories for player No.1 who had no territories***"<<endl;
-    player1->setTerritories(territories);
+    player1->setTerritories(another_territories);
     cout << "player no.1 territories are: "<<endl<<"\t";
-    vector<Territory*> playerTerritory = player1->getTerritories();
-    for (auto & territory : playerTerritory){
-        cout<<*territory<<"\t";
+    for (auto & territory : player1->getTerritories()){
+        cout<<*territory<<endl<<"\t";
     }
     cout<<endl;
     cout<<endl;
@@ -95,8 +98,8 @@ void PlayerDriver(){
     //testing get and set for player's list of order unctions
     cout << "\t\t\t***Testing set and get list of order for player No.1 who had no orders in his list***"<<endl;
     player1->setPlayerOrdersList(ordersList);
-    cout << "player no.1 's orders list is: "<<endl;
-    cout<<player1->getPlayerOrdersList()<<endl;
+    cout << "player no.1's orders list is: "<<endl;
+    cout<<*player1->getPlayerOrdersList()<<endl;
     cout<<endl;
     cout<<endl;
 
@@ -106,7 +109,7 @@ void PlayerDriver(){
     cout << "The list of to be defended territories is:"<< endl<<"\t";
     vector<Territory*> to_be_defended_territories = player1->toDefend();
     for (auto & territory : to_be_defended_territories){
-        cout<<*territory<<"\t";
+        cout<<*territory<<endl<<"\t";
     }
     cout<<endl;
     cout<<endl;
@@ -117,7 +120,7 @@ void PlayerDriver(){
     cout << "The list of to be attacked territories is:"<< endl<<"\t";
     vector<Territory*> to_be_attacked_territories = player1->toAttack();
     for (auto & territory : to_be_attacked_territories){
-        cout<<*territory<<"\t";
+        cout<<*territory<<endl<<"\t";
     }
     cout<<endl;
     cout<<endl;
@@ -127,59 +130,65 @@ void PlayerDriver(){
     cout <<"\t\t\t***Testing issueOrder Function***"<<endl;
     cout << "The list of player order is:"<< endl;
     player1->issueOrder();
-    cout <<player1->getPlayerOrdersList()<<endl;
+    cout <<*player1->getPlayerOrdersList()<<endl;
 
     cout<<endl;
 
-    player2->removeTerritory(a_Territory );
 
     // clearing the heap
     // deleting territories vector
-//    delete continent;
-//    continent = nullptr;
 
-//    delete territories[0];
-//    territories[0] = nullptr;
-//    delete newTerritory;
-//    newTerritory = NULL;
 
-//    for(auto territory :territories ){
-//        delete territory;
-//    }
-//    territories.clear();
-//
-//    for(auto territory :playerTerritory){
-//        delete territory;
-//    }
-//    playerTerritory.clear();
-//
-//
-////    for(auto order : orders ){
-////        delete order;
-////    }
-////    orders.clear();
-//    cout << "marker 1 ----------------------------------------" << endl;
-//
-////    for(auto card:cards ){
-////        delete card;
-////    }
-////    cards.clear();
-//
-//
-////    delete ordersList;
-////    ordersList = NULL;
-////
-////    delete handOfCards;
-////    handOfCards = NULL;
-//
-//    delete player1 ;
-//    player1= NULL;
-//
-//    delete player2 ;
-//    player2= NULL;
-//
-//    delete player3;
-//    player3= NULL;
+
+    delete player1 ;
+    player1= nullptr;
+    cout<<endl;
+
+    delete player2 ;
+    player2= nullptr;
+    cout<<endl;
+
+    delete player3;
+    player3= nullptr;
+    cout<<endl;
+
+    delete ordersList;
+    ordersList = nullptr;
+    cout<<endl;
+
+
+    delete handOfCards;
+    handOfCards = nullptr;
+    cout<<endl;
+
+
+
+    for (auto &territory :territories){
+        delete territory;
+        territory= nullptr;
+    }
+    territories.clear();
+    cout<<endl;
+
+    for (auto &territory :another_territories){
+        delete territory;
+        territory= nullptr;
+    }
+    another_territories.clear();
+    cout<<endl;
+
+    delete newTerritory;
+    newTerritory = nullptr;
+    cout<<endl;
+
+    delete continent;
+    continent = nullptr;
+
+
+
+
+
+
 
 
 

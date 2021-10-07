@@ -4,9 +4,6 @@
 
 #include "Player.h"
 #include <iostream>
-#include "../Map/Map.h"
-#include "../Cards/Cards.h"
-#include "../Orders/Orders.h"
 #include "../GameEngine/GameEngine.h"
 
 using namespace std;
@@ -44,13 +41,12 @@ Player::Player(const Player &anotherPlayer) {
 }
 
 Player::~Player(){
-    cout<<"destruct player---------------------------------------------"<<endl;
-    for (auto territory :territories){
+    cout<<"~player() destructing a player whose name is "<< name<<endl;
+    for (auto &territory :territories){
         territory->removeOwner();
     }
-    territories.clear();
-//    delete playerCards;
-//    delete playerOrdersList;
+    delete playerCards;
+    delete playerOrdersList;
 }
 
 void Player::setName(string name) {
@@ -96,6 +92,7 @@ vector<Territory*> Player::toDefend() {
 }
 
 vector<Territory*> Player::toAttack() {
+
     Continent *continent = new Continent(10,"Europe",5);
     vector<Territory*> territories_to_be_attacked;
     territories_to_be_attacked.push_back(new Territory(3,"England", 5,continent));
@@ -112,9 +109,9 @@ void Player::issueOrder() {
 }
 
 Player &Player::operator=(const Player &anotherPlayer) {
-    if (this!=& anotherPlayer){
+    if (this != & anotherPlayer){
         this->~Player();
-
+        territories.clear();
         this->name = anotherPlayer.name +"_copy";
         this->playerCards = new Hand(*anotherPlayer.playerCards);
         this->playerOrdersList = new OrdersList(*anotherPlayer.playerOrdersList);
@@ -128,13 +125,13 @@ Player &Player::operator=(const Player &anotherPlayer) {
     return *this;
 }
 
- ostream &operator<<(ostream &out, const Player &player) {
+ostream &operator<<(ostream &out, const Player &player) {
     if (player.territories.empty()){
         out << "Player name is "<<player.name<<", and he has no territories"<<endl;
     }else{
         out << "Player name is "<< player.name<< ", and he has the following territories:"<<endl<<"\t";
         for (auto &territory : player.territories){
-            out << *territory << "\t";
+            out << *territory << endl<<"\t";
         }
         out<<endl;
     }
@@ -145,10 +142,10 @@ Player &Player::operator=(const Player &anotherPlayer) {
         out<<*player.playerCards;
     }
     if (player.playerOrdersList->size()== 0){
-        out<<"This player does not have in orders in his list"<<endl;
+        out<<"This player does not have any orders in his list"<<endl;
     } else{
-        out<<"Player orders list contain these orders"<<endl;
-//        out <<*playerOrdersList;
+        out <<"Player orders list contain these orders"<<endl;
+        out <<*player.playerOrdersList<<endl;
     }
     out<< endl;
 
