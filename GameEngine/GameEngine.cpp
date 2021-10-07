@@ -5,12 +5,12 @@
 #include "GameEngine.h"
 #include "../Player/Player.h"
 #include <algorithm>
-#include <filesystem>
+//#include <filesystem>
 #include <time.h>
 #include <unordered_set>
 #include <string>
 Phases* phase = new Phases(Phases::START);
-
+std::vector<Player*> GameEngine::players_;
 // ----------------------------------START UP----------------------------------------------//
 void StartUp::startUp() {
     printTitle();
@@ -220,20 +220,20 @@ void HelperFunctions::takeInput(Phases nextPhase){
 void GameEngine::assignToNeutralPlayer(Territory* territory)
 {
     Player* owner = getOwnerOf(territory);
-    owner->removeOwnedTerritory(territory);
+    owner->removeTerritory(territory);
 
     auto isNeutralPlayer = [](const auto &player) { return player->isNeutral(); };
     auto iterator = find_if(players_.begin(), players_.end(), isNeutralPlayer);
     if (iterator == players_.end())
     {
         Player* neutralPlayer = new Player();
-        neutralPlayer->addOwnedTerritory(territory);
+        neutralPlayer->addTerritory(territory);
         players_.push_back(neutralPlayer);
     }
     else
     {
         Player* neutralPlayer = *iterator;
-        neutralPlayer->addOwnedTerritory(territory);
+        neutralPlayer->addTerritory(territory);
     }
 }
 

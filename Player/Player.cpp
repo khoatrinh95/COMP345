@@ -8,7 +8,7 @@
 #include "../Cards/Cards.h"
 #include "../Orders/Orders.h"
 #include "../GameEngine/GameEngine.h"
-#include <algorithm>
+
 using namespace std;
 // Player default constructor
 Player::Player() {
@@ -44,12 +44,13 @@ Player::Player(const Player &anotherPlayer) {
 }
 
 Player::~Player(){
+    cout<<"destruct player---------------------------------------------"<<endl;
     for (auto territory :territories){
         territory->removeOwner();
     }
     territories.clear();
-    delete playerCards;
-    delete playerOrdersList;
+//    delete playerCards;
+//    delete playerOrdersList;
 }
 
 void Player::setName(string name) {
@@ -160,7 +161,7 @@ void Player::addTerritory(Territory *newTerritory) {
 
 void Player::removeTerritory(Territory *A_Territory) {
     for (int i = 0; i<territories.size();i++){
-        if (territories.at(i)==A_Territory){
+        if (territories.at(i)->getId()==A_Territory->getId()){
             territories.erase(next(begin(territories), + i));
         }
     }
@@ -175,6 +176,10 @@ void Player::addDiplomaticRelation(Player* player)
 std::vector<Player *> Player::getRelations() const
 {
     return diplomaticRelations_;
+}
+
+bool Player::isNeutral() {
+    return neutral;
 }
 
 

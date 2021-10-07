@@ -13,6 +13,7 @@ using namespace std;
 
 void PlayerDriver(){
     Continent *continent = new Continent(9,"Africa",10);
+    Territory * a_Territory = new Territory(99,"Lebanon",3,continent);
 
     vector<Territory*> territories;
     territories.push_back(new Territory(99,"Lebanon",3,continent));
@@ -130,46 +131,55 @@ void PlayerDriver(){
 
     cout<<endl;
 
+    player2->removeTerritory(a_Territory );
 
     // clearing the heap
     // deleting territories vector
-    delete newTerritory;
-    newTerritory = NULL;
+//    delete continent;
+//    continent = nullptr;
 
-    for(auto territory :territories ){
-        delete territory;
-    }
-    territories.clear();
+//    delete territories[0];
+//    territories[0] = nullptr;
+//    delete newTerritory;
+//    newTerritory = NULL;
 
-    for(auto territory :playerTerritory){
-        delete territory;
-    }
-    playerTerritory.clear();
-
-    for(auto order : orders ){
-        delete order;
-    }
-    orders.clear();
-
-    for(auto card:cards ){
-        delete card;
-    }
-    cards.clear();
-
-    delete ordersList;
-    ordersList = NULL;
-
-    delete handOfCards;
-    handOfCards = NULL;
-
-    delete player1 ;
-    player1= NULL;
-
-    delete player2 ;
-    player2= NULL;
-
-    delete player3;
-    player3= NULL;
+//    for(auto territory :territories ){
+//        delete territory;
+//    }
+//    territories.clear();
+//
+//    for(auto territory :playerTerritory){
+//        delete territory;
+//    }
+//    playerTerritory.clear();
+//
+//
+////    for(auto order : orders ){
+////        delete order;
+////    }
+////    orders.clear();
+//    cout << "marker 1 ----------------------------------------" << endl;
+//
+////    for(auto card:cards ){
+////        delete card;
+////    }
+////    cards.clear();
+//
+//
+////    delete ordersList;
+////    ordersList = NULL;
+////
+////    delete handOfCards;
+////    handOfCards = NULL;
+//
+//    delete player1 ;
+//    player1= NULL;
+//
+//    delete player2 ;
+//    player2= NULL;
+//
+//    delete player3;
+//    player3= NULL;
 
 
 

@@ -13,7 +13,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-
+class Player;
 enum class Phases{START, MAPLOADED, MAPVALIDATED, PLAYERSADDED, ASSIGNREINFORCEMENT, ISSUEORDERS, EXECUTEORDERS, WIN};
 
 extern Phases * phase;

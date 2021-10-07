@@ -236,7 +236,9 @@ void MapLoader::loadFromFile(std::string fileName) {
                     if (terId > 0) {
                         if (i == 0) {
                             while(strStream >> adjTerId) {
+                                cout << "terId: " << terId << " - adjTerId: " << adjTerId << endl;
                                 borders[terId - 1]++;
+                                cout << "borders[" << terId-1 << "] = " << borders[terId - 1] << endl;
                             }
                         } else {
                             // instantiate objects
@@ -372,6 +374,12 @@ Territory::Territory() {
     id = -1;
     numAdjTerritories = 0;
     name = "";
+
+    //
+    numberOfArmies_ = 0;
+    pendingIncomingArmies_ = 0;
+    pendingOutgoingArmies_ = 0;
+    name_ = "";
 }
 
 Territory::Territory(int id, string name, int armies, Continent* continent) {
@@ -382,6 +390,12 @@ Territory::Territory(int id, string name, int armies, Continent* continent) {
     this->id = id;
     numAdjTerritories = 0;
     this->name = name;
+
+    //
+    numberOfArmies_ = 0;
+    pendingIncomingArmies_ = 0;
+    pendingOutgoingArmies_ = 0;
+    name_ = "";
 }
 
 Territory::Territory(Territory const &anotherTerritory) {
@@ -397,6 +411,12 @@ Territory::Territory(Territory const &anotherTerritory) {
             adjTerritories[i] = anotherTerritory.adjTerritories[i];
         }
     }
+
+    //
+    numberOfArmies_ = 0;
+    pendingIncomingArmies_ = 0;
+    pendingOutgoingArmies_ = 0;
+    name_ = "";
 }
 
 Territory& Territory::operator = (Territory const &anotherTerritory) {
@@ -412,6 +432,13 @@ Territory& Territory::operator = (Territory const &anotherTerritory) {
             adjTerritories[i] = anotherTerritory.adjTerritories[i];
         }
     }
+
+    //
+    numberOfArmies_ = 0;
+    pendingIncomingArmies_ = 0;
+    pendingOutgoingArmies_ = 0;
+    name_ = "";
+
     return *this;
 }
 
@@ -426,13 +453,17 @@ Territory::~Territory() {
                 cout << "~Territory()->adjTerritory - non-null territory " << endl;
                 cout << "~Territory() - adj.ter. no." << i+1 << ": " << (*(adjTerritories + i))->name << endl;
                 Territory* adjTer = *(adjTerritories + i);
-                int numTerAdjTer = adjTer->numAdjTerritories;
-                for (int j = 0; j < numTerAdjTer; j++) {
-                    cout << "~Territory()->adjTerritory no." << j+1 << endl;
-                    if (adjTer->adjTerritories[j] != nullptr && adjTer->adjTerritories[j]->id == id) {
-                        cout << "~Territory()->adjTerritory no." << j+1 << ": " << (adjTer->adjTerritories[j])->name << endl;
-                        cout << "~Territory()->adjTerritory setting to null adj.ter. no." << j+1 << ": " << adjTer->name << endl;
-                        adjTer->adjTerritories[j] = nullptr;
+                if (adjTer != nullptr) {
+                    cout << "------------------" << endl;
+                    int numTerAdjTer = adjTer->numAdjTerritories;
+                    cout << "~Territory()->adjTerritory " << *this << endl;
+                    for (int j = 0; j < numTerAdjTer; j++) {
+                        cout << "~Territory()->adjTerritory no." << j+1 << " out of " << numTerAdjTer << endl;
+                        if (adjTer->adjTerritories[j] != nullptr && adjTer->adjTerritories[j]->id == id) {
+                            cout << "~Territory()->adjTerritory no." << j+1 << ": " << (adjTer->adjTerritories[j])->name << endl;
+                            cout << "~Territory()->adjTerritory setting to null adj.ter. no." << j+1 << ": " << adjTer->name << endl;
+                            adjTer->adjTerritories[j] = nullptr;
+                        }
                     }
                 }
             }
@@ -445,6 +476,7 @@ Territory::~Territory() {
     }
 //    delete continent;
     if (continent != nullptr) {
+        cout << "-------------continent->numTerritories: " << continent->numTerritories << endl;
         for (int i = 0; i < continent->numTerritories; i++) {
             if (continent->territories[i] != nullptr && continent->territories[i]->id == id) {
                 continent->territories[i] = nullptr;
@@ -453,7 +485,10 @@ Territory::~Territory() {
     }
     continent = nullptr;
 
-    owner->removeTerritory(id);
+    cout << "Marker 2 ==============================================" << endl;
+    owner->removeTerritory(this);
+
+    cout << "Marker 3 ==============================================" << endl;
     owner = nullptr;
     cout << "exit ~Territory()" << endl;
 }

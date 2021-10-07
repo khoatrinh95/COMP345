@@ -6,7 +6,7 @@
 #define COMP345_N11_MAPDRIVER_H
 
 
-void mapInitializer();
+void mapDriver();
 
 
 #endif //COMP345_N11_MAPDRIVER_H

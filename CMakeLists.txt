@@ -7,7 +7,8 @@ add_executable(COMP345_N11
         TestDriver.cpp TestDriver.h
         Player/Player.cpp Player/Player.h Player/PlayerDriver.h Player/PlayerDriver.cpp
         Orders/Orders.cpp Orders/Orders.h Orders/OrdersDriver.cpp
-        #        GameEngine/GameEngine.cpp GameEngine/GameEngine.h
+        GameEngine/GameEngine.cpp GameEngine/GameEngine.h
         Cards/CardsDriver.cpp Cards/Cards.h Cards/Cards.cpp
         Map/MapDriver.h Map/MapDriver.cpp Map/Map.cpp Map/Map.h
+        Cards/CardDriver.h Orders/OrdersDriver.h GameEngine/GameEngineDriver.cpp GameEngine/GameEngineDriver.h
         )

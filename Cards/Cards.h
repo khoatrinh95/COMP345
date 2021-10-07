@@ -11,6 +11,7 @@
 using namespace std;
 
 class Player;
+class Order;
 
 #pragma once
 class Card{

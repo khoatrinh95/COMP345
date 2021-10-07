@@ -1,5 +1,5 @@
 #include "../GameEngine/GameEngine.h"
-#include "../orders/Orders.h"
+#include "../Orders/Orders.h"
 #include <iterator>
 #include <math.h>
 #include <algorithm>
@@ -416,8 +416,8 @@ void AdvanceOrder::execute_()
             // Successful attack
         else
         {
-            issuer_->addOwnedTerritory(destination_);
-            defender->removeOwnedTerritory(destination_);
+            issuer_->addTerritory(destination_);
+            defender->removeTerritory(destination_);
             destination_->addArmies(survivingAttackers);
             std::cout << "Successful attack on " << destination_->getName() << ". " << survivingAttackers << " armies now occupy this territory." << std::endl;
         }

@@ -5,8 +5,7 @@
 #include<iostream>
 #include <sstream>
 #include "Cards.h"
-#include "../Player/Player.cpp"
-#include "../Orders/Orders.cpp"
+
 #include <ctime>
 
 using namespace std;

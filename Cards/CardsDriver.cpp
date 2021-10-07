@@ -3,11 +3,11 @@
 //
 
 #include <iostream>
-#include "Cards.cpp"
+#include "Cards.h"
 
 using namespace std;
 
-void CardsDriver(){
+void CardDriver(){
     //Testing card constructors and operators
     Card bombCard("bomb");
     Card reinforcementCard("reinforcement");
@@ -142,6 +142,3 @@ void CardsDriver(){
     diplomacyCardptr = NULL;
 };
 
-int main() {
-    CardsDriver();
-}

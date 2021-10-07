@@ -4,7 +4,7 @@
 
 #include "Map.h"
 
-void mapInitializer() {
+void mapDriver() {
 //    MapLoader("maps/canada.map");
     MapLoader("../Map/maps/canada.map");
 }

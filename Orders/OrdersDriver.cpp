@@ -3,24 +3,23 @@
 //
 
 #include "../orders/Orders.h"
-#include "../cards/Cards.h"
 #include "../gameengine/GameEngine.h"
-#include "../Player/Player.h"
-int main()
+
+void  orderDriver()
 {
     // Setup
-    Territory* t1 = new Territory("Columbia");
-    Territory* t2 = new Territory("NewYork");
-    Territory* t3 = new Territory("California");
+    Territory* t1 = new Territory(1,"Columbia",4, nullptr);
+    Territory* t2 = new Territory(2,"NewYork",5,nullptr);
+    Territory* t3 = new Territory(3,"California",4,nullptr);
     t1->addArmies(10);
     t2->addArmies(5);
     t3->addArmies(10);
 
     Player* player = new Player("Thong");
     Player* enemy = new Player("Khoa");
-    player->addOwnedTerritory(t1);
-    player->addOwnedTerritory(t2);
-    enemy->addOwnedTerritory(t3);
+    player->addTerritory(t1);
+    player->addTerritory(t2);
+    enemy->addTerritory(t3);
 
 //    GameEngine::setPlayers({ player, enemy });
 
@@ -65,5 +64,5 @@ int main()
     delete t3;
 //    GameEngine::resetGameEngine();
 
-    return 0;
+//    return 0;
 }

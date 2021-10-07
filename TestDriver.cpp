@@ -3,3 +3,12 @@
 //
 
 #include "TestDriver.h"
+int main(){
+    cout << "Hello COMP345" << endl;
+    PlayerDriver();
+//    CardDriver();
+//    orderDriver();
+//    GameEngineDriver();
+//    mapDriver();
+
+}

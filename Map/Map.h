@@ -20,6 +20,7 @@ using namespace std;
 class Map;
 class Territory;
 class Continent;
+class Player;
 
 class MapLoader{
 public:

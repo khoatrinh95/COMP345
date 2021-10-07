@@ -6,15 +6,17 @@
 #define COMP345_N11_ORDERS_H
 
 
-#pragma once
+//#pragma once
 
-#include "../map/Map.h"
-#include "../player/Player.h"
+#include "../Map/Map.h"
+#include "../Player/Player.h"
 #include <iostream>
 #include <vector>
-
+using namespace std;
 class Player;
 class Territory;
+class Order;
+
 
 enum OrderType : short
 {

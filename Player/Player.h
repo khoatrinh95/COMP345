@@ -7,12 +7,16 @@
 
 #include <string>
 #include <vector>
-#include <list>
 #include <iostream>
 
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
 #include "../Orders/Orders.h"
+
+class Territory;
+class Hand;
+class Order;
+class OrdersList;
 using namespace std;
 
 class Player {
@@ -22,6 +26,7 @@ private:
     Hand *playerCards;
     OrdersList *playerOrdersList;
     vector<Player*> diplomaticRelations_;
+    bool neutral = false;
 public:
     Player();
     Player(const string &name);
@@ -55,6 +60,7 @@ public:
     void addDiplomaticRelation(Player* player);
 
     vector<Player*> getRelations() const;
+    bool isNeutral();
 };
 
 
