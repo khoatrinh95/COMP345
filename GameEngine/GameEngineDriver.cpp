@@ -6,6 +6,8 @@
 
 
 void GameEngineDriver(){
-    StartUp::startUp();
-    Play::playGame();
+    GameEngine *gameEngine = new GameEngine();
+    gameEngine -> playGame();
+    cout << *gameEngine;
+    delete gameEngine;
 }

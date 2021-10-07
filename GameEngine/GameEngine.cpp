@@ -3,30 +3,28 @@
 //
 
 #include "GameEngine.h"
-#include "../Player/Player.h"
 #include <algorithm>
-//#include <filesystem>
-#include <time.h>
-#include <unordered_set>
+
 #include <string>
-Phases* phase = new Phases(Phases::START);
+
 std::vector<Player*> GameEngine::players_;
 // ----------------------------------START UP----------------------------------------------//
-void StartUp::startUp() {
+void StartUp::startUp(Phases *phase) {
     printTitle();
     while (*phase != Phases::ASSIGNREINFORCEMENT) {
         switch (*phase) {
             case Phases::START:
-                loadMap();
+                loadMap(phase);
                 break;
             case Phases::MAPLOADED:
-                validateMap();
+                validateMap(phase);
                 break;
             case Phases::MAPVALIDATED:
-                createPlayers();
+                GameEngine::clearPlayerList();
+                createPlayers(phase);
                 break;
             case Phases::PLAYERSADDED:
-                assignTerritories();
+                assignTerritories(phase);
                 break;
             default:
                 cout << "ERROR" << endl;
@@ -35,7 +33,7 @@ void StartUp::startUp() {
     }
 }
 
-void StartUp::loadMap(){
+void StartUp::loadMap(Phases *phase){
     cout << "***  Inside loadMap  ***" << endl;
 
     cout << "...loading map" << endl;
@@ -45,26 +43,26 @@ void StartUp::loadMap(){
     vector<string> options {"Load a different map", "Validate map"};
     HelperFunctions::printOptions(options);
 
-    HelperFunctions::takeInput(Phases::MAPLOADED);
+    HelperFunctions::takeInput(phase, Phases::MAPLOADED);
 };
 
-void StartUp::validateMap(){
+void StartUp::validateMap(Phases *phase){
     cout << "***  Inside validateMap  ***" << endl;
     *phase = Phases::MAPVALIDATED;
 };
 
-void StartUp::createPlayers(){
+void StartUp::createPlayers(Phases *phase){
     cout << "***  Inside createPlayers  ***" << endl;
     addPlayers();
 
     vector<string> options {"Add a different number of players", "Assign territories"};
     HelperFunctions::printOptions(options);
 
-    HelperFunctions::takeInput(Phases::PLAYERSADDED);
+    HelperFunctions::takeInput(phase, Phases::PLAYERSADDED);
 
 };
 
-void StartUp::assignTerritories(){
+void StartUp::assignTerritories(Phases *phase){
     cout << "***  Inside assignTerritories  ***" << endl;
     *phase = Phases::ASSIGNREINFORCEMENT;
 };
@@ -84,10 +82,16 @@ void StartUp::addPlayers(){
         string input;
         cin >> input;
         if (HelperFunctions::isNumber(input)){
-
             // TBI: HANDLE ADDING PLAYERS HERE
-
-            cout << input << " players have been added." << endl;
+            int numOfPlayers = stoi(input);
+            for (int i = 0; i < numOfPlayers; i++){
+                cout << "Please enter the name of player " << (i+1) << endl;
+                string name;
+                cin >> name;
+                Player *player = new Player(name);
+                GameEngine::addPlayersToList(player);
+            }
+            cout << numOfPlayers << " players have been added." << endl;
             break;
         }
         else {
@@ -98,21 +102,21 @@ void StartUp::addPlayers(){
 
 // ----------------------------------PLAY----------------------------------------------//
 
-void Play::playGame(){
+void Play::playGame(Phases *phase){
     printPlayPhaseGreeting();
     while (*phase != Phases::WIN) {
         switch (*phase) {
             case Phases::ASSIGNREINFORCEMENT:
-                assignArmies();
+                assignArmies(phase);
                 break;
             case Phases::ISSUEORDERS:
-                issueOrders();
+                issueOrders(phase);
                 break;
             case Phases::EXECUTEORDERS:
-                executeOrders();
+                executeOrders(phase);
                 break;
             case Phases::WIN:
-                cleanUp();
+//                cleanUp();
                 break;
             default:
                 cout << "ERROR" << endl;
@@ -122,12 +126,12 @@ void Play::playGame(){
 };
 
 
-void Play::assignArmies(){
+void Play::assignArmies(Phases *phase){
     cout << "***  Inside assignArmies  ***" << endl;
     *phase = Phases::ISSUEORDERS;
 };
 
-void Play::issueOrders(){
+void Play::issueOrders(Phases *phase){
     cout << "***  Inside issueOrders  ***" << endl;
 
     // TBI: HANDLE ISSUE ORDERS HERE
@@ -135,11 +139,11 @@ void Play::issueOrders(){
     vector<string> options {"Issue order", "Complete issue orders"};
     HelperFunctions::printOptions(options);
 
-    HelperFunctions::takeInput(Phases::EXECUTEORDERS);
+    HelperFunctions::takeInput(phase, Phases::EXECUTEORDERS);
 
 };
 
-void Play::executeOrders(){
+void Play::executeOrders(Phases *phase){
     cout << "***  Inside executeOrders  ***" << endl;
 
     // TBI: HANDLE EXECUTE ORDERS HERE
@@ -147,16 +151,8 @@ void Play::executeOrders(){
     vector<string> options {"Execute orders", "Complete execute orders"};
     HelperFunctions::printOptions(options);
 
-    HelperFunctions::takeInput(Phases::WIN);
+    HelperFunctions::takeInput(phase, Phases::WIN);
 
-};
-
-void Play::cleanUp(){
-    cout << "***  Inside cleanUp  ***" << endl;
-
-    // Handle memory leak
-    delete phase;
-    phase = nullptr;
 };
 
 void Play::printPlayPhaseGreeting() {
@@ -190,7 +186,7 @@ bool HelperFunctions::isNumber(const std::string& s)
     return !s.empty() && it == s.end();
 }
 
-void HelperFunctions::takeInput(Phases nextPhase){
+void HelperFunctions::takeInput(Phases *phase, Phases nextPhase){
     while (true) {
         string input;
         cin >> input;
@@ -251,6 +247,72 @@ Player* GameEngine::getOwnerOf(Territory* territory)
     return nullptr;
 }
 
+// Default constructor
+GameEngine::GameEngine(){
+    phase = new Phases(Phases::START);
+}
+
+// Copy constructor of Game Engine
+GameEngine::GameEngine(const GameEngine &anotherGameEngine) {
+    this -> phase = new Phases(*anotherGameEngine.phase);
+    for (auto player : anotherGameEngine.players_){
+        Player* player_temp = new Player(*player);
+        this->players_.push_back(player_temp);
+    }
+}
+
+// Destructor
+GameEngine::~GameEngine() {
+    cout << "***  Inside Game Engine destructor  ***" << endl;
+    // Explicitly call destructor of Player because the players will be dynamically allocated at the beginning of the game
+    for (auto player : players_){
+        delete player;
+    }
+    players_.clear();
+
+    // Handle memory leak
+    delete phase;
+    phase = nullptr;
+}
+
+// Assignment operator
+GameEngine &GameEngine::operator=(const GameEngine &anotherGameEngine) {
+    for (auto player : anotherGameEngine.players_){
+        Player* player_temp = new Player(*player);
+        this->players_.push_back(player_temp);
+    }
+    return *this;
+}
+
+// Stream insertion
+ostream &operator<<(ostream &stream, const GameEngine &gameEngine) {
+    string toPrint = "Here are the players currently playing: \n";
+    for (auto player : gameEngine.players_){
+        toPrint.append(player->getName()).append("\n");
+    }
+    stream << toPrint;
+    return stream;
+}
+
+void GameEngine::playGame() {
+    StartUp::startUp(phase);
+    Play::playGame(phase);
+}
+
+const vector<Player *> &GameEngine::getPlayers() {
+    return players_;
+}
+
+void GameEngine::addPlayersToList(Player* player) {
+    players_.push_back(player);
+}
+
+void GameEngine::clearPlayerList() {
+    for (auto player : players_){
+        delete player;
+    }
+    players_.clear();
+}
 
 
 
