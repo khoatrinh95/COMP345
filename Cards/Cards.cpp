@@ -94,19 +94,18 @@ Deck::Deck(vector<Card*> &cards) : cards(cards){
 
 Deck::Deck(const Deck& d){
     cout << "Inside copy constructor of Deck" << endl;
-    vector<Card*> copyOfDeck;
-    for (int i = 0; i < d.cards.size(); i++) {
-        copyOfDeck.push_back(new Card(*d.cards[i]));
+    for (Card* card : d.cards) {
+        this->cards.push_back(new Card(*card));
     }
-    cards = copyOfDeck;
 }
 
 Deck::~Deck() {
     cout << "Inside destructor of Deck" << endl;
-    for (auto card : cards) {
+    for (Card* card : cards) {
         delete card;
+        card = NULL;
     }
-    cards.clear();
+    cards.erase(cards.begin(), cards.end());
 }
 
 Deck& Deck::operator=(const Deck& d){
@@ -169,19 +168,18 @@ Hand::Hand(const vector<Card*> &cards) : hand(cards){
 
 Hand::Hand(const Hand& h){
     cout << "Inside copy constructor of Hand" << endl;
-    vector<Card*> copyOfHand;
-    for (int i = 0; i < h.hand.size(); i++) {
-        copyOfHand.push_back(new Card(*h.hand[i]));
+    for (Card* card : h.hand) {
+        this->hand.push_back(new Card(*card));
     }
-    hand = copyOfHand;
 }
 
 Hand::~Hand() {
     cout << "Inside destructor of Hand" << endl;
-    for (auto card : hand) {
+    for (Card* card : hand) {
         delete card;
+        card = NULL;
     }
-    hand.clear();
+    hand.erase(hand.begin(), hand.end());
 }
 
 Hand& Hand::operator=(const Hand& h){
@@ -204,7 +202,7 @@ string Hand::printHand() const{
     bool newLine = false;
     std::ostringstream buffer;
     if (hand.size() <= 0) {
-        return "Hand is empty!";
+        return "Hand is empty!\n";
     }
     for (int i = 0; i < hand.size(); i++) {
         newLine = false;
