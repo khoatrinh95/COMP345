@@ -8,39 +8,43 @@
 void  orderDriver()
 {
     // Setup
-    Territory* t1 = new Territory(1,"Columbia",4, nullptr);
-    Territory* t2 = new Territory(2,"NewYork",5,nullptr);
-    Territory* t3 = new Territory(3,"California",4,nullptr);
-    t1->addArmies(10);
-    t2->addArmies(5);
-    t3->addArmies(10);
+    Territory* columbia = new Territory(1, "Columbia", 0, nullptr);
+    Territory* newyork = new Territory(2, "NewYork", 0, nullptr);
+    Territory* california = new Territory(3, "California",0, nullptr);
+
+    columbia->addArmies(10);
+    newyork->addArmies(5);
+    california->addArmies(10);
 
     Player* player = new Player("Thong");
     Player* enemy = new Player("Khoa");
 
     // Add
-    player->addTerritory(t1);
-    player->addTerritory(t2);
-    enemy->addTerritory(t3);
-
-//    GameEngine::setPlayers({ player, enemy });
+    player->addTerritory(columbia);
+    player->addTerritory(newyork);
+    enemy->addTerritory(california);
 
     OrdersList ordersList;
-    ordersList.add(new DeployOrder(player, 3, t1));
-    ordersList.add(new AdvanceOrder(player, 1, t1, t3));
-    ordersList.add(new BombOrder(player, t3));
-    ordersList.add(new BlockadeOrder(player, t1));
-    ordersList.add(new AirliftOrder(player, 6, t1, t2));
+    ordersList.add(new DeployOrder(player, 3, columbia));
+    ordersList.add(new AdvanceOrder(player, 1, columbia, california));
+    ordersList.add(new BombOrder(player, california));
+    ordersList.add(new BlockadeOrder(player, columbia));
+    ordersList.add(new AirliftOrder(player, 6, columbia, newyork));
     ordersList.add(new NegotiateOrder(player, enemy));
 
-
+    GameEngine::addPlayersToList(player);
+    GameEngine::addPlayersToList(enemy);
     // Show the OrderList
     std::cout << "========== " << "Here is original orders list: " << ordersList << " ==========" << std::endl;
     for (const auto &order : ordersList.getOrders())
     {
         std::cout << *order << std::endl;
         std::cout << std::boolalpha << "Order is valid: " << order->validate() << std::endl;
-        order->execute();
+        try{
+            order->execute();
+        }catch(int e) {
+            cout << "An exception occurred. Exception Nr. " << e << '\n';
+        }
         std::cout << std::endl;
     }
 
@@ -63,11 +67,12 @@ void  orderDriver()
     }
 
     // After all, delete all territories
-    delete t1;
-    delete t2;
-    delete t3;
+    columbia = NULL;
+    delete columbia;
+    newyork = NULL;
+    delete newyork;
+    california = NULL;
+    delete california;
 
-    // This is the end of Orders driver.
-
-
+   GameEngine::clearPlayerList();
 }

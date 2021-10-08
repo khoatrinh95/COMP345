@@ -390,8 +390,6 @@ Territory::Territory(int id, string name, int armies, Continent* continent) {
     this->id = id;
     numAdjTerritories = 0;
     this->name = name;
-
-    //
     numberOfArmies_ = 0;
     pendingIncomingArmies_ = 0;
     pendingOutgoingArmies_ = 0;
