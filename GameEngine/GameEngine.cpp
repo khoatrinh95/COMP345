@@ -309,8 +309,8 @@ void GameEngine::addPlayersToList(Player* player) {
 
 void GameEngine::clearPlayerList() {
     for (auto player : players_){
-        player = NULL;
         delete player;
+        player = NULL;
     }
     players_.clear();
 }
