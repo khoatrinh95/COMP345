@@ -105,10 +105,10 @@ void CardDriver(){
     //cleaning up memory
     delete player1;
     player1 = NULL;
-    delete ordersList;
+    //delete ordersList; //this is already being deleted from deleting player1 on line 106
     ordersList = NULL;
 
-    delete cardHandptr;
+    //delete cardHandptr; //this is already being deleted from deleting player1 on line 106
     cardHandptr = NULL;
     delete cardHandCopyptr;
     cardHandCopyptr = NULL;
@@ -122,22 +122,26 @@ void CardDriver(){
     cardDeckCopyptr = NULL;
     cardDeckCopy2ptr = NULL;
 
+    /* these are being deleted when cardDeck is being deleted
     delete bombCard2ptr;
     delete reinforcementCard2ptr;
     delete blockadeCard2ptr;
     delete airliftCard2ptr;
     delete diplomacyCard2ptr;
+    */
     bombCard2ptr = NULL;
     reinforcementCard2ptr = NULL;
     blockadeCard2ptr = NULL;
     airliftCard2ptr = NULL;
     diplomacyCard2ptr = NULL;
 
+    /* these are being deleted when cardDeck is being deleted
     delete bombCardptr;
     delete reinforcementCardptr;
     delete blockadeCardptr;
     delete airliftCardptr;
     delete diplomacyCardptr;
+    */
     bombCardptr = NULL;
     reinforcementCardptr = NULL;
     blockadeCardptr = NULL;
