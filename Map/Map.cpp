@@ -8,7 +8,7 @@
 //#include <regex>
 //#include <fstream>
 #include <sstream>
-//#include <iostream>
+#include <iostream>
 //using namespace std;
 
 MapLoader::MapLoader() {

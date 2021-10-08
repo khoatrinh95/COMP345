@@ -17,6 +17,8 @@ void  orderDriver()
 
     Player* player = new Player("Thong");
     Player* enemy = new Player("Khoa");
+
+    // Add
     player->addTerritory(t1);
     player->addTerritory(t2);
     enemy->addTerritory(t3);
@@ -27,14 +29,13 @@ void  orderDriver()
     ordersList.add(new DeployOrder(player, 3, t1));
     ordersList.add(new AdvanceOrder(player, 1, t1, t3));
     ordersList.add(new BombOrder(player, t3));
-    ordersList.add(new AirliftOrder(player, 6, t1, t2));
     ordersList.add(new BlockadeOrder(player, t1));
+    ordersList.add(new AirliftOrder(player, 6, t1, t2));
     ordersList.add(new NegotiateOrder(player, enemy));
 
 
-
     // Show the OrderList
-    std::cout << "===== " << "Original orders list: " << ordersList << " =====" << std::endl;
+    std::cout << "========== " << "Here is original orders list: " << ordersList << " ==========" << std::endl;
     for (const auto &order : ordersList.getOrders())
     {
         std::cout << *order << std::endl;
@@ -43,26 +44,30 @@ void  orderDriver()
         std::cout << std::endl;
     }
 
-    // Show the OrderList after moving an order from index 1 to index 4
-    ordersList.move(4, 6);
+    // Move the order from index 2 to 4
+    ordersList.move(2, 4);
+
+    // Display the OrderList after moving order
     std::cout << "===== " << "Orders list after moving an order: " << ordersList << " =====" << std::endl;
     for (const auto &order : ordersList.getOrders())
     {
         std::cout << *order << std::endl;
     }
 
-    // Show the OrderList after deleting an order at index 5
-    ordersList.remove(2);
+    // Delete the order at index 3
+    ordersList.remove(3);
     std::cout << "\n===== " << "Orders list after deleting an order: " << ordersList << " =====" << std::endl;
     for (const auto &order : ordersList.getOrders())
     {
         std::cout << *order << std::endl;
     }
 
+    // After all, delete all territories
     delete t1;
     delete t2;
     delete t3;
-//    GameEngine::resetGameEngine();
 
-//    return 0;
+    // This is the end of Orders driver.
+
+
 }
