@@ -115,7 +115,7 @@ const OrdersList &OrdersList::operator=(const OrdersList &orders) {
 std::ostream &operator<<(std::ostream &output, const OrdersList &orders) {
     output << "[Orders List] Size=" << orders.size() << endl;
     for (auto order: orders.getOrders()) {
-        output << order << endl;
+        output << *order << endl;
     }
     return output;
 }
