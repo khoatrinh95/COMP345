@@ -6,9 +6,10 @@
 int main(){
     cout << "Hello COMP345" << endl;
     PlayerDriver();
-    CardDriver();
-    orderDriver();
-    mapDriver();
-    GameEngineDriver();
+//    CardDriver();
+//    orderDriver();
+//    GameEngineDriver();
+//    mapDriver();
+
 
 }
