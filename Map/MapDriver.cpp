@@ -2,12 +2,20 @@
 // Created by fadib on 2021-09-26.
 //
 
-#include "Map.h"
+#include "MapDriver.h"
+class player;
 
 void mapDriver() {
+    // default constructor
+    Map* map0 = new Map();
+    cout << "\nMap 0: Default Constructor\n" << *map0 << endl;
+    delete map0;
+
     // reading canada.map
     Map* map = MapLoader::loadMapFile("../Map/maps/canada.map");
-    cout << "\nMap 1: Canada\n" << *map << endl;
+    Player* player = new Player("Fadi"); ////// for demo purpose only, not deleting the object after. I understand it causes memory leak, but since it's only part of the demo and will be deleted later. the reason is, in my driver, I only create a dummy object of type Player because the prof said we don't need to link the classes for this assignment submission.
+    map->setOwnerOfTerritory(player);
+    cout << "\n\n\n\nMap 1: Canada\n" << *map << endl;
     cout << "\nValidating the map... ";
     int validation = map->validate();
     switch (validation) {

@@ -41,6 +41,7 @@ public:
     Map& operator = (Map const &anotherMap);
     ~Map();
     int validate() const;
+    void setOwnerOfTerritory(Player *player); ///////////// for demo purpose only, to be removed later
     void makeContinentContain2Territories(); ///////////// for demo purpose only, to be removed later
 private:
     Territory** territories;

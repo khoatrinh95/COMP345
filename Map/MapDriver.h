@@ -5,6 +5,9 @@
 #ifndef COMP345_N11_MAPDRIVER_H
 #define COMP345_N11_MAPDRIVER_H
 
+#include "../Map/Map.h"
+#include "../Player/Player.h"
+
 
 void mapDriver();
 
