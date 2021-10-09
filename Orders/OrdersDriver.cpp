@@ -32,6 +32,22 @@ void  orderDriver()
     ordersList.add(new AirliftOrder(player, 6, columbia, newyork));
     ordersList.add(new NegotiateOrder(player, enemy));
 
+    // adding random cards to player
+    vector<Card*>cards;
+    cards.push_back(new Card("bomb"));
+    cards.push_back(new Card("reinforcement"));
+    Hand * handOfCards = new Hand(cards);
+    player -> setPlayerCards(handOfCards);
+
+    // adding random cards to enemy
+    vector<Card*>cardsEnemy;
+    cards.push_back(new Card("bomb"));
+    cards.push_back(new Card("reinforcement"));
+    Hand * handOfCardsEnemy = new Hand(cardsEnemy);
+    enemy -> setPlayerCards(handOfCardsEnemy);
+
+
+
     GameEngine::addPlayersToList(player);
     GameEngine::addPlayersToList(enemy);
     // Show the OrderList
