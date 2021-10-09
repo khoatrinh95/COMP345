@@ -64,6 +64,7 @@ public:
     static const vector<Player *> &getPlayers();
     static void addPlayersToList(Player* player);
     static void clearPlayerList();
+    static void assignRandomCardsToPlayers();
 private:
     Phases *phase;
     static std::vector<Player*> players_;

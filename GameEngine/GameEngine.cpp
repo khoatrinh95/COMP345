@@ -92,6 +92,9 @@ void StartUp::addPlayers(){
                 GameEngine::addPlayersToList(player);
             }
             cout << numOfPlayers << " players have been added." << endl;
+
+            // Randomly assign cards and orders to players just for the sake of demo
+            GameEngine::assignRandomCardsToPlayers();
             break;
         }
         else {
@@ -313,6 +316,23 @@ void GameEngine::clearPlayerList() {
         player = NULL;
     }
     players_.clear();
+}
+
+void GameEngine::assignRandomCardsToPlayers() {
+    for (auto player : players_){
+        vector<Card*>cards;
+        cards.push_back(new Card("bomb"));
+        cards.push_back(new Card("reinforcement"));
+        Hand * handOfCards = new Hand(cards);
+
+        vector<Order*> orders;
+        orders.push_back(new AirliftOrder());
+        orders.push_back(new NegotiateOrder());
+        OrdersList *ordersList = new OrdersList(orders);
+
+        player -> setPlayerCards(handOfCards);
+        player -> setPlayerOrdersList(ordersList);
+    }
 }
 
 
