@@ -10,7 +10,7 @@
 #include <string>
 #include <regex>
 #include <fstream>
-//#include <sstream>
+#include <sstream>
 #include <iostream>
 
 
@@ -25,15 +25,11 @@ class Player;
 class MapLoader{
 public:
     MapLoader();
-    explicit MapLoader(string fileName);
     MapLoader(MapLoader const &anotherMapLoader);
     MapLoader& operator = (MapLoader const &anotherMapLoader);
     ~MapLoader();
-    void loadFromFile(string fileName);
+    static Map* loadMapFile(string fileName);
 private:
-    Territory** territories;
-    Continent** continents;
-    int numContinents, numTerritories;
     friend Map;
     friend ostream& operator << (ostream &stream, const MapLoader &mapLoader);
 };
@@ -41,67 +37,61 @@ private:
 class Map{
 public:
     Map();
-    Map(MapLoader const &mapLoader);
     Map(Map const &anotherMap);
     Map& operator = (Map const &anotherMap);
     ~Map();
+    int validate() const;
+    void makeContinentContain2Territories(); ///////////// for demo purpose only, to be removed later
 private:
     Territory** territories;
     Continent** continents;
     int numContinents, numTerritories;
+    bool checkConnectivity(Territory *ter, Territory **path, bool withinContinent) const;
+    friend Map* MapLoader::loadMapFile(string fileName);
     friend ostream& operator << (ostream &stream, const Map &map);
 };
 
 class Territory{
 public:
     Territory();
-    Territory(string name);
-    Territory(int id, string name, int army);
-    void addAdjTerritories(Territory* adjTer);
-
-
-    // Thong
+//    Territory(string name);
+//    Territory(int id, string name, int army);
+//    void addAdjTerritories(Territory* adjTer);
+    Territory(int id, string name, int armies, Continent *continent);
+    Territory(Territory const &anotherTerritory);
+    Territory& operator = (Territory const &anotherTerritory);
+    void setAdjTerritories(int numAdjTerritories, Territory **adjTerritories);
+    ~Territory();
+    void setOwner(Player *owner);
+    Player* getOwner() const;
+    int getId() const;
+    string getName() const;
+    void setNumberOfArmies(int newArmies);
+    void removeOwner();
     int getNumberOfArmies() const;
     int getPendingIncomingArmies() const;
     int getPendingOutgoingArmies() const;
-    void setName(std::string name);
     void setPendingIncomingArmies(int armies);
     void setPendingOutgoingArmies(int armies);
     void removeArmies(int armies);
     void addArmies(int armies);
     void addPendingIncomingArmies(int armies);
     void addPendingOutgoingArmies(int armies);
-    int getNumberOfMovableArmies();
-
-    Territory(int id, string name, int armies, Continent *continent);
-    Territory(Territory const &anotherTerritory);
-    Territory& operator = (Territory const &anotherTerritory);
-    void addAdjTerritories(int numAdjTerritories, Territory **adjTerritories);
-    ~Territory();
-    void setOwner(Player *owner);
-    Player* getOwner();
-    int getId();
-    std::string getName() const;
-    void setArmies(int newArmies);
-    int getArmies();
-    void removeOwner();
+    int getNumberOfMovableArmies() const;
 private:
     Territory** adjTerritories;
     Continent* continent;
     Player* owner;
-    int armies;
+    int numArmies;
     int id;
     int numAdjTerritories;
     string name;
     friend Continent;
     friend MapLoader;
+    friend Map;
     friend ostream& operator << (ostream &stream, const Territory &territory);
-
-    // thong
-    int numberOfArmies_;
-    int pendingIncomingArmies_;
-    int pendingOutgoingArmies_;
-    std::string name_;
+    int pendingIncomingArmies;
+    int pendingOutgoingArmies;
 
 };
 
@@ -111,10 +101,9 @@ public:
     Continent(int id, string name, int bonus);
     Continent(Continent const &anotherContinent);
     Continent& operator = (Continent const &anotherContinent);
-    string getName();
+    string getName() const;
     ~Continent();
-    Player* getOwner();
-
+    Player* getOwner() const;
 private:
     int id;
     string name;
@@ -124,6 +113,7 @@ private:
     Player* owner;
     void setTerritories(int numTerritories, Territory** territories);
     friend MapLoader;
+    friend Map;
     friend Territory;
     friend ostream& operator << (ostream& stream, const Continent &continent);
 };
