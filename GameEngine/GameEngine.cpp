@@ -154,6 +154,7 @@ void Play::executeOrders(Phases *phase){
     vector<string> options {"Execute orders", "Complete execute orders"};
     HelperFunctions::printOptions(options);
 
+    // only setting the next phase to WIN for the sake of demo - in real game, this won't be automatically win
     HelperFunctions::takeInput(phase, Phases::WIN);
 
 };
