@@ -5,11 +5,10 @@
 #include "TestDriver.h"
 int main(){
     cout << "Hello COMP345" << endl;
+    orderDriver();
     PlayerDriver();
-//    CardDriver();
-//    orderDriver();
-//    GameEngineDriver();
-//    mapDriver();
-
+    CardDriver();
+    mapDriver();
+    GameEngineDriver();
 
 }

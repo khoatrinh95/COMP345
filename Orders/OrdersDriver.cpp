@@ -83,12 +83,15 @@ void  orderDriver()
     }
 
     // After all, delete all territories
-    columbia = NULL;
-    delete columbia;
-    newyork = NULL;
-    delete newyork;
-    california = NULL;
-    delete california;
 
-   GameEngine::clearPlayerList();
+    delete columbia;
+    columbia = NULL;
+
+    delete newyork;
+    newyork = NULL;
+
+    delete california;
+    california = NULL;
+
+    GameEngine::clearPlayerList();
 }

@@ -63,8 +63,14 @@ Player::~Player(){
     for (auto &territory :territories){
         territory->removeOwner();
     }
-    delete playerCards;
-    delete playerOrdersList;
+
+    if (playerCards != nullptr) {
+        delete playerCards;
+    }
+
+    if (playerOrdersList != nullptr) {
+        delete playerOrdersList;
+    }
 }
 
 /**
