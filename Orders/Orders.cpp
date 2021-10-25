@@ -342,7 +342,7 @@ bool AdvanceOrder::validate() const {
 
 // Executes the Advance Order.
 void AdvanceOrder::execute_() {
-    Player *defender = GameEngine::getOwnerOf(destination_);
+    Player *defender = destination_->getOwner();
     bool offensive = issuer_ != defender;
 
     // Recalculate what number of armies may want to truely be moved if the kingdom of the territory has modified because of an attack
