@@ -1,6 +1,4 @@
-//
-// Created by Khoa Trinh on 2021-09-29.
-//
+
 
 #include "GameEngine.h"
 #include <algorithm>
