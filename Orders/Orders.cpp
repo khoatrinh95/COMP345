@@ -374,8 +374,7 @@ void AdvanceOrder::execute_() {
         }
             // Successful attack
         else {
-            issuer_->addTerritory(destination_);
-            defender->removeTerritory(destination_);
+            defender->transferTerritory(destination_, issuer_);
             destination_->addArmies(survivingAttackers);
             std::cout << "Attack is successful on the " << destination_->getName() << ". " << survivingAttackers
                       << " armies now attacked and owns this territory." << std::endl;

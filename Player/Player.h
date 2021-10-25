@@ -28,6 +28,13 @@ private:
     OrdersList *playerOrdersList;
     vector<Player*> diplomaticRelations_;
     bool neutral = false;
+
+    /**
+ * remove a territory from player list of territories
+ * @param A_Territory
+ */
+    void removeTerritory(Territory *A_Territory);
+
 public:
     /**
      * default constructor for Player object
@@ -148,10 +155,10 @@ public:
     void addTerritory(Territory *newTerritory);
 
     /**
-     * remove a territory from player list of territories
-     * @param A_Territory
+     * transfer a territory to player list of territories
+     * @param newTerritory
      */
-    void removeTerritory(Territory *A_Territory);
+    void transferTerritory (Territory *newTerritory, Player *toTransfer);
 
     /**
      * Add an enemy player to the list of diplomatic relations for this player

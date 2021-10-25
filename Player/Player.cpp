@@ -235,6 +235,7 @@ ostream &operator<<(ostream &out, const Player &player) {
  */
 void Player::addTerritory(Territory *newTerritory) {
     this->territories.push_back(newTerritory);
+    newTerritory->setOwner(this);
 }
 
 /**
@@ -247,6 +248,11 @@ void Player::removeTerritory(Territory *A_Territory) {
             territories.erase(next(begin(territories), + i));
         }
     }
+}
+
+void Player::transferTerritory(Territory *newTerritory, Player *toTransfer) {
+    toTransfer->addTerritory(newTerritory);
+    removeTerritory(newTerritory);
 }
 
 /**
