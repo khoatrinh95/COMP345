@@ -68,6 +68,6 @@ public:
 private:
     Phases *phase;
     static std::vector<Player*> players_;
-
+    Map* map_ = MapLoader::loadMapFile("../Map/maps/canada.map");
 };
 #endif //COMP345_N11_GAMEENGINE_H
