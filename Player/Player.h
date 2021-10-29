@@ -28,12 +28,9 @@ private:
     OrdersList *playerOrdersList;
     vector<Player*> diplomaticRelations_;
     bool neutral = false;
+    int reinforcement_pool;
 
-    /**
- * remove a territory from player list of territories
- * @param A_Territory
- */
-    void removeTerritory(Territory *A_Territory);
+
 
 public:
     /**
@@ -116,6 +113,19 @@ public:
     vector<Territory*> getTerritories() const;
 
     /**
+     * set a player number of armies
+     * @param armies
+     */
+    void setReinforcementPool(int armies);
+
+    /**
+     * get player number of armies
+     * @return
+     */
+    int getReinforcementPool() const;
+
+
+    /**
      * determine player territory(s) that need to be defended
      * @return list of territories
      */
@@ -155,6 +165,11 @@ public:
     void addTerritory(Territory *newTerritory);
 
     /**
+ * remove a territory from player list of territories
+ * @param A_Territory
+ */
+    void removeTerritory(Territory *A_Territory);
+    /**
      * transfer a territory to player list of territories
      * @param newTerritory
      */
@@ -178,6 +193,7 @@ public:
      */
     bool isNeutral();
 };
+
 
 
 #endif //COMP345_N11_PLAYER_H

@@ -243,16 +243,22 @@ void Player::addTerritory(Territory *newTerritory) {
  * @param A_Territory
  */
 void Player::removeTerritory(Territory *A_Territory) {
+
     for (int i = 0; i<territories.size();i++){
         if (territories.at(i)->getId()==A_Territory->getId()){
+            territories.at(i)->setOwner(nullptr);
             territories.erase(next(begin(territories), + i));
         }
     }
 }
-
+/**
+ * move the a territory from one player to another player
+ * @param newTerritory
+ * @param toTransfer
+ */
 void Player::transferTerritory(Territory *newTerritory, Player *toTransfer) {
-    toTransfer->addTerritory(newTerritory);
     removeTerritory(newTerritory);
+    toTransfer->addTerritory(newTerritory);
 }
 
 /**
@@ -277,6 +283,21 @@ vector<Player *> Player::getRelations() const {
  */
 bool Player::isNeutral() {
     return neutral;
+}
+/**
+ * set a player number of armies
+ * @param armies
+ */
+void Player::setReinforcementPool(int armies) {
+    reinforcement_pool = armies;
+}
+
+/**
+ * get player number of armies
+ * @return
+ */
+int Player::getReinforcementPool() const {
+        return reinforcement_pool;
 }
 
 
