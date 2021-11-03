@@ -42,8 +42,8 @@ public:
 
     //Methods requested from the assignment hand out
     virtual Phases getCommand(Phases* phase); //public get command method for other classes
-    void saveCommand(string command);
-    void saveEffect(Command* command, string effect);
+    void saveCommand(string command); //saves the command received by input into a command object
+    void saveEffect(Command* command, string effect); //saves the effect of a command into its object
     bool validate(string command, Phases* phase);
 
     Command* getLastCommandInList();
@@ -68,11 +68,11 @@ public:
     string getCurrentLine();
 
     //mutator for the file input stream
-    void setIfstr(ifstream* ifstr);
+    void setFStr(fstream* ifstr);
 private:
     string filename;
     string currentLine;
-    ifstream* _ifstr; //file input stream from where lines are being read
+    fstream* _ifstr; //file input stream from where lines are being read
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {

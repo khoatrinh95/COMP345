@@ -8,9 +8,19 @@ void PhasesLoop(Phases* currentPhase, CommandProcessor* comPro) {
     while (*currentPhase != Phases::ASSIGNREINFORCEMENT) {
         switch (*currentPhase) {
             case Phases::START:
+                cout << "Currently in START phase." << endl;
+                *currentPhase = comPro->getCommand(currentPhase);
+                break;
             case Phases::MAPLOADED:
+                cout << "Currently in MAPLOADED phase." << endl;
+                *currentPhase = comPro->getCommand(currentPhase);
+                break;
             case Phases::MAPVALIDATED:
+                cout << "Currently in MAPVALIDATED phase." << endl;
+                *currentPhase = comPro->getCommand(currentPhase);
+                break;
             case Phases::PLAYERSADDED:
+                cout << "Currently in PLAYERSADDED phase." << endl;
                 *currentPhase = comPro->getCommand(currentPhase);
                 break;
             default:
@@ -23,7 +33,6 @@ void PhasesLoop(Phases* currentPhase, CommandProcessor* comPro) {
 void CommandProcessingDriver(string filename) {
     CommandProcessor* comPro;
     Phases* currentPhase = new Phases(Phases::START);
-    Phases* nextPhase;
     
     if (filename.compare("") != 0) {
         comPro = new FileCommandProcessorAdapter(filename);
@@ -35,10 +44,16 @@ void CommandProcessingDriver(string filename) {
         PhasesLoop(currentPhase, comPro);
 
         delete currentPhase;
+
+        cout << "Skipping gameplay loop... Currently in WIN phase." << endl;
         currentPhase = new Phases(Phases::WIN);
 
         *currentPhase = comPro->getCommand(currentPhase);
     }
 
+    delete currentPhase;
+    currentPhase = nullptr;
+    delete comPro;
+    comPro = nullptr;
 }
 
