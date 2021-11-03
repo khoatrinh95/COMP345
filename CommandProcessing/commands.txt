@@ -1,0 +1,13 @@
+loadmap a
+loadmap b
+validatemap
+addplayer 1
+addplayer 2
+startgame
+gamestart
+replay
+loadmap c
+validatemap
+addplayer 3
+gamestart
+quit

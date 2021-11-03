@@ -12,6 +12,7 @@ int main(int argc, char* argv[]){
 //    mapDriver();
 //    GameEngineDriver();
 
+    /* uncomment this block for driver tests for CommandProcessing (part 1)
     if (strcmp(argv[1], "-file") == 0) {
         if (argv[2] != NULL) {
             string filename = argv[2];
@@ -25,4 +26,5 @@ int main(int argc, char* argv[]){
         CommandProcessingDriver("");
     }
 
+     */
 }
