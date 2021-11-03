@@ -9,6 +9,7 @@
 #include "Cards/CardDriver.h"
 #include "Map/MapDriver.h"
 #include "Orders/OrdersDriver.h"
+#include "CommandProcessing/CommandProcessingDriver.h"
 using namespace std;
 
 
