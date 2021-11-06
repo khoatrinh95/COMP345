@@ -25,7 +25,9 @@ Command::Command(const Command& c) {
     this->effect = c.effect;
 }
 
+// Definition is commented because it's only used for debugging
 Command::~Command() {
+    //cout << "Inside Command destructor of " << this->getCommand() << endl;
 }
 
 Command& Command::operator=(const Command& c) {
@@ -87,8 +89,8 @@ std::ostream& operator<<(std::ostream& stream, const CommandProcessor& com) {
  * getCommand function for asking for commands from the console
  * @return last command object in the collection
  */
-Phases CommandProcessor::getCommand(Phases* phase) {
-    return this->readCommand(phase);
+string CommandProcessor::getCommand() {
+    return this->readCommand();
 }
 
 /**
@@ -112,71 +114,12 @@ Command* CommandProcessor::getLastCommandInList() {
  * @param phase the current game state
  * @return the next game state to transition into
  */
-Phases CommandProcessor::readCommand(Phases* phase) {
+string CommandProcessor::readCommand() {
     string commander;
     cout << "Enter your command. \n";
     getline(cin, commander); //takes in the entire string until the enter key is pressed in the console
-    while (!validate(commander, phase)) {
-        cout << "The command you entered was invalid. Please try again." << endl;
-        cout << "Enter your command. \n";
-        getline(cin, commander);
-    }
-    stringstream ss(commander);
-    string comWord;
-    ss >> comWord; //get first token of input string
-    std::transform(comWord.begin(), comWord.end(), comWord.begin(),
-                   [](unsigned char c){ return std::tolower(c); }); //convert input to lowercase
-
-    if (comWord.compare("loadmap") == 0) {
-        string secondWord;
-        ss >> secondWord; //get second token of input string, which is the map file specified (e.g. canada.map)
-
-        //TODO: check if map file exists
-
-        string header = "Loaded map ";
-        string footer = " successfully and transitioned to the maploaded state.";
-        string effect = header + secondWord + footer;
-        cout << effect << endl;
-        saveEffect(getLastCommandInList(), effect);
-        return Phases::MAPLOADED;
-    } else if (comWord.compare("validatemap") == 0) {
-
-        // TODO : call validate map method
-
-        string effect = "Validated the selected map successfully and transitioned to the mapvalidated state.";
-        cout << effect << endl;
-        saveEffect(getLastCommandInList(), effect);
-        return Phases::MAPVALIDATED;
-    } else if (comWord.compare("addplayer") == 0) {
-        string secondWord;
-        ss >> secondWord; //get second token of input string which is the name of the player to be added
-
-        // TODO : add player to the list of players
-
-        string header = "Added player ";
-        string footer = " successfully and transitioned to the playersadded state.";
-        string effect = header + secondWord + footer;
-        cout << effect << endl;
-        saveEffect(getLastCommandInList(), effect);
-        return Phases::PLAYERSADDED;
-    } else if (comWord.compare("gamestart") == 0) {
-        string effect = "Started the game and transitioned to the assignreinforcement state.";
-        cout << effect << endl;
-        saveEffect(getLastCommandInList(), effect);
-        return Phases::ASSIGNREINFORCEMENT;
-    } else if (comWord.compare("replay") == 0) {
-        string effect = "Replaying the game and transitioning to the start state.";
-        cout << effect << endl;
-        saveEffect(getLastCommandInList(), effect);
-        return Phases::START;
-    } else if (comWord.compare("quit") == 0) {
-        string effect = "Quitting the game and exiting the program.";
-        cout << effect << endl;
-        saveEffect(getLastCommandInList(), effect);
-        return Phases::WIN; //unsure about this part, there is no exit phase so I made it loop back into WIN
-    } else {
-        return Phases::START;
-    }
+    saveCommand(commander);
+    return commander;
 }
 
 /**
@@ -194,61 +137,49 @@ bool CommandProcessor::validate(string command, Phases* phase) {
     if (comWord.compare("loadmap") == 0) {
         if (*phase != Phases::START && *phase != Phases::MAPLOADED) {
             cout << "loadmap is only accepted during the phases START and MAPLOADED.";
-            saveCommand(command);
             saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
             return false;
         } else {
-            saveCommand(command);
             return true;
         }
     } else if (comWord.compare("validatemap") == 0) {
         if (*phase != Phases::MAPLOADED) {
             cout << "validatemap is only accepted during the phase MAPLOADED.";
-            saveCommand(command);
             saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
             return false;
         } else {
-            saveCommand(command);
             return true;
         }
     } else if (comWord.compare("addplayer") == 0) {
         if (*phase != Phases::PLAYERSADDED && *phase != Phases::MAPVALIDATED) {
             cout << "addplayer is only accepted during the phases MAPVALIDATED and PLAYERSADDED.";
-            saveCommand(command);
             saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
             return false;
         } else {
-            saveCommand(command);
             return true;
         }
     } else if (comWord.compare("gamestart") == 0) {
         if (*phase != Phases::PLAYERSADDED) {
             cout << "gamestart is only accepted during the phase PLAYERSADDED.";
-            saveCommand(command);
             saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
             return false;
         } else {
-            saveCommand(command);
             return true;
         }
     } else if (comWord.compare("replay") == 0) {
         if (*phase != Phases::WIN) {
             cout << "replay is only accepted during the phase WIN.";
-            saveCommand(command);
             saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
             return false;
         } else {
-            saveCommand(command);
             return true;
         }
     } else if (comWord.compare("quit") == 0) {
         if (*phase != Phases::WIN) {
             cout << "quit is only accepted during the phase WIN.";
-            saveCommand(command);
             saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
             return false;
         } else {
-            saveCommand(command);
             return true;
         }
     } else {
@@ -396,8 +327,8 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
  * @param phase specify the phase at which the game is currently in
  * @return the next phase to transition into
  */
-Phases FileCommandProcessorAdapter::getCommand(Phases* phase) {
-    return this->readCommand(phase);
+string FileCommandProcessorAdapter::getCommand() {
+    return this->readCommand();
 }
 
 /**
@@ -406,71 +337,14 @@ Phases FileCommandProcessorAdapter::getCommand(Phases* phase) {
  * @param phase specify the phase at which the game is currently in
  * @return the next phase to transition into
  */
-Phases FileCommandProcessorAdapter::readCommand(Phases* phase) {
+string FileCommandProcessorAdapter::readCommand() {
     if (flr->readFromLine()) {
         string commander = flr->getCurrentLine();
         cout << commander << " has been read from the file." << endl;
-        if (!validate(commander, phase)) {
-            cout << "The command that was read was invalid. Skipping to next line." << endl;
-            return *phase;
-        }
-        stringstream ss(commander);
-        string comWord;
-        ss >> comWord; //get first token of input string
-        std::transform(comWord.begin(), comWord.end(), comWord.begin(),
-                       [](unsigned char c){ return std::tolower(c); }); //convert input to lowercase
-
-        if (comWord.compare("loadmap") == 0) {
-            string secondWord;
-            ss >> secondWord; //get second token of input string, which is the map file specified (e.g. canada.map)
-
-            //TODO: check if map file exists
-
-            string header = "Loaded map ";
-            string footer = " successfully and transitioned to the maploaded state.";
-            string effect = header + secondWord + footer;
-            cout << effect << endl;
-            saveEffect(getLastCommandInList(), effect);
-            return Phases::MAPLOADED;
-        } else if (comWord.compare("validatemap") == 0) {
-
-            // TODO : call validate map method
-
-            string effect = "Validated the selected map successfully and transitioned to the mapvalidated state.";
-            cout << effect << endl;
-            saveEffect(getLastCommandInList(), effect);
-            return Phases::MAPVALIDATED;
-        } else if (comWord.compare("addplayer") == 0) {
-            string secondWord;
-            ss >> secondWord; //get second token of input string which is the name of the player to be added
-
-            // TODO : add player to the list of players
-
-            string header = "Added player ";
-            string footer = " successfully and transitioned to the playersadded state.";
-            string effect = header + secondWord + footer;
-            cout << effect << endl;
-            saveEffect(getLastCommandInList(), effect);
-            return Phases::PLAYERSADDED;
-        } else if (comWord.compare("gamestart") == 0) {
-            string effect = "Started the game and transitioned to the assignreinforcement state.";
-            cout << effect << endl;
-            saveEffect(getLastCommandInList(), effect);
-            return Phases::ASSIGNREINFORCEMENT;
-        } else if (comWord.compare("replay") == 0) {
-            string effect = "Replaying the game and transitioning to the start state.";
-            cout << effect << endl;
-            saveEffect(getLastCommandInList(), effect);
-            return Phases::START;
-        } else if (comWord.compare("quit") == 0) {
-            string effect = "Quitting the game and exiting the program.";
-            cout << effect << endl;
-            saveEffect(getLastCommandInList(), effect);
-            return Phases::WIN; //unsure about this part, there is no exit phase so I made it loop back into WIN
-        }
+        saveCommand(commander);
+        return commander;
     } else {
         cout << "There are no more commands to be read from the file. Aborting program." << endl;
         exit(0);
     }
-    return Phases::START; //keeping compiler happy
 }

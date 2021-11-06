@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
 //    GameEngineDriver();
 
     /* uncomment the block below for driver tests for CommandProcessing (part 1)
-     * To run, go to the top bar menu in CLion, then go to edit configurations,
+     * To run, go to the top bar menu in CLion and click on Run, then go to Edit Configurations,
      * then in program arguments either type "-console" or "-file ../CommandProcessing/commands.txt"
      * without quotation marks.
      *
