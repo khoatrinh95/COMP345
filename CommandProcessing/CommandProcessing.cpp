@@ -27,7 +27,7 @@ Command::Command(const Command& c) {
 
 // Definition is commented because it's only used for debugging
 Command::~Command() {
-    //cout << "Inside Command destructor of " << this->getCommand() << endl;
+    //cout << "Inside Command destructor of " << this->getCommand() << " with effect " << this->getEffect() << endl;
 }
 
 Command& Command::operator=(const Command& c) {
@@ -50,7 +50,7 @@ string Command::getCommand() {
     return command;
 }
 
-void Command::setEffect(string effect) {
+void Command::saveEffect(string effect) {
     this->effect = effect;
 }
 
@@ -111,8 +111,7 @@ Command* CommandProcessor::getLastCommandInList() {
 
 /**
  * readCommand function to retrieve commands from console inputs
- * @param phase the current game state
- * @return the next game state to transition into
+ * @return the string of the command that was read
  */
 string CommandProcessor::readCommand() {
     string commander;
@@ -137,7 +136,7 @@ bool CommandProcessor::validate(string command, Phases* phase) {
     if (comWord.compare("loadmap") == 0) {
         if (*phase != Phases::START && *phase != Phases::MAPLOADED) {
             cout << "loadmap is only accepted during the phases START and MAPLOADED.";
-            saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
+            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
             return true;
@@ -145,7 +144,7 @@ bool CommandProcessor::validate(string command, Phases* phase) {
     } else if (comWord.compare("validatemap") == 0) {
         if (*phase != Phases::MAPLOADED) {
             cout << "validatemap is only accepted during the phase MAPLOADED.";
-            saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
+            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
             return true;
@@ -153,7 +152,7 @@ bool CommandProcessor::validate(string command, Phases* phase) {
     } else if (comWord.compare("addplayer") == 0) {
         if (*phase != Phases::PLAYERSADDED && *phase != Phases::MAPVALIDATED) {
             cout << "addplayer is only accepted during the phases MAPVALIDATED and PLAYERSADDED.";
-            saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
+            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
             return true;
@@ -161,7 +160,7 @@ bool CommandProcessor::validate(string command, Phases* phase) {
     } else if (comWord.compare("gamestart") == 0) {
         if (*phase != Phases::PLAYERSADDED) {
             cout << "gamestart is only accepted during the phase PLAYERSADDED.";
-            saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
+            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
             return true;
@@ -169,7 +168,7 @@ bool CommandProcessor::validate(string command, Phases* phase) {
     } else if (comWord.compare("replay") == 0) {
         if (*phase != Phases::WIN) {
             cout << "replay is only accepted during the phase WIN.";
-            saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
+            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
             return true;
@@ -177,12 +176,14 @@ bool CommandProcessor::validate(string command, Phases* phase) {
     } else if (comWord.compare("quit") == 0) {
         if (*phase != Phases::WIN) {
             cout << "quit is only accepted during the phase WIN.";
-            saveEffect(commandList.back(), "Unable to proceed with the command at the current game state.");
+            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
             return true;
         }
     } else {
+        cout << "The command entered was not recognized.";
+        commandList.back()->saveEffect("The command entered was not recognized.");
         return false;
     }
 }
@@ -195,15 +196,6 @@ void CommandProcessor::saveCommand(string command) {
     Command* commandObj = new Command();
     commandObj->setCommand(command);
     commandList.push_back(commandObj);
-}
-
-/**
- * saves an effect to the command object
- * @param command command object to add effect to
- * @param effect the effect of the command object
- */
-void CommandProcessor::saveEffect(Command* command, string effect) {
-    command->setEffect(effect);
 }
 
 /*
