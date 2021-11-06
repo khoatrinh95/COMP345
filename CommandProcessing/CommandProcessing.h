@@ -41,7 +41,7 @@ public:
     virtual ~CommandProcessor();
 
     //Methods requested from the assignment hand out
-    virtual Phases getCommand(Phases* phase); //public get command method for other classes
+    virtual string getCommand(); //public get command method for other classes
     void saveCommand(string command); //saves the command received by input into a command object
     void saveEffect(Command* command, string effect); //saves the effect of a command into its object
     bool validate(string command, Phases* phase);
@@ -53,7 +53,7 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const CommandProcessor& com);
 private:
     vector<Command*> commandList;
-    virtual Phases readCommand(Phases* phase);
+    virtual string readCommand();
 };
 
 class FileLineReader {
@@ -82,12 +82,12 @@ public:
     FileCommandProcessorAdapter(string filename);
     ~FileCommandProcessorAdapter();
 
-    virtual Phases getCommand(Phases* phase); //public get command method for other classes
+    string getCommand(); //public get command method for other classes
 
     FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter& c);
     friend std::ostream& operator<<(std::ostream& stream, const FileCommandProcessorAdapter& com);
 private:
-    Phases readCommand(Phases* phase);
+    string readCommand();
     FileLineReader* flr;
     CommandProcessor* comPro;
 };
