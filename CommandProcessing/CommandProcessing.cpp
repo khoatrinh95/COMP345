@@ -409,6 +409,7 @@ Phases FileCommandProcessorAdapter::getCommand(Phases* phase) {
 Phases FileCommandProcessorAdapter::readCommand(Phases* phase) {
     if (flr->readFromLine()) {
         string commander = flr->getCurrentLine();
+        cout << commander << " has been read from the file." << endl;
         if (!validate(commander, phase)) {
             cout << "The command that was read was invalid. Skipping to next line." << endl;
             return *phase;

@@ -12,7 +12,11 @@ int main(int argc, char* argv[]){
 //    mapDriver();
 //    GameEngineDriver();
 
-    /* uncomment this block for driver tests for CommandProcessing (part 1)
+    /* uncomment the block below for driver tests for CommandProcessing (part 1)
+     * To run, go to the top bar menu in CLion, then go to edit configurations,
+     * then in program arguments either type "-console" or "-file ../CommandProcessing/commands.txt"
+     * without quotation marks.
+     *
     if (strcmp(argv[1], "-file") == 0) {
         if (argv[2] != NULL) {
             string filename = argv[2];
@@ -25,6 +29,5 @@ int main(int argc, char* argv[]){
     } else {
         CommandProcessingDriver("");
     }
-
-     */
+    */
 }
