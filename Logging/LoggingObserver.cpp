@@ -34,7 +34,7 @@ void LogObserver::update(Subject* s) {
 
     // Write to the file
 
-    MyFile << stringToLog << endl;
+    MyFile << stringToLog << s->contentToLog << endl;
 
     // Close the file
     MyFile.close();

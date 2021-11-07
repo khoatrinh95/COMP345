@@ -27,6 +27,7 @@ public:
 
 class Subject : public Iloggable{
 public:
+    string contentToLog;
     Subject();
     ~Subject();
     virtual void attach(Observer* o);

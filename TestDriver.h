@@ -10,6 +10,7 @@
 #include "Map/MapDriver.h"
 #include "Orders/OrdersDriver.h"
 #include "CommandProcessing/CommandProcessingDriver.h"
+#include "Logging/LoggingDriver.h"
 using namespace std;
 
 

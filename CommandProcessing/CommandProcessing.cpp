@@ -52,6 +52,10 @@ string Command::getCommand() {
 
 void Command::saveEffect(string effect) {
     this->effect = effect;
+
+    // for Iloggable
+    this->contentToLog = effect;
+    notify();
 }
 
 string Command::getEffect() {
@@ -196,6 +200,10 @@ void CommandProcessor::saveCommand(string command) {
     Command* commandObj = new Command();
     commandObj->setCommand(command);
     commandList.push_back(commandObj);
+
+    // for Iloggable
+    contentToLog = command;
+    notify();
 }
 
 /*
@@ -339,4 +347,18 @@ string FileCommandProcessorAdapter::readCommand() {
         cout << "There are no more commands to be read from the file. Aborting program." << endl;
         exit(0);
     }
+}
+
+/**
+method inherited from ILoggable
+ */
+string Command::stringToLog() {
+    return "Command's effect: ";
+}
+
+/**
+method inherited from ILoggable
+ */
+string CommandProcessor::stringToLog() {
+    return "Command: ";
 }

@@ -10,11 +10,12 @@
 #include <iostream>
 #include <fstream>
 #include "../GameEngine/GameEngine.h"
+#include "../Logging/LoggingObserver.h"
 using namespace std;
 
 enum class Phases;
 
-class Command {
+class Command : public Subject{
 public:
     //Constructors and operator overloads
     Command();
@@ -29,12 +30,15 @@ public:
     string getCommand();
     void saveEffect(string effect);
     string getEffect();
+
+    // ILoggable
+    virtual string stringToLog();
 private:
     string command;
     string effect;
 };
 
-class CommandProcessor {
+class CommandProcessor : public Subject{
 public:
     //Constructor and destructor
     CommandProcessor();
@@ -50,6 +54,9 @@ public:
     vector<Command*> getCommandList(); //accessor for list of commands, just in case
     CommandProcessor& operator =(const CommandProcessor& c);
     friend std::ostream& operator<<(std::ostream& stream, const CommandProcessor& com);
+
+    // ILoggable
+    virtual string stringToLog();
 
 protected:
     virtual string readCommand(); //takes input from the console
