@@ -3,7 +3,6 @@
 //
 
 #include "LoggingDriver.h"
-#include "../Orders/Orders.h"
 
 
 void  LoggingDriver()
@@ -27,39 +26,58 @@ void  LoggingDriver()
 
 
     /*
-     * TEST LOGGING OBSERVER FOR ORDER AND ORDERSLIST
+     * TEST LOGGING OBSERVER
      */
-    OrdersList ordersList;
-    OrdersList* _ordersList = &ordersList;
-    LogObserver* logObserver = new LogObserver(_ordersList);
-    ordersList.add(new DeployOrder(player, 3, columbia));
-    ordersList.add(new AdvanceOrder(player, 1, columbia, california));
-    ordersList.add(new BombOrder(player, california));
-    ordersList.add(new BlockadeOrder(player, columbia));
-    ordersList.add(new AirliftOrder(player, 6, columbia, newyork));
-    ordersList.add(new NegotiateOrder(player, enemy));
+    LogObserver* logObserver;
 
-    GameEngine::addPlayersToList(player);
-    GameEngine::addPlayersToList(enemy);
-    // Show the OrderList
-    std::cout << "========== " << "Here is original orders list: " << ordersList << " ==========" << std::endl;
-    for (const auto &order : ordersList.getOrders())
-    {
-        logObserver = new LogObserver(order);
-        std::cout << *order << std::endl;
-        std::cout << std::boolalpha << "Order is valid: " << order->validate() << std::endl;
-        try{
-            order->execute();
-        }catch(int e) {
-            cout << "An exception occurred. Exception Nr. " << e << '\n';
-        }
-        std::cout << std::endl;
+    DeployOrder* deployOrder = new DeployOrder(player, 3, columbia);
+    AdvanceOrder* advanceOrder = new AdvanceOrder(player, 1, columbia, california);
+    BombOrder* bombOrder = new BombOrder(player, california);
+    OrdersList* ordersList = new OrdersList();
 
+    CommandProcessor* comPro = new CommandProcessor();
+    Command* command = new Command();
+
+
+    vector<Subject*> subjects = {deployOrder, advanceOrder, bombOrder, ordersList, comPro, command};
+
+    for(Subject* s: subjects) {
+        logObserver = new LogObserver(s);
     }
+
+    // Test OrderList::add()
+    ordersList->add(deployOrder);
+    ordersList->add(advanceOrder);
+    ordersList->add(bombOrder);
+
+    // Test Order::execute()
+    for(Order* order : ordersList->getOrders()){
+        order->execute();
+    }
+
+    // Test CommandProcessor::saveCommand()
+    comPro->getCommand();
+
+    // Test Command::saveEffect()
+    command->saveEffect("Testing Logging Effect");
+
+
+
+    // clean up - memory leak
+    delete ordersList;
+    ordersList = NULL;
+
+    delete comPro;
+    comPro = NULL;
+
     delete logObserver;
     logObserver = NULL;
 
-    // After all, delete all territories
+    delete player;
+    player = NULL;
+
+    delete enemy;
+    enemy = NULL;
 
     delete columbia;
     columbia = NULL;
