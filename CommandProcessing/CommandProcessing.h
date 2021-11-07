@@ -27,7 +27,7 @@ public:
     //Accessors and mutators
     void setCommand(string command);
     string getCommand();
-    void setEffect(string effect);
+    void saveEffect(string effect);
     string getEffect();
 private:
     string command;
@@ -41,9 +41,8 @@ public:
     virtual ~CommandProcessor();
 
     //Methods requested from the assignment hand out
-    virtual Phases getCommand(Phases* phase); //public get command method for other classes
-    void saveCommand(string command); //saves the command received by input into a command object
-    void saveEffect(Command* command, string effect); //saves the effect of a command into its object
+    virtual string getCommand(); //public get command method for other classes
+
     bool validate(string command, Phases* phase);
 
     Command* getLastCommandInList();
@@ -51,9 +50,13 @@ public:
     vector<Command*> getCommandList(); //accessor for list of commands, just in case
     CommandProcessor& operator =(const CommandProcessor& c);
     friend std::ostream& operator<<(std::ostream& stream, const CommandProcessor& com);
+
+protected:
+    virtual string readCommand(); //takes input from the console
+    void saveCommand(string command); //saves the command received by input into a command object
 private:
     vector<Command*> commandList;
-    virtual Phases readCommand(Phases* phase);
+
 };
 
 class FileLineReader {
@@ -82,12 +85,14 @@ public:
     FileCommandProcessorAdapter(string filename);
     ~FileCommandProcessorAdapter();
 
-    virtual Phases getCommand(Phases* phase); //public get command method for other classes
+    string getCommand(); //public get command method for other classes
 
     FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter& c);
     friend std::ostream& operator<<(std::ostream& stream, const FileCommandProcessorAdapter& com);
+
+protected:
+    string readCommand(); //protected function to retrieve commands from a file
 private:
-    Phases readCommand(Phases* phase);
     FileLineReader* flr;
     CommandProcessor* comPro;
 };
