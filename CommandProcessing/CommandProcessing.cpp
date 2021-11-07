@@ -13,6 +13,8 @@
 Command::Command() {
     command = "none";
     effect = "none";
+    instruction = "";
+    argument = "";
 }
 
 Command::Command(string command, string effect) {
@@ -20,19 +22,45 @@ Command::Command(string command, string effect) {
     this->effect = effect;
 }
 
+Command::Command(string command, string effect, string instruction) {
+    this->command = command;
+    this->effect = effect;
+    this->instruction = instruction;
+}
+
+Command::Command(string command, string effect, string instruction, string argument) {
+    this->command = command;
+    this->effect = effect;
+    this->instruction = instruction;
+    this->argument = argument;
+}
+
+/**
+ * copy constructor, copies all details
+ * @param c command object to be copied
+ */
 Command::Command(const Command& c) {
     this->command = c.command;
     this->effect = c.effect;
+    this->instruction = c.instruction;
+    this->argument = c.argument;
 }
 
-// Definition is commented because it's only used for debugging
+// Definition is commented out because it's only used for debugging
 Command::~Command() {
-    //cout << "Inside Command destructor of " << this->getCommand() << " with effect " << this->getEffect() << endl;
+    //cout << "Inside Command destructor of [" << this->getCommand() << "] with effect [" << this->getEffect() << "]" << endl;
 }
 
+/**
+ * assignment operator that copies attributes
+ * @param c object to be copied
+ * @return reference to be assigned
+ */
 Command& Command::operator=(const Command& c) {
     command = c.command;
     effect = c.effect;
+    instruction = c.instruction;
+    argument = c.argument;
     return *this;
 }
 
@@ -41,7 +69,6 @@ std::ostream& operator<<(std::ostream& stream, const Command& c) {
 }
 
 //accessors and mutators
-
 void Command::setCommand(string command) {
     this->command = command;
 }
@@ -63,12 +90,36 @@ string Command::getEffect() {
 }
 
 /*
+ * The following accessor and mutators are part of extra attributes of the command class we added to our design.
+ * Please read the descriptions on the private members at CommandProcessing.h
+ */
+
+void Command::setInstruction(string instruction) {
+    this->instruction = instruction;
+}
+
+string Command::getInstruction() {
+    return instruction;
+}
+
+void Command::setArgument(string argument) {
+    this->argument = argument;
+}
+
+string Command::getArgument() {
+    return argument;
+}
+
+/*
  * Command Processor portion
  */
 
 CommandProcessor::CommandProcessor() { }
 
-CommandProcessor::~CommandProcessor() { //destructor will delete all command objects in the collection
+/**
+ * destructor will delete all command objects in the collection
+ */
+CommandProcessor::~CommandProcessor() {
     for (Command* com : commandList) {
         delete com;
         com = NULL;
@@ -76,7 +127,10 @@ CommandProcessor::~CommandProcessor() { //destructor will delete all command obj
     commandList.erase(commandList.begin(), commandList.end());
 }
 
-CommandProcessor& CommandProcessor::operator=(const CommandProcessor& c) { //copy constructor, copies list of Commands
+/**
+ * assignment operator, copies list of Commands
+ */
+CommandProcessor& CommandProcessor::operator=(const CommandProcessor& c) {
     vector<Command*> copyOfCommands;
     for (int i = 0; i < c.commandList.size(); i++) {
         copyOfCommands.push_back(new Command(*c.commandList[i]));
@@ -86,15 +140,17 @@ CommandProcessor& CommandProcessor::operator=(const CommandProcessor& c) { //cop
 }
 
 std::ostream& operator<<(std::ostream& stream, const CommandProcessor& com) {
-    return stream << "\nThis is a command processor object.\n";
+    return stream << "\nThis is a command processor object.\n"; //dummy message, this class does not need to be printed out
 }
 
 /**
  * getCommand function for asking for commands from the console
- * @return last command object in the collection
+ * @return pointer to the last command object in the collection
  */
-string CommandProcessor::getCommand() {
-    return this->readCommand();
+Command* CommandProcessor::getCommand() {
+    string commander = this->readCommand();
+    saveCommand(commander);
+    return getLastCommandInList();
 }
 
 /**
@@ -121,18 +177,18 @@ string CommandProcessor::readCommand() {
     string commander;
     cout << "Enter your command. \n";
     getline(cin, commander); //takes in the entire string until the enter key is pressed in the console
-    saveCommand(commander);
     return commander;
 }
 
 /**
  * validate function to verify that the command entered is valid for the game state the game is in
- * @param command the command that was input from the console
+ * @param command a command object we are testing for valid existing command + valid game state to execute in
  * @param phase the current state of the game
  * @return true or false to indicate whether the command entered was valid for the game state
  */
-bool CommandProcessor::validate(string command, Phases* phase) {
-    stringstream ss(command);
+bool CommandProcessor::validate(Command* command, Phases* phase) {
+    string commander = command->getCommand();
+    stringstream ss(commander);
     string comWord;
     ss >> comWord; //get first token of input string
     std::transform(comWord.begin(), comWord.end(), comWord.begin(),
@@ -140,54 +196,60 @@ bool CommandProcessor::validate(string command, Phases* phase) {
     if (comWord.compare("loadmap") == 0) {
         if (*phase != Phases::START && *phase != Phases::MAPLOADED) {
             cout << "loadmap is only accepted during the phases START and MAPLOADED.";
-            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
+            command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
+            command->setInstruction(comWord);
             return true;
         }
     } else if (comWord.compare("validatemap") == 0) {
         if (*phase != Phases::MAPLOADED) {
             cout << "validatemap is only accepted during the phase MAPLOADED.";
-            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
+            command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
+            command->setInstruction(comWord);
             return true;
         }
     } else if (comWord.compare("addplayer") == 0) {
         if (*phase != Phases::PLAYERSADDED && *phase != Phases::MAPVALIDATED) {
             cout << "addplayer is only accepted during the phases MAPVALIDATED and PLAYERSADDED.";
-            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
+            command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
+            command->setInstruction(comWord);
             return true;
         }
     } else if (comWord.compare("gamestart") == 0) {
         if (*phase != Phases::PLAYERSADDED) {
             cout << "gamestart is only accepted during the phase PLAYERSADDED.";
-            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
+            command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
+            command->setInstruction(comWord);
             return true;
         }
     } else if (comWord.compare("replay") == 0) {
         if (*phase != Phases::WIN) {
             cout << "replay is only accepted during the phase WIN.";
-            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
+            command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
+            command->setInstruction(comWord);
             return true;
         }
     } else if (comWord.compare("quit") == 0) {
         if (*phase != Phases::WIN) {
             cout << "quit is only accepted during the phase WIN.";
-            commandList.back()->saveEffect("Unable to proceed with the command at the current game state.");
+            command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
+            command->setInstruction(comWord);
             return true;
         }
     } else {
         cout << "The command entered was not recognized.";
-        commandList.back()->saveEffect("The command entered was not recognized.");
+        command->saveEffect("The command entered was not recognized. ");
         return false;
     }
 }
@@ -298,18 +360,25 @@ string FileLineReader::getCurrentLine() {
  * FileCommandProcessorAdapter section
  */
 
+/**
+ * Non parameterized constructor, sets usingConsole to true and creates a base class version of CommandProcessor
+ * so that we can use the console version of getCommand().
+ */
 FileCommandProcessorAdapter::FileCommandProcessorAdapter() {
     flr = nullptr;
-    comPro = nullptr;
-} //null init
+    comPro = new CommandProcessor();
+    usingConsole = true;
+}
 
 /**
- * Parameterized constructor where you can specify file to open
+ * Parameterized constructor where you can specify file to open. Initializes a filelinereader but not a commandprocessor
+ * because we will be reading inputs from the file and not from the console.
  * @param filename file path of the text file to be read
  */
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(string filename) {
     flr = new FileLineReader(filename);
-    comPro = new CommandProcessor();
+    comPro = nullptr;
+    usingConsole = false;
 }
 
 /**
@@ -324,24 +393,29 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 
 /**
  * Public method to start reading commands from text file
- * @param phase specify the phase at which the game is currently in
- * @return the next phase to transition into
+ * Calls different versions of getCommand and by extension readCommand by specifying when running the program
+ * if it is taking inputs from a file or from the console.
+ * @return pointer to the command object that was created from reading the input
  */
-string FileCommandProcessorAdapter::getCommand() {
-    return this->readCommand();
+Command* FileCommandProcessorAdapter::getCommand() {
+    if (usingConsole) {
+        return comPro->getCommand();
+    } else {
+        string commander = this->readCommand();
+        saveCommand(commander);
+        return getLastCommandInList();
+    }
 }
 
 /**
- * private method that calls the file reader class and then validates, adds effects to the commands,
- * and returns the next phase to transition into
- * @param phase specify the phase at which the game is currently in
- * @return the next phase to transition into
+ * Adapter pattern: a different version from the console class that is only called when the input comes from a file
+ * protected method that calls the file reader class to retrieve commands from the specified file at the constructor
+ * @return the string that was read from the line it is currently at
  */
 string FileCommandProcessorAdapter::readCommand() {
     if (flr->readFromLine()) {
         string commander = flr->getCurrentLine();
         cout << commander << " has been read from the file." << endl;
-        saveCommand(commander);
         return commander;
     } else {
         cout << "There are no more commands to be read from the file. Aborting program." << endl;

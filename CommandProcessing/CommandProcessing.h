@@ -20,6 +20,11 @@ public:
     //Constructors and operator overloads
     Command();
     Command(string command, string effect);
+
+    //please read private members for explanation on the following two
+    Command(string command, string effect, string instruction, string argument);
+    Command(string command, string effect, string instruction);
+
     Command(const Command& c);
     ~Command();
     Command& operator =(const Command& c);
@@ -30,12 +35,18 @@ public:
     string getCommand();
     void saveEffect(string effect);
     string getEffect();
+    void setInstruction(string instruction);
+    string getInstruction();
+    void setArgument(string argument);
+    string getArgument();
 
     // ILoggable
     virtual string stringToLog();
 private:
-    string command;
-    string effect;
+    string command; //entire line of input from console or file by the user
+    string effect; //effect of the command, a description
+    string instruction; //first word of the command, tells engine what to do
+    string argument; //second word of the command if any, an additional parameter such as file or name
 };
 
 class CommandProcessor : public Subject{
@@ -45,9 +56,9 @@ public:
     virtual ~CommandProcessor();
 
     //Methods requested from the assignment hand out
-    virtual string getCommand(); //public get command method for other classes
+    virtual Command* getCommand(); //public get command method for other classes
 
-    bool validate(string command, Phases* phase);
+    bool validate(Command* command, Phases* phase);
 
     Command* getLastCommandInList();
 
@@ -92,14 +103,17 @@ public:
     FileCommandProcessorAdapter(string filename);
     ~FileCommandProcessorAdapter();
 
-    string getCommand(); //public get command method for other classes
+    //adapter pattern: explained in definition
+    Command* getCommand(); //public get command method for other classes
 
     FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter& c);
     friend std::ostream& operator<<(std::ostream& stream, const FileCommandProcessorAdapter& com);
 
 protected:
+    //adapter pattern: explained in definition
     string readCommand(); //protected function to retrieve commands from a file
 private:
+    bool usingConsole; //for adapter pattern
     FileLineReader* flr;
     CommandProcessor* comPro;
 };
