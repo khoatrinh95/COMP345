@@ -7,6 +7,7 @@
 
 #include <string>
 #include "../Player/Player.h"
+#include "../GameEngine/GameEngine.h"
 #include <string>
 #include <regex>
 #include <fstream>
@@ -21,6 +22,7 @@ class Map;
 class Territory;
 class Continent;
 class Player;
+class GameEngine;
 
 class MapLoader{
 public:
@@ -28,7 +30,9 @@ public:
     MapLoader(MapLoader const &anotherMapLoader);
     MapLoader& operator = (MapLoader const &anotherMapLoader);
     ~MapLoader();
+
     static Map* loadMapFile(string fileName);
+
 private:
     friend Map;
     friend ostream& operator << (ostream &stream, const MapLoader &mapLoader);
@@ -43,6 +47,11 @@ public:
     int validate() const;
     void setOwnerOfTerritory(Player *player); ///////////// for demo purpose only, to be removed later
     void makeContinentContain2Territories(); ///////////// for demo purpose only, to be removed later
+
+    ///////////////////////////////////////////////////////////SARAH
+    int getNumContinent();
+    Continent ** getContinent() const;
+    ///////////////////////////////////////////////////////////////
 private:
     Territory** territories;
     Continent** continents;
@@ -79,6 +88,11 @@ public:
     void addPendingIncomingArmies(int armies);
     void addPendingOutgoingArmies(int armies);
     int getNumberOfMovableArmies() const;
+
+    /////////////////////////////////////////////////Sarah
+    int getNumAdjTerritories() const;
+    Territory ** getAdjTerritories() const;
+    ///////////////////////////////////////////////
 private:
     Territory** adjTerritories;
     Continent* continent;
@@ -105,6 +119,9 @@ public:
     string getName() const;
     ~Continent();
     Player* getOwner() const;
+    ////////////////////////////////////////////////////////// SARAH
+    int getBonus() const;
+    /////////////////////////////////////////////////////////////////
 private:
     int id;
     string name;

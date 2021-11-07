@@ -883,6 +883,7 @@ ostream& operator << (ostream &stream, const MapLoader &mapLoader) {
     return stream;
 }
 
+
 ostream& operator << (ostream &stream, const Map &map) {
     stream << "Number of Territories: " << map.numTerritories;
     stream << "\nNumber of Continents: " << map.numContinents;
@@ -919,6 +920,16 @@ ostream& operator << (ostream &stream, const Territory &territory) {
     }
     return stream;
 }
+///////////////////////////////////////////////////////////////////////////////Sarah
+int Territory::getNumAdjTerritories() const {
+    return numAdjTerritories;
+}
+
+Territory **Territory::getAdjTerritories() const {
+    return adjTerritories;
+}
+/////////////////////////////////////////////////////////////////////////////////
+
 
 ostream& operator << (ostream& stream, const Continent& continent) {
     stream << "ID: " << continent.id << ", Name: " << continent.name << ", Number of territories: " << continent.numTerritories << ", Bonus: " << continent.bonus;
@@ -938,6 +949,11 @@ ostream& operator << (ostream& stream, const Continent& continent) {
     }
     return stream;
 }
+//////////////////////////////////////////////////////////sarah
+int Continent::getBonus() const {
+    return bonus;
+}
+//////////////////////////////////////////////////////////////////////
 
 ////// for demo purpose only, to be removed later
 void Map::setOwnerOfTerritory(Player *player) {
@@ -951,3 +967,13 @@ void Map::makeContinentContain2Territories() {
     continents[0]->territories[1] = continents[1]->territories[0];
     continents[0]->territories[0]->numArmies = 111;
 }
+
+/////////////////////////////////////////////////////////////SARAH
+int Map::getNumContinent() {
+    return this->numContinents;
+}
+
+Continent **Map::getContinent() const {
+    return this->continents;
+}
+/////////////////////////////////////////////////////////////////////

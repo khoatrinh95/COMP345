@@ -7,13 +7,15 @@
 
 #include <string>
 #include "../Orders/Orders.h"
+#include "../Map/Map.h"
 #include <vector>
 using namespace std;
 
 class Player;
 class Order;
+class Card;
+class Territory;
 
-#pragma once
 class Card{
 public:
     //constructors and destructors
@@ -33,11 +35,14 @@ public:
     string getType() const; //accessor
     void setType(string typer); //mutator
 
+    //////////////////////////////////////////////////////Sarah
+    void useCardtoCreateOrder(Player *player, int numArmies, Territory *source,Territory *target);
+    ///////////////////////////////////////////////////
+
 private:
     string type;
 };
 
-#pragma once
 class Deck{
 public:
     //constructors and destructors
@@ -61,7 +66,6 @@ private:
     vector<Card*> cards;
 };
 
-#pragma once
 class Hand{
 public:
     //constructors and destructors
@@ -80,9 +84,13 @@ public:
 
     int getSize() const; //function to see the size of the player's hand
     string printHand() const; //prints out all cards on hand
+    //////////////////////////////////////////////////
+    vector<Card *> getHand() const;
+    /////////////////////////////////////////////////////
 
 private:
     vector<Card*> hand;
+
 };
 
 class DiplomacyCard : public Card

@@ -5,7 +5,6 @@
 #include<iostream>
 #include <sstream>
 #include "Cards.h"
-
 #include <ctime>
 
 using namespace std;
@@ -70,6 +69,8 @@ Card* Card::play(Player *&player) {
     return this;
 }
 
+
+
 void Card::testType() {
     string validTypes[] = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};
     bool correct = false;
@@ -85,6 +86,20 @@ void Card::testType() {
     }
 
 }
+//////////////////////////////////////////////////////////Sarah
+void Card::useCardtoCreateOrder(Player *player, int numArmies, Territory *source, Territory *target) {
+    if (type.compare("bomb") == 0) {
+        player->getPlayerOrdersList()->add(new BombOrder(player,target));
+    } else if (type.compare("blockade") == 0) {
+        player->getPlayerOrdersList()->add(new BlockadeOrder(player, source));
+    } else if (type.compare("airlift") == 0) {
+        player->getPlayerOrdersList()->add(new AirliftOrder(player, numArmies, source, target));
+    } else if (type.compare("negotiate") == 0) {
+        player->getPlayerOrdersList()->add(new NegotiateOrder(player, target->getOwner()));
+    }
+    //////////////missing adding the card back to the deck
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Deck::Deck(){
 }
@@ -221,6 +236,7 @@ void Hand::drawFromDeck(Deck* deck) {
     hand.push_back(deck->draw());
 }
 
+
 void Hand::playAllCards(Deck* deck, Player *&player) {
     cout << "Playing all cards in hand!" << endl;
     int size = hand.size();
@@ -241,3 +257,11 @@ bool Hand::playOneCard(int position, Deck* deck, Player *&player) {
     }
 
 }
+
+vector<Card *> Hand::getHand() const  {
+    return hand;
+}
+
+
+
+

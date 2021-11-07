@@ -4,10 +4,11 @@
 
 #include "GameEngine.h"
 #include <algorithm>
-
+#include <math.h>
 #include <string>
 
 std::vector<Player*> GameEngine::players_;
+Map * GameEngine :: map_;
 // ----------------------------------START UP----------------------------------------------//
 void StartUp::startUp(Phases *phase) {
     printTitle();
@@ -337,6 +338,107 @@ void GameEngine::assignRandomCardsToPlayers() {
 }
 
 
+////////////////////////////////////////////////////////////SARAH _PART 3
+
+void GameEngine::mainGameLoop() {
+    bool ownAllContinents = false;
+    while (players_.size()!=1) {
+        // remove a player from the game if s/he does not own any territory
+
+        // add armies to each player Reinforcement Pool
+        reinforcementPhase();
+
+        // let each player decide his/her order list
+        issueOrdersPhase();
+
+        // execute each player orders from his/her order list
+        executeOrdersPhase();
 
 
 
+        for (auto &player :players_){
+            if(player->getTerritories().size() == 0){
+                removePlayer(player);
+            }
+        }
+    }
+    cout << "The winner of the game is : "<< players_.at(0)->getName()<< endl;
+}
+
+/**
+ * assign reinforcement for each player
+ */
+void GameEngine::reinforcementPhase() {
+    for (auto &player:players_){
+        int armies = floor(player->getTerritories().size()/3);
+        for(int i = 0; i<map_->getNumContinent();i++){
+            if (map_->getContinent()[i]->getOwner()==player){
+                armies = armies + map_->getContinent()[i]->getBonus();
+            }
+        }
+        if (armies<3){
+            armies = 3 ;
+        }
+        player->setReinforcementPool(armies);
+    }
+}
+
+/**
+ * asking the player to start their issuing their orders
+ */
+void GameEngine::issueOrdersPhase() {
+    for (auto &player : players_){
+        player->issueOrder();
+    }
+}
+
+/**
+ * execute player orders from their order list
+ */
+void GameEngine::executeOrdersPhase() {
+    int longestOrderList = 0 ;
+    // find the longest order list of a player
+    for (auto &player:players_){
+        if (player->getPlayerOrdersList()->size()>longestOrderList){
+            longestOrderList = player->getPlayerOrdersList()->size();
+        }
+    }
+    // execute all deploy orders of all players in round-robin fashion
+    for (int i = 0 ; i<longestOrderList; i++){
+        for (auto &player:players_){
+            if(player->getPlayerOrdersList()->size()>i){
+              if (player->getPlayerOrdersList()->getOrders().at(i)->getType() == DEPLOY){
+                  player->getPlayerOrdersList()->getOrders().at(i)->execute();
+              }
+            }
+        }
+    }
+    // execute all non-deploy orders of all prayers in round-robin fashion
+    for (int i = 0 ; i<longestOrderList; i++){
+        for (auto &player:players_){
+            if(player->getPlayerOrdersList()->size()>i){
+                if (player->getPlayerOrdersList()->getOrders().at(i)->getType() != DEPLOY){
+                    player->getPlayerOrdersList()->getOrders().at(i)->execute();
+                }
+            }
+        }
+    }
+
+}
+/**
+ * remove player from a player list
+ * @param player
+ */
+void GameEngine::removePlayer(Player *player) {
+    for (int i = 0; i<players_.size();i++){
+        if (players_.at(i)->getName()==player->getName()){
+            players_.erase(next(begin(players_), + i));
+            delete player;
+            player = nullptr;
+        }
+    }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////

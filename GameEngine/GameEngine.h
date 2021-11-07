@@ -8,12 +8,14 @@
 #include "../cards/Cards.h"
 #include "../Map/Map.h"
 #include "../Player/Player.h"
-#include "../Map/Map.h"
 #include <string>
 #include <iostream>
 #include <vector>
 using namespace std;
 class Player;
+class Map;
+class Territory;
+
 enum class Phases{START, MAPLOADED, MAPVALIDATED, PLAYERSADDED, ASSIGNREINFORCEMENT, ISSUEORDERS, EXECUTEORDERS, WIN};
 
 
@@ -65,9 +67,17 @@ public:
     static void addPlayersToList(Player* player);
     static void clearPlayerList();
     static void assignRandomCardsToPlayers();
+    //////////////////////////////////////////////////Sarah GAME PLAY _____ PART 3
+    static void mainGameLoop();
+    static void reinforcementPhase();
+    static void issueOrdersPhase();
+    static void executeOrdersPhase();
+    static void removePlayer(Player *player);
+
+    ////////////////////////////////////////////////////////////////////////////
 private:
     Phases *phase;
     static std::vector<Player*> players_;
-    Map* map_ = MapLoader::loadMapFile("../Map/maps/canada.map");
+    static Map* map_ ;
 };
 #endif //COMP345_N11_GAMEENGINE_H
