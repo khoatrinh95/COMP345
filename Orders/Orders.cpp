@@ -63,6 +63,7 @@ std::ostream &operator<<(std::ostream &output, const Order &order) {
 void Order::execute() {
     if (validate()) {
         execute_();
+        notify();
     } else {
         std::cout << "Order invalidated. Skipping..." << std::endl;
         undo_();
@@ -163,6 +164,8 @@ int OrdersList::size() const {
 // Add an order to the OrderList.
 void OrdersList::add(Order *order) {
     orders_.push_back(order);
+    contentToLog = toString(order->getType());
+    notify();
 }
 
 // Move an order within the OrderList from `area` position to `targetRange` position.
@@ -676,4 +679,64 @@ void NegotiateOrder::execute_() {
 // Get the type of the Order sub-class
 OrderType NegotiateOrder::getType() const {
     return NEGOTIATE;
+}
+
+// for LoggingObserver
+string Order::stringToLog() {
+    return "Executing Order";
+}
+
+string OrdersList::stringToLog(){
+    return "Adding to OrdersList: ";
+}
+
+
+string DeployOrder::stringToLog() {
+    return "Executing Deploy Order";
+}
+
+
+string AirliftOrder::stringToLog() {
+    return "Executing Airlift Order";
+}
+
+
+string NegotiateOrder::stringToLog() {
+    return "Executing Negotiate Order";
+}
+
+
+string AdvanceOrder::stringToLog() {
+    return "Executing Advance Order";
+}
+
+
+string BombOrder::stringToLog() {
+    return "Executing Bomb Order";
+}
+
+
+string BlockadeOrder::stringToLog() {
+    return "Executing Blockade Order";
+}
+
+// convert enum OrderType to string
+string toString (short enumType) {
+    switch( enumType )
+    {
+        case OrderType::DEPLOY:
+            return "Deploy";
+        case OrderType::ADVANCE:
+            return "Advance";
+        case OrderType::BOMB:
+            return "Bomb";
+        case OrderType::BLOCKADE:
+            return "Blockade";
+        case OrderType::AIRLIFT:
+            return "Airlift";
+        case OrderType::NEGOTIATE:
+            return "Negotiate";
+        default:
+            return "Not recognized..";
+    }
 }

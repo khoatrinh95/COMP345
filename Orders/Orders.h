@@ -10,6 +10,7 @@
 
 #include "../Map/Map.h"
 #include "../Player/Player.h"
+#include "../Logging/LoggingObserver.h"
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -28,8 +29,9 @@ enum OrderType : short
     NEGOTIATE,
 };
 
+string toString (short enumType);
 
-class Order
+class Order : public Subject
 {
 public:
     /**
@@ -44,6 +46,9 @@ public:
     virtual Order* clone() const = 0;
     virtual bool validate() const = 0;
     virtual OrderType getType() const = 0;
+
+    // Iloggable
+    virtual string stringToLog();
 
 protected:
     Player* issuer_;
@@ -63,7 +68,7 @@ private:
 /***
  * The OrderList class contains...
  */
-class OrdersList
+class OrdersList : public Subject
 {
 public:
 
@@ -82,6 +87,8 @@ public:
     void move(int area, int targetRange);
     void remove(int target);
 
+    // Iloggable
+    virtual string stringToLog();
 private:
     std::vector<Order*> orders_;
 };
@@ -102,6 +109,8 @@ public:
     bool validate() const;
     OrderType getType() const;
 
+    // Iloggable
+    virtual string stringToLog();
 protected:
     void execute_();
     void undo_();
@@ -128,6 +137,8 @@ public:
     bool validate() const;
     OrderType getType() const;
 
+    // Iloggable
+    virtual string stringToLog();
 protected:
     void execute_();
     void undo_();
@@ -151,6 +162,8 @@ public:
     bool validate() const;
     OrderType getType() const;
 
+    // Iloggable
+    virtual string stringToLog();
 protected:
     void execute_();
     std::ostream &print_(std::ostream &output) const;
@@ -174,6 +187,8 @@ public:
     bool validate() const;
     OrderType getType() const;
 
+    // Iloggable
+    virtual string stringToLog();
 protected:
     void execute_();
     void undo_();
@@ -200,6 +215,8 @@ public:
     bool validate() const;
     OrderType getType() const;
 
+    // Iloggable
+    virtual string stringToLog();
 protected:
     void execute_();
     std::ostream &print_(std::ostream &output) const;
@@ -223,6 +240,8 @@ public:
     bool validate() const;
     OrderType getType() const;
 
+    // Iloggable
+    virtual string stringToLog();
 protected:
     void execute_();
     std::ostream &print_(std::ostream &output) const;
