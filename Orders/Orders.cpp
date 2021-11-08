@@ -25,7 +25,6 @@ namespace {
         if (relationsWithHostOfTarget) {
             std::cout << attacker->getName() << " and " << ownerOfTarget->getName()
                       << " cannot attack each other for the rest of this turn. ";
-                      << " cannot attack each other for the rest of this turn. ";
         }
 
         return attacker == ownerOfTarget || !relationsWithHostOfTarget;
