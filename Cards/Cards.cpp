@@ -117,8 +117,10 @@ Deck::Deck(const Deck& d){
 Deck::~Deck() {
     cout << "Inside destructor of Deck" << endl;
     for (Card* card : cards) {
-        delete card;
-        card = NULL;
+        if(card != nullptr) {
+            delete card;
+            card = nullptr;
+        }
     }
     cards.erase(cards.begin(), cards.end());
 }
@@ -191,8 +193,10 @@ Hand::Hand(const Hand& h){
 Hand::~Hand() {
     cout << "Inside destructor of Hand" << endl;
     for (Card* card : hand) {
-        delete card;
-        card = NULL;
+        if(card != nullptr) {
+            delete card;
+            card = nullptr;
+        }
     }
     hand.erase(hand.begin(), hand.end());
 }
