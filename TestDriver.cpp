@@ -6,11 +6,11 @@
 
 int main(int argc, char* argv[]){
     cout << "Hello COMP345" << endl;
-//    orderDriver();
+    orderDriver();
 //    PlayerDriver();
 //    CardDriver();
 //    mapDriver();
-    GameEngineDriver();
+//    GameEngineDriver();
 //    LoggingDriver();
 
     /* uncomment the block below for driver tests for CommandProcessing (part 1)

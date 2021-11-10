@@ -19,6 +19,8 @@ void  orderDriver()
     Player* player = new Player("Thong");
     Player* enemy = new Player("Khoa");
 
+
+
     // Add
     player->addTerritory(columbia);
     player->addTerritory(newyork);
@@ -28,8 +30,10 @@ void  orderDriver()
     ordersList.add(new DeployOrder(player, 3, columbia));
     ordersList.add(new AdvanceOrder(player, 1, columbia, california));
     ordersList.add(new BombOrder(player, california));
+    //    (5) the blockade order transfers ownership to the Neutral player
     ordersList.add(new BlockadeOrder(player, columbia));
     ordersList.add(new AirliftOrder(player, 6, columbia, newyork));
+    //(4) the negotiate order prevents attacks between the two players involved
     ordersList.add(new NegotiateOrder(player, enemy));
 
     // adding random cards to player
@@ -55,6 +59,7 @@ void  orderDriver()
     for (const auto &order : ordersList.getOrders())
     {
         std::cout << *order << std::endl;
+        //(1) each order is validated before being executed according to the above descriptions;
         std::cout << std::boolalpha << "Order is valid: " << order->validate() << std::endl;
         try{
             order->execute();
