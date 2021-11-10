@@ -7,7 +7,9 @@
 
 void GameEngineDriver(){
     GameEngine *gameEngine = new GameEngine();
+    LogObserver* logObserver = new LogObserver(gameEngine);
     gameEngine -> startupPhase();
     cout << *gameEngine;
     delete gameEngine;
+    delete logObserver;
 }

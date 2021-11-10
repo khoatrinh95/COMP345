@@ -211,7 +211,8 @@ void GameEngine::startupPhase() {
                 cout << "Loading map \"" << command->getArgument() << "\"... " << endl;
                 loadMap(command->getArgument());
                 command->saveEffect("Map [" + command->getArgument() + "] loaded. Transition to [maploaded]");
-                *phase = Phases::MAPLOADED;
+                transition(Phases::MAPLOADED);
+//                *phase = Phases::MAPLOADED;
             } else if(instruction == "validatemap" && *phase == Phases::MAPLOADED) {
 
                 // validating map and printing the result
@@ -221,7 +222,8 @@ void GameEngine::startupPhase() {
                     case 0:
                         cout << "The map is valid." << endl;
                         command->saveEffect("Map validated. Transition to [mapvalidated]");
-                        *phase = Phases::MAPVALIDATED;
+                        transition(Phases::MAPVALIDATED);
+//                        *phase = Phases::MAPVALIDATED;
                         break;
                     case 1:
                         cout << "The map is not a connected graph" << endl;
@@ -243,7 +245,8 @@ void GameEngine::startupPhase() {
                 cout << "Players joined the game:" << endl;
                 cout << getPlayersNames() << endl;
                 command->saveEffect("Player [" + command->getArgument() + "] added. Transition to [playersadded]");
-                *phase = Phases::PLAYERSADDED;
+                transition(Phases::PLAYERSADDED);
+//                *phase = Phases::PLAYERSADDED;
             } else if(instruction == "gamestart" && *phase == Phases::PLAYERSADDED && players_.size() >= 2) {
 
                 // initializing the game
@@ -259,7 +262,8 @@ void GameEngine::startupPhase() {
                 initialCardDrawing();
                 cout << "Initial cards drawn" << endl;
                 command->saveEffect("Game initiated. Territories distributed. Playing order determined. Initial reinforcement accomplished. Initial cards drawn. Transition to [assignreinforcement]");
-                *phase = Phases::ASSIGNREINFORCEMENT;
+                transition(Phases::ASSIGNREINFORCEMENT);
+//                *phase = Phases::ASSIGNREINFORCEMENT;
                 *mode = Modes::STARTUP;
             } else {
                 command->saveEffect("Wrong command. Command Ignored.");
@@ -284,7 +288,8 @@ void GameEngine::loadMap(string filename){
 
 void GameEngine::validateMap(Phases *phase){
     cout << "***  Inside validateMap  ***" << endl;
-    *phase = Phases::MAPVALIDATED;
+    transition(Phases::MAPVALIDATED);
+//    *phase = Phases::MAPVALIDATED;
 };
 
 
@@ -473,3 +478,37 @@ void GameEngine::executeOrdersPhase() {
     }
 
 }
+
+// Iloggable
+string GameEngine::stringToLog() {
+    return "Game Engine - changing to phase: ";
+}
+
+string GameEngine::phaseToString(Phases *phase) {
+    switch (*phase){
+        case Phases::ASSIGNREINFORCEMENT:
+            return "Assign Reinforcement";
+        case Phases::MAPVALIDATED:
+            return "Map Validated";
+        case Phases::PLAYERSADDED:
+            return "Players Added";
+        case Phases::MAPLOADED:
+            return "Map loaded";
+        case Phases::EXECUTEORDERS:
+            return "Execute Orders";
+        case Phases::ISSUEORDERS:
+            return "Issue Orders";
+        case Phases::WIN:
+            return "Win";
+        case Phases::START:
+            return "Start";
+    }
+}
+
+void GameEngine::transition(Phases phaseToTransition) {
+    *phase = phaseToTransition;
+    string phaseString = phaseToString(phase);
+    contentToLog = phaseString;
+    notify();
+}
+
