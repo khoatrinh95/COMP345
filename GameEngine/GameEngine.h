@@ -53,7 +53,9 @@ public:
     virtual string stringToLog();
 
 private:
-    const string mapDirectory;
+    const int MIN_NUM_PLAYERS;
+    const int MAX_NUM_PLAYERS;
+    const string MAP_DIRECTORY;
     static Player *neutralPlayer;
     vector<Player *> playingOrder;
     Phases *phase;

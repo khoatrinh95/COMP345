@@ -286,9 +286,9 @@ Player &Player::operator=(const Player &anotherPlayer) {
  */
 ostream &operator<<(ostream &out, const Player &player) {
     if (player.territories.empty()){
-        out << "Player name is "<<player.name<<", and he has no territories"<<endl;
+        out << "Player's name is "<<player.name<<", and he/she has no territories"<<endl;
     }else{
-        out << "Player name is "<< player.name<< ", and he has the following territories:"<<endl<<"\t";
+        out << "Player name is "<< player.name<< ", and he/she has the following territories:"<<endl<<"\t";
         for (auto &territory : player.territories) {
             if(territory != nullptr) {
                 out << *territory << endl<<"\t";
@@ -310,6 +310,7 @@ ostream &operator<<(ostream &out, const Player &player) {
         out <<"Player orders list contain these orders"<<endl;
         out <<*player.playerOrdersList<<endl;
     }
+    out << player.name << " has " << player.reinforcement_pool << " army(ies) in his/her reinforcement pool." << endl;
     out<< endl;
 
     return out;
