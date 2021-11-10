@@ -212,6 +212,7 @@ void GameEngine::startupPhase() {
                 loadMap(command->getArgument());
                 command->saveEffect("Map [" + command->getArgument() + "] loaded. Transition to [maploaded]");
                 transition(Phases::MAPLOADED);
+//                *phase = Phases::MAPLOADED;
             } else if(instruction == "validatemap" && *phase == Phases::MAPLOADED) {
 
                 // validating map and printing the result
@@ -222,6 +223,7 @@ void GameEngine::startupPhase() {
                         cout << "The map is valid." << endl;
                         command->saveEffect("Map validated. Transition to [mapvalidated]");
                         transition(Phases::MAPVALIDATED);
+//                        *phase = Phases::MAPVALIDATED;
                         break;
                     case 1:
                         cout << "The map is not a connected graph" << endl;
@@ -244,6 +246,7 @@ void GameEngine::startupPhase() {
                 cout << getPlayersNames() << endl;
                 command->saveEffect("Player [" + command->getArgument() + "] added. Transition to [playersadded]");
                 transition(Phases::PLAYERSADDED);
+//                *phase = Phases::PLAYERSADDED;
             } else if(instruction == "gamestart" && *phase == Phases::PLAYERSADDED && players_.size() >= 2) {
 
                 // initializing the game
@@ -260,6 +263,7 @@ void GameEngine::startupPhase() {
                 cout << "Initial cards drawn" << endl;
                 command->saveEffect("Game initiated. Territories distributed. Playing order determined. Initial reinforcement accomplished. Initial cards drawn. Transition to [assignreinforcement]");
                 transition(Phases::ASSIGNREINFORCEMENT);
+//                *phase = Phases::ASSIGNREINFORCEMENT;
                 *mode = Modes::STARTUP;
             } else {
                 command->saveEffect("Wrong command. Command Ignored.");
@@ -285,6 +289,7 @@ void GameEngine::loadMap(string filename){
 void GameEngine::validateMap(Phases *phase){
     cout << "***  Inside validateMap  ***" << endl;
     transition(Phases::MAPVALIDATED);
+//    *phase = Phases::MAPVALIDATED;
 };
 
 
