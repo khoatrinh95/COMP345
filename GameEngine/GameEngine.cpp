@@ -21,24 +21,21 @@ Player *GameEngine::neutralPlayer = new Player("Neutral", true);
  */
 
 // Default constructor
-GameEngine::GameEngine() : mapDirectory("../Map/maps/") {
+GameEngine::GameEngine() : MAP_DIRECTORY("../Map/maps/"), MIN_NUM_PLAYERS(2), MAX_NUM_PLAYERS(6) {
     phase = new Phases(Phases::START);
     mode = new Modes(Modes::STARTUP);
     commandProcessor = new FileCommandProcessorAdapter("../GameEngine/GECommands.txt");
-    deck->addCard(new Card("bomb"));
-    deck->addCard(new Card("reinforcement"));
-    deck->addCard(new Card("blockade"));
-    deck->addCard(new Card("airlift"));
-    deck->addCard(new Card("diplomacy"));
-    deck->addCard(new Card("bomb"));
-    deck->addCard(new Card("reinforcement"));
-    deck->addCard(new Card("blockade"));
-    deck->addCard(new Card("airlift"));
-    deck->addCard(new Card("diplomacy"));
+    for(int i = 0; i < 10; i++) {
+        deck->addCard(new Card("bomb"));
+        deck->addCard(new Card("reinforcement"));
+        deck->addCard(new Card("blockade"));
+        deck->addCard(new Card("airlift"));
+        deck->addCard(new Card("diplomacy"));
+    }
 }
 
 // Copy constructor of Game Engine
-GameEngine::GameEngine(const GameEngine &anotherGameEngine) : mapDirectory(anotherGameEngine.mapDirectory) {
+GameEngine::GameEngine(const GameEngine &anotherGameEngine) : MAP_DIRECTORY(anotherGameEngine.MAP_DIRECTORY), MIN_NUM_PLAYERS(anotherGameEngine.MIN_NUM_PLAYERS), MAX_NUM_PLAYERS(anotherGameEngine.MAX_NUM_PLAYERS) {
     this -> phase = new Phases(*anotherGameEngine.phase);
     this -> mode = new Modes(*anotherGameEngine.mode);
     for (auto player : anotherGameEngine.players_){
@@ -100,12 +97,10 @@ GameEngine &GameEngine::operator=(const GameEngine &anotherGameEngine) {
     this -> phase = new Phases(*anotherGameEngine.phase);
     this -> mode = new Modes(*anotherGameEngine.mode);
     for (auto player : anotherGameEngine.players_){
-        Player* player_temp = new Player(*player);
-        this->players_.push_back(player_temp);
+        this->players_.push_back(new Player(*player));
     }
     for (auto player : anotherGameEngine.playingOrder){
-        Player* player_temp = new Player(*player);
-        this->playingOrder.push_back(player_temp);
+        this->playingOrder.push_back(new Player(*player));
     }
     this->commandProcessor = new CommandProcessor(*anotherGameEngine.commandProcessor);
     this->deck = new Deck(*anotherGameEngine.deck);
@@ -116,15 +111,10 @@ GameEngine &GameEngine::operator=(const GameEngine &anotherGameEngine) {
 
 // Stream insertion
 ostream &operator<<(ostream &stream, const GameEngine &gameEngine) {
-//    string toPrint = "Here are the players currently playing: \n";
-//    for (auto player : gameEngine.players_){
-//        toPrint.append(player->getName()).append("\n");
-//    }
-//    stream << toPrint;
-    stream << "Here are the players currently playing:\n";
+    stream << "Here are the players currently playing:" << endl;
     for (auto player : gameEngine.players_) {
         if(player != nullptr) {
-            stream << *player << "\n";
+            stream << *player << endl;
         }
     }
     return stream;
@@ -235,7 +225,7 @@ void GameEngine::startupPhase() {
                     default:
                         cout << "Unknown issue!" << endl;
                 }
-            } else if(instruction == "addplayer" && (*phase == Phases::MAPVALIDATED || *phase == Phases::PLAYERSADDED) && players_.size() < 6) {
+            } else if(instruction == "addplayer" && (*phase == Phases::MAPVALIDATED || *phase == Phases::PLAYERSADDED) && players_.size() < MAX_NUM_PLAYERS) {
 
                 // adding a player
                 cout << "Adding player \"" << command->getArgument() << "\"... " << endl;
@@ -244,7 +234,7 @@ void GameEngine::startupPhase() {
                 cout << getPlayersNames() << endl;
                 command->saveEffect("Player [" + command->getArgument() + "] added. Transition to [playersadded]");
                 *phase = Phases::PLAYERSADDED;
-            } else if(instruction == "gamestart" && *phase == Phases::PLAYERSADDED && players_.size() >= 2) {
+            } else if(instruction == "gamestart" && *phase == Phases::PLAYERSADDED && players_.size() >= MIN_NUM_PLAYERS) {
 
                 // initializing the game
                 cout << "Starting the game... " << endl;
@@ -278,7 +268,7 @@ void GameEngine::startupPhase() {
 
 void GameEngine::loadMap(string filename){
     cout << "Loading map ..." << endl;
-    map_ = MapLoader::loadMapFile(mapDirectory + filename);
+    map_ = MapLoader::loadMapFile(MAP_DIRECTORY + filename);
     cout << "Map was loaded successfully!" << endl;
 };
 
@@ -292,7 +282,6 @@ void GameEngine::validateMap(Phases *phase){
  * Assign territories to players
  */
 void GameEngine::assignTerritories() {
-    cout << "***  Inside assignTerritories  ***" << endl;
     int numPlayers = static_cast<int>(players_.size());
     Territory **territories = map_->getTerritories();
     vector<Territory*> vecTerritories;
@@ -356,8 +345,8 @@ void GameEngine::initialReinforcement() {
 void GameEngine::initialCardDrawing() {
     for (auto &player : players_) {
         for (int i = 0; i < 2; i++) {
-            if(player == nullptr) {
-                if(player->getPlayerCards() == nullptr && deck == nullptr) {
+            if(player != nullptr) {
+                if(player->getPlayerCards() != nullptr && deck != nullptr) {
                     player->getPlayerCards()->drawFromDeck(deck);
                 }
             }
