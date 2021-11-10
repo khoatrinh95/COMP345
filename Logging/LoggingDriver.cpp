@@ -61,7 +61,7 @@ void  LoggingDriver()
     // Test Command::saveEffect()
     command->saveEffect("Testing Logging Effect");
 
-
+    // Test GameEngine::transition() -> will be tested in GameEngineDriver()
 
     // clean up - memory leak
     delete ordersList;
@@ -87,6 +87,4 @@ void  LoggingDriver()
 
     delete california;
     california = NULL;
-
-//    GameEngine::clearPlayerList();
 }
