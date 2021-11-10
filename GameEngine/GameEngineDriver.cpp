@@ -7,7 +7,7 @@
 
 void GameEngineDriver(){
     GameEngine *gameEngine = new GameEngine();
-    gameEngine -> playGame();
+    gameEngine -> startupPhase();
     cout << *gameEngine;
     delete gameEngine;
 }

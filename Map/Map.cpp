@@ -762,6 +762,11 @@ int Territory::getNumberOfMovableArmies() const {
     return numArmies + pendingIncomingArmies - pendingOutgoingArmies;
 }
 
+// Returns the containing continent
+Continent * Territory::getContinent() const {
+    return continent;
+}
+
 // Continent default constructor
 Continent::Continent() {
     cout << "into Continent()" << endl;
@@ -977,3 +982,11 @@ Continent **Map::getContinent() const {
     return this->continents;
 }
 /////////////////////////////////////////////////////////////////////
+
+int Map::getNumTerritories() {
+    return numTerritories;
+}
+
+Territory **Map::getTerritories() const {
+    return territories;
+}

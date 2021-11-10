@@ -10,8 +10,8 @@ int main(int argc, char* argv[]){
 //    PlayerDriver();
 //    CardDriver();
 //    mapDriver();
-//    GameEngineDriver();
-    LoggingDriver();
+    GameEngineDriver();
+//    LoggingDriver();
 
     /* uncomment the block below for driver tests for CommandProcessing (part 1)
      * To run, go to the top bar menu in CLion and click on Run, then go to Edit Configurations,

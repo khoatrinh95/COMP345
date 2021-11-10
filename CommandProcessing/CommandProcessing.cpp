@@ -189,17 +189,26 @@ string CommandProcessor::readCommand() {
 bool CommandProcessor::validate(Command* command, Phases* phase) {
     string commander = command->getCommand();
     stringstream ss(commander);
-    string comWord;
+    string comWord, comArg;
     ss >> comWord; //get first token of input string
+    if(comWord == "loadmap" || comWord == "addplayer") {
+        ss >> comArg;
+    }
     std::transform(comWord.begin(), comWord.end(), comWord.begin(),
                    [](unsigned char c){ return std::tolower(c); }); //convert input to lowercase for easier handling
     if (comWord.compare("loadmap") == 0) {
-        if (*phase != Phases::START && *phase != Phases::MAPLOADED) {
-            cout << "loadmap is only accepted during the phases START and MAPLOADED.";
-            command->saveEffect("Unable to proceed with the command at the current game state.");
+        if ((*phase != Phases::START && *phase != Phases::MAPLOADED) || comArg.empty()) {
+            if(comArg.empty()) {
+                cout << "loadmap needs an argument.";
+                command->saveEffect("Command does not specify a map file.");
+            } else {
+                cout << "loadmap is only accepted during the phases START and MAPLOADED.";
+                command->saveEffect("Unable to proceed with the command at the current game state.");
+            }
             return false;
         } else {
             command->setInstruction(comWord);
+            command->setArgument(comArg);
             return true;
         }
     } else if (comWord.compare("validatemap") == 0) {
@@ -212,12 +221,18 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
             return true;
         }
     } else if (comWord.compare("addplayer") == 0) {
-        if (*phase != Phases::PLAYERSADDED && *phase != Phases::MAPVALIDATED) {
-            cout << "addplayer is only accepted during the phases MAPVALIDATED and PLAYERSADDED.";
-            command->saveEffect("Unable to proceed with the command at the current game state.");
+        if ((*phase != Phases::PLAYERSADDED && *phase != Phases::MAPVALIDATED) || comArg.empty()) {
+            if(comArg.empty()) {
+                cout << "A player needs a name.";
+                command->saveEffect("Command does not specify a player's name.");
+            } else {
+                cout << "addplayer is only accepted during the phases MAPVALIDATED and PLAYERSADDED.";
+                command->saveEffect("Unable to proceed with the command at the current game state.");
+            }
             return false;
         } else {
             command->setInstruction(comWord);
+            command->setArgument(comArg);
             return true;
         }
     } else if (comWord.compare("gamestart") == 0) {

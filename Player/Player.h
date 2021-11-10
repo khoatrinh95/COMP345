@@ -60,6 +60,11 @@ public:
     Player(const Player &anotherPlayer);
 
     /**
+     * parameterized constructor for Player
+     * @param neutral
+     */
+    explicit Player(bool neutral);
+    /**
      * destructor for player object
      */
     ~Player();

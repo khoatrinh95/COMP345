@@ -4,7 +4,7 @@
 
 #include<iostream>
 #include <sstream>
-#include "Cards.h"
+#include "../Cards/Cards.h"
 #include <ctime>
 
 using namespace std;

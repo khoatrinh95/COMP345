@@ -52,6 +52,9 @@ public:
     int getNumContinent();
     Continent ** getContinent() const;
     ///////////////////////////////////////////////////////////////
+
+    int getNumTerritories();
+    Territory **getTerritories() const;
 private:
     Territory** territories;
     Continent** continents;
@@ -88,6 +91,7 @@ public:
     void addPendingIncomingArmies(int armies);
     void addPendingOutgoingArmies(int armies);
     int getNumberOfMovableArmies() const;
+    Continent * getContinent() const;
 
     /////////////////////////////////////////////////Sarah
     int getNumAdjTerritories() const;

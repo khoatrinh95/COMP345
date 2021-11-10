@@ -88,5 +88,5 @@ void  LoggingDriver()
     delete california;
     california = NULL;
 
-    GameEngine::clearPlayerList();
+//    GameEngine::clearPlayerList();
 }

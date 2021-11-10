@@ -18,7 +18,7 @@ namespace {
  * or check if there is any diplomacy relations between the attacker and the territory target
  */
     bool checkIfPossibleToAttack(Player *attacker, Territory *target) {
-        Player *ownerOfTarget = GameEngine::getOwnerOf(target);
+        Player *ownerOfTarget = target->getOwner();
         std::vector<Player *> relations = attacker->getRelations();
         bool relationsWithHostOfTarget = find(relations.begin(), relations.end(), ownerOfTarget) != relations.end();
 

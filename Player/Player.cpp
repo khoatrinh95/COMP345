@@ -57,6 +57,12 @@ Player::Player(const Player &anotherPlayer) {
 }
 
 /**
+ * a constructor that takes only player neutral parameter
+ * @param name
+  */
+    Player::Player(bool _neutral) : neutral(_neutral) {}
+
+/**
  * destructor of player object
  */
 Player::~Player(){

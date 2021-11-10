@@ -48,8 +48,8 @@ void  orderDriver()
 
 
 
-    GameEngine::addPlayersToList(player);
-    GameEngine::addPlayersToList(enemy);
+//    GameEngine::addPlayersToList(player);
+//    GameEngine::addPlayersToList(enemy);
     // Show the OrderList
     std::cout << "========== " << "Here is original orders list: " << ordersList << " ==========" << std::endl;
     for (const auto &order : ordersList.getOrders())
@@ -93,5 +93,5 @@ void  orderDriver()
     delete california;
     california = NULL;
 
-    GameEngine::clearPlayerList();
+//    GameEngine::clearPlayerList();
 }
