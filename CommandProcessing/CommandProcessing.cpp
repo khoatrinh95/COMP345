@@ -199,10 +199,10 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
     if (comWord.compare("loadmap") == 0) {
         if ((*phase != Phases::START && *phase != Phases::MAPLOADED) || comArg.empty()) {
             if(comArg.empty()) {
-                cout << "loadmap needs an argument.";
+                cout << "loadmap needs an argument." << endl;
                 command->saveEffect("Command does not specify a map file.");
             } else {
-                cout << "loadmap is only accepted during the phases START and MAPLOADED.";
+                cout << "loadmap is only accepted during the phases START and MAPLOADED." << endl;
                 command->saveEffect("Unable to proceed with the command at the current game state.");
             }
             return false;
@@ -213,7 +213,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
         }
     } else if (comWord.compare("validatemap") == 0) {
         if (*phase != Phases::MAPLOADED) {
-            cout << "validatemap is only accepted during the phase MAPLOADED.";
+            cout << "validatemap is only accepted during the phase MAPLOADED." << endl;
             command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
@@ -223,10 +223,10 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
     } else if (comWord.compare("addplayer") == 0) {
         if ((*phase != Phases::PLAYERSADDED && *phase != Phases::MAPVALIDATED) || comArg.empty()) {
             if(comArg.empty()) {
-                cout << "A player needs a name.";
+                cout << "A player needs a name." << endl;
                 command->saveEffect("Command does not specify a player's name.");
             } else {
-                cout << "addplayer is only accepted during the phases MAPVALIDATED and PLAYERSADDED.";
+                cout << "addplayer is only accepted during the phases MAPVALIDATED and PLAYERSADDED." << endl;
                 command->saveEffect("Unable to proceed with the command at the current game state.");
             }
             return false;
@@ -237,7 +237,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
         }
     } else if (comWord.compare("gamestart") == 0) {
         if (*phase != Phases::PLAYERSADDED) {
-            cout << "gamestart is only accepted during the phase PLAYERSADDED.";
+            cout << "gamestart is only accepted during the phase PLAYERSADDED." << endl;
             command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
@@ -246,7 +246,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
         }
     } else if (comWord.compare("replay") == 0) {
         if (*phase != Phases::WIN) {
-            cout << "replay is only accepted during the phase WIN.";
+            cout << "replay is only accepted during the phase WIN." << endl;
             command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
@@ -255,7 +255,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
         }
     } else if (comWord.compare("quit") == 0) {
         if (*phase != Phases::WIN) {
-            cout << "quit is only accepted during the phase WIN.";
+            cout << "quit is only accepted during the phase WIN." << endl;
             command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
@@ -263,7 +263,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
             return true;
         }
     } else {
-        cout << "The command entered was not recognized.";
+        cout << "The command entered was not recognized." << endl;
         command->saveEffect("The command entered was not recognized. ");
         return false;
     }

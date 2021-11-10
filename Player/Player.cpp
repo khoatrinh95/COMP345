@@ -17,6 +17,7 @@ Player::Player() {
     playerCards = new Hand();
     playerOrdersList = new OrdersList();
     vector<Territory*> territories;
+    neutral = false;
 }
 
 
@@ -31,6 +32,7 @@ Player::Player(string Name, vector<Territory *> &territories) {
     this->territories = territories;
     this->playerCards = new Hand();
     this->playerOrdersList = new OrdersList();
+    neutral = false;
     }
 
 
@@ -38,7 +40,10 @@ Player::Player(string Name, vector<Territory *> &territories) {
  * a constructor that takes only player name as parameter
  * @param name
   */
-Player::Player(const string &name) : name(name) {}
+Player::Player(string name) : name(name), neutral(false) {
+        playerCards = new Hand();
+        playerOrdersList = new OrdersList();
+}
 
 /**
  * Copy constructor that do a deep copy of a player's members
@@ -54,13 +59,17 @@ Player::Player(const Player &anotherPlayer) {
         newTerritory->setOwner(this);
         addTerritory(newTerritory);
     }
+    this->neutral = anotherPlayer.neutral;
 }
 
 /**
  * a constructor that takes only player neutral parameter
  * @param name
   */
-    Player::Player(bool _neutral) : neutral(_neutral) {}
+    Player::Player(string _name, bool _neutral) : name(_name), neutral(_neutral) {
+        playerCards = new Hand();
+        playerOrdersList = new OrdersList();
+    }
 
 /**
  * destructor of player object
@@ -264,6 +273,7 @@ Player &Player::operator=(const Player &anotherPlayer) {
             newTerritory->setOwner(this);
             addTerritory(newTerritory);
         }
+        this->neutral = anotherPlayer.neutral;
     }
     return *this;
 }
@@ -279,20 +289,22 @@ ostream &operator<<(ostream &out, const Player &player) {
         out << "Player name is "<<player.name<<", and he has no territories"<<endl;
     }else{
         out << "Player name is "<< player.name<< ", and he has the following territories:"<<endl<<"\t";
-        for (auto &territory : player.territories){
-            out << *territory << endl<<"\t";
+        for (auto &territory : player.territories) {
+            if(territory != nullptr) {
+                out << *territory << endl<<"\t";
+            }
         }
         out<<endl;
     }
 
-    if (player.playerCards->getSize()==0){
+    if (player.playerCards == nullptr || player.playerCards->getSize()==0){
         out<<"This player does not have a hand of cards"<<endl;
     } else{
         out<<"player hand of cards is :"<<endl;
         out<<*player.playerCards;
     }
 
-    if (player.playerOrdersList->size()== 0){
+    if (player.playerOrdersList == nullptr || player.playerOrdersList->size()== 0){
         out<<"This player does not have any orders in his list"<<endl;
     } else{
         out <<"Player orders list contain these orders"<<endl;

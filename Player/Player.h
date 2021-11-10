@@ -28,7 +28,7 @@ private:
     Hand *playerCards;
     OrdersList *playerOrdersList;
     vector<Player*> diplomaticRelations_;
-    bool neutral = false;
+    bool neutral;
     int reinforcement_pool;
 
 
@@ -44,7 +44,7 @@ public:
      * parameterized constructor for Player
      * @param name player name
      */
-    Player(const string &name);
+    Player(string name);
 
     /**
      * parameterized constructor for Player
@@ -63,7 +63,7 @@ public:
      * parameterized constructor for Player
      * @param neutral
      */
-    explicit Player(bool neutral);
+    Player(string _name, bool neutral);
     /**
      * destructor for player object
      */

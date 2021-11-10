@@ -12,209 +12,7 @@
 
 
 Deck *GameEngine::deck = new Deck();
-Player *GameEngine::neutralPlayer = new Player(false);
-// ----------------------------------START UP----------------------------------------------//
-//void StartUp::startUp(Phases *phase) {
-//    printTitle();
-//    while (*phase != Phases::ASSIGNREINFORCEMENT) {
-//        switch (*phase) {
-//            case Phases::START:
-//                loadMap(phase);
-//                break;
-//            case Phases::MAPLOADED:
-//                validateMap(phase);
-//                break;
-//            case Phases::MAPVALIDATED:
-//                GameEngine::clearPlayerList();
-//                createPlayers(phase);
-//                break;
-//            case Phases::PLAYERSADDED:
-//                assignTerritories(phase);
-//                break;
-//            default:
-//                cout << "ERROR" << endl;
-//                break;
-//        }
-//    }
-//}
-//
-//void StartUp::loadMap(Phases *phase){
-//    cout << "***  Inside loadMap  ***" << endl;
-//
-//    cout << "...loading map" << endl;
-//    // TBI: load map
-//    cout << "...map loaded" << endl;
-//
-//    vector<string> options {"Load a different map", "Validate map"};
-//    HelperFunctions::printOptions(options);
-//
-//    HelperFunctions::takeInput(phase, Phases::MAPLOADED);
-//};
-//
-//void StartUp::validateMap(Phases *phase){
-//    cout << "***  Inside validateMap  ***" << endl;
-//    *phase = Phases::MAPVALIDATED;
-//};
-//
-//void StartUp::createPlayers(Phases *phase){
-//    cout << "***  Inside createPlayers  ***" << endl;
-//    addPlayers();
-//
-//    vector<string> options {"Add a different number of players", "Assign territories"};
-//    HelperFunctions::printOptions(options);
-//
-//    HelperFunctions::takeInput(phase, Phases::PLAYERSADDED);
-//
-//};
-//
-//void StartUp::assignTerritories(Phases *phase){
-//    cout << "***  Inside assignTerritories  ***" << endl;
-//    *phase = Phases::ASSIGNREINFORCEMENT;
-//};
-//
-//void StartUp::printTitle() {
-//    cout << ("****************************************") << endl;
-//    cout << ("*                                      *") << endl;
-//    cout << ("*               WARZONE                *") << endl;
-//    cout << ("*                                      *") << endl;
-//    cout << ("****************************************") << endl;
-//    cout << ("           Welcome to WARZONE          ") << endl;
-//}
-//
-//void StartUp::addPlayers(){
-//    while (true) {
-//        cout << "Please enter the number of players: " << endl;
-//        string input;
-//        cin >> input;
-//        if (HelperFunctions::isNumber(input)){
-//            // TBI: HANDLE ADDING PLAYERS HERE
-//            int numOfPlayers = stoi(input);
-//            for (int i = 0; i < numOfPlayers; i++){
-//                cout << "Please enter the name of player " << (i+1) << endl;
-//                string name;
-//                cin >> name;
-//                Player *player = new Player(name);
-//                addPlayersToList(player);
-//            }
-//            cout << numOfPlayers << " players have been added." << endl;
-//
-//            // Randomly assign cards and orders to players just for the sake of demo
-//            assignRandomCardsToPlayers();
-//            break;
-//        }
-//        else {
-//            cout << "Invalid input" << endl;
-//        }
-//    }
-//}
-
-// ----------------------------------PLAY----------------------------------------------//
-
-void Play::playGame(Phases *phase){
-    printPlayPhaseGreeting();
-    while (*phase != Phases::WIN) {
-        switch (*phase) {
-            case Phases::ASSIGNREINFORCEMENT:
-                assignArmies(phase);
-                break;
-            case Phases::ISSUEORDERS:
-                issueOrders(phase);
-                break;
-            case Phases::EXECUTEORDERS:
-                executeOrders(phase);
-                break;
-            case Phases::WIN:
-//                cleanUp();
-                break;
-            default:
-                cout << "ERROR" << endl;
-                break;
-        }
-    }
-};
-
-
-void Play::assignArmies(Phases *phase){
-    cout << "***  Inside assignArmies  ***" << endl;
-    *phase = Phases::ISSUEORDERS;
-};
-
-void Play::issueOrders(Phases *phase){
-    cout << "***  Inside issueOrders  ***" << endl;
-
-    // TBI: HANDLE ISSUE ORDERS HERE
-
-    vector<string> options {"Issue order", "Complete issue orders"};
-    HelperFunctions::printOptions(options);
-
-    HelperFunctions::takeInput(phase, Phases::EXECUTEORDERS);
-
-};
-
-void Play::executeOrders(Phases *phase){
-    cout << "***  Inside executeOrders  ***" << endl;
-
-    // TBI: HANDLE EXECUTE ORDERS HERE
-
-    vector<string> options {"Execute orders", "Complete execute orders"};
-    HelperFunctions::printOptions(options);
-
-    // only setting the next phase to WIN for the sake of demo - in real game, this won't be automatically win
-    HelperFunctions::takeInput(phase, Phases::WIN);
-
-};
-
-void Play::printPlayPhaseGreeting() {
-    cout << ("****************************************") << endl;
-    cout << ("*           Setup complete             *") << endl;
-    cout << ("*                                      *") << endl;
-    cout << ("*             LET'S PLAY               *") << endl;
-    cout << ("****************************************") << endl << endl;
-
-}
-
-// --------------------------------HELPER FUNCTIONS-------------------------------------------
-
-void HelperFunctions::printOptions(vector<string> options){
-    for (int i = 1; i<= options.size(); i++){
-        cout << i << " - " << options[i-1] << endl;
-    }
-    cout << "Please enter the option number: " << endl;
-
-    // Handle memory leak
-    options.clear();
-
-    // This will create a new (temporary) vector and swap its contents with options. The temporary vector is then destroyed, freeing the memory along with it.
-    vector<string>().swap(options);
-}
-
-bool HelperFunctions::isNumber(const std::string& s)
-{
-    std::string::const_iterator it = s.begin();
-    while (it != s.end() && std::isdigit(*it)) ++it;
-    return !s.empty() && it == s.end();
-}
-
-void HelperFunctions::takeInput(Phases *phase, Phases nextPhase){
-    while (true) {
-        string input;
-        cin >> input;
-        if (input == "1"){
-            break;
-        }
-        else if (input == "2"){
-            *phase = nextPhase;
-            break;
-        }
-        else {
-            cout << "invalid input" << endl;
-            break;
-        }
-    }
-}
-
-// Thong's part
-
+Player *GameEngine::neutralPlayer = new Player("Neutral", true);
 
 /*
 ===================================
@@ -222,36 +20,11 @@ void HelperFunctions::takeInput(Phases *phase, Phases nextPhase){
 ===================================
  */
 
-void GameEngine::assignToNeutralPlayer(Territory* territory)
-{
-    Player* owner = territory->getOwner();
-    owner->removeTerritory(territory);
-    territory->setOwner(neutralPlayer);
-    neutralPlayer->addTerritory(territory);
-}
-
-// Find the player who owns the specified territory. Return nullptr if the territory is unowned.
-Player* GameEngine::getOwnerOf(Territory* territory) const {
-    for (const auto &player : players_)
-    {
-        std::vector<Territory*> territories = player->getTerritories();
-        if (find(territories.begin(), territories.end(), territory) != territories.end())
-        {
-            return player;
-        }
-    }
-    return nullptr;
-}
-
-
-
 // Default constructor
 GameEngine::GameEngine() : mapDirectory("../Map/maps/") {
-//    std::vector<Player*> players_;
-//    Map *map_;
     phase = new Phases(Phases::START);
-    commandProcessor = new CommandProcessor();
-//    vector<Player *> playingOrder;
+    mode = new Modes(Modes::STARTUP);
+    commandProcessor = new FileCommandProcessorAdapter("../GameEngine/GECommands.txt");
     deck->addCard(new Card("bomb"));
     deck->addCard(new Card("reinforcement"));
     deck->addCard(new Card("blockade"));
@@ -262,12 +35,12 @@ GameEngine::GameEngine() : mapDirectory("../Map/maps/") {
     deck->addCard(new Card("blockade"));
     deck->addCard(new Card("airlift"));
     deck->addCard(new Card("diplomacy"));
-
 }
 
 // Copy constructor of Game Engine
 GameEngine::GameEngine(const GameEngine &anotherGameEngine) : mapDirectory(anotherGameEngine.mapDirectory) {
     this -> phase = new Phases(*anotherGameEngine.phase);
+    this -> mode = new Modes(*anotherGameEngine.mode);
     for (auto player : anotherGameEngine.players_){
         Player* player_temp = new Player(*player);
         this->players_.push_back(player_temp);
@@ -284,31 +57,48 @@ GameEngine::GameEngine(const GameEngine &anotherGameEngine) : mapDirectory(anoth
 
 // Destructor
 GameEngine::~GameEngine() {
-    cout << "***  Inside Game Engine destructor  ***" << endl;
     // Explicitly call destructor of Player because the players will be dynamically allocated at the beginning of the game
-    for (auto player : players_){
-        delete player;
+    for (auto player : players_) {
+        if(player != nullptr) {
+            delete player;
+            player = nullptr;
+        }
     }
     players_.clear();
 
     playingOrder.clear();
 
     // Handle memory leak
-    delete phase;
-    phase = nullptr;
-    delete commandProcessor;
-    commandProcessor = nullptr;
-    delete deck;
-    deck = nullptr;
-    delete neutralPlayer;
-    neutralPlayer = nullptr;
-    delete map_;
-    map_ = nullptr;
+    if(phase != nullptr) {
+        delete phase;
+        phase = nullptr;
+    }
+    if(mode != nullptr) {
+        delete mode;
+        mode = nullptr;
+    }
+    if(commandProcessor != nullptr) {
+        delete commandProcessor;
+        commandProcessor = nullptr;
+    }
+    if(deck != nullptr) {
+        delete deck;
+        deck = nullptr;
+    }
+    if(neutralPlayer != nullptr) {
+        delete neutralPlayer;
+        neutralPlayer = nullptr;
+    }
+    if(map_ != nullptr) {
+        delete map_;
+        map_ = nullptr;
+    }
 }
 
 // Assignment operator
 GameEngine &GameEngine::operator=(const GameEngine &anotherGameEngine) {
     this -> phase = new Phases(*anotherGameEngine.phase);
+    this -> mode = new Modes(*anotherGameEngine.mode);
     for (auto player : anotherGameEngine.players_){
         Player* player_temp = new Player(*player);
         this->players_.push_back(player_temp);
@@ -326,17 +116,26 @@ GameEngine &GameEngine::operator=(const GameEngine &anotherGameEngine) {
 
 // Stream insertion
 ostream &operator<<(ostream &stream, const GameEngine &gameEngine) {
-    string toPrint = "Here are the players currently playing: \n";
-    for (auto player : gameEngine.players_){
-        toPrint.append(player->getName()).append("\n");
+//    string toPrint = "Here are the players currently playing: \n";
+//    for (auto player : gameEngine.players_){
+//        toPrint.append(player->getName()).append("\n");
+//    }
+//    stream << toPrint;
+    stream << "Here are the players currently playing:\n";
+    for (auto player : gameEngine.players_) {
+        if(player != nullptr) {
+            stream << *player << "\n";
+        }
     }
-    stream << toPrint;
     return stream;
 }
 
-void GameEngine::playGame() {
-//    StartUp::startUp(phase);
-    Play::playGame(phase);
+void GameEngine::assignToNeutralPlayer(Territory* territory)
+{
+    Player* owner = territory->getOwner();
+    owner->removeTerritory(territory);
+    territory->setOwner(neutralPlayer);
+    neutralPlayer->addTerritory(territory);
 }
 
 const vector<Player *> &GameEngine::getPlayers() {
@@ -347,119 +146,6 @@ void GameEngine::addPlayersToList(Player* player) {
     players_.push_back(player);
 }
 
-void GameEngine::clearPlayerList() {
-    for (auto player : players_){
-        delete player;
-        player = nullptr;
-    }
-    players_.clear();
-}
-
-void GameEngine::assignRandomCardsToPlayers() {
-    for (auto player : players_){
-        vector<Card*>cards;
-        cards.push_back(new Card("bomb"));
-        cards.push_back(new Card("reinforcement"));
-        Hand * handOfCards = new Hand(cards);
-
-        vector<Order*> orders;
-        orders.push_back(new AirliftOrder());
-        orders.push_back(new NegotiateOrder());
-        OrdersList *ordersList = new OrdersList(orders);
-
-        player -> setPlayerCards(handOfCards);
-        player -> setPlayerOrdersList(ordersList);
-    }
-}
-
-
-////////////////////////////////////////////////////////////SARAH _PART 3
-
-void GameEngine::mainGameLoop() {
-    bool ownAllContinents = false;
-    while (players_.size()!=1) {
-        // remove a player from the game if s/he does not own any territory
-
-        // add armies to each player Reinforcement Pool
-        reinforcementPhase();
-
-        // let each player decide his/her order list
-        issueOrdersPhase();
-
-        // execute each player orders from his/her order list
-        executeOrdersPhase();
-
-
-
-        for (auto &player :players_){
-            if(player->getTerritories().size() == 0){
-                removePlayer(player);
-            }
-        }
-    }
-    cout << "The winner of the game is : "<< players_.at(0)->getName()<< endl;
-}
-
-/**
- * assign reinforcement for each player
- */
-void GameEngine::reinforcementPhase() {
-    for (auto &player:players_){
-        int armies = floor(player->getTerritories().size()/3);
-        for(int i = 0; i<map_->getNumContinent();i++){
-            if (map_->getContinent()[i]->getOwner()==player){
-                armies = armies + map_->getContinent()[i]->getBonus();
-            }
-        }
-        if (armies<3){
-            armies = 3 ;
-        }
-        player->setReinforcementPool(armies);
-    }
-}
-
-/**
- * asking the player to start their issuing their orders
- */
-void GameEngine::issueOrdersPhase() {
-    for (auto &player : players_){
-        player->issueOrder();
-    }
-}
-
-/**
- * execute player orders from their order list
- */
-void GameEngine::executeOrdersPhase() {
-    int longestOrderList = 0 ;
-    // find the longest order list of a player
-    for (auto &player:players_){
-        if (player->getPlayerOrdersList()->size()>longestOrderList){
-            longestOrderList = player->getPlayerOrdersList()->size();
-        }
-    }
-    // execute all deploy orders of all players in round-robin fashion
-    for (int i = 0 ; i<longestOrderList; i++){
-        for (auto &player:players_){
-            if(player->getPlayerOrdersList()->size()>i){
-              if (player->getPlayerOrdersList()->getOrders().at(i)->getType() == DEPLOY){
-                  player->getPlayerOrdersList()->getOrders().at(i)->execute();
-              }
-            }
-        }
-    }
-    // execute all non-deploy orders of all prayers in round-robin fashion
-    for (int i = 0 ; i<longestOrderList; i++){
-        for (auto &player:players_){
-            if(player->getPlayerOrdersList()->size()>i){
-                if (player->getPlayerOrdersList()->getOrders().at(i)->getType() != DEPLOY){
-                    player->getPlayerOrdersList()->getOrders().at(i)->execute();
-                }
-            }
-        }
-    }
-
-}
 /**
  * remove player from a player list
  * @param player
@@ -478,7 +164,7 @@ void GameEngine::removePlayer(Player *player) {
  * Generate textual list of players
  */
 string GameEngine::getPlayersNames() const {
-    string names("Players:\n");
+    string names;
     int count(0);
     for(auto &player : players_) {
         names += to_string(++count) + ": " + player->getName() + "\n";
@@ -490,7 +176,7 @@ string GameEngine::getPlayersNames() const {
  * Generate textual list of players according to playing order
  */
 string GameEngine::getPlayingOrderPlayersNames() const {
-    string names("Players:\n");
+    string names;
     int count(0);
     for(auto &player : playingOrder) {
         names += to_string(++count) + ": " + player->getName() + "\n";
@@ -498,6 +184,10 @@ string GameEngine::getPlayingOrderPlayersNames() const {
     return names;
 }
 
+
+
+
+// ----------------------------------Startup----------------------------------------------//
 /**
  * Game startup phase
  */
@@ -506,10 +196,8 @@ void GameEngine::startupPhase() {
 
     // get commands until getting to the playing mode
     while (*phase != Phases::ASSIGNREINFORCEMENT) {
-        cout << "inside while" << endl; /////////////////////////////////////////////
         Command *command = commandProcessor->getCommand();
         commandProcessor->validate(command, phase);
-        cout << command->getInstruction() << " - " << command->getArgument() << "////////////////////////////////"<< endl; ////////////////////////////////////////
         string instruction = command->getInstruction();
         cout << "Processing command \"" << command->getCommand() << "\"... " << endl;
 
@@ -551,8 +239,9 @@ void GameEngine::startupPhase() {
 
                 // adding a player
                 cout << "Adding player \"" << command->getArgument() << "\"... " << endl;
-                Player *player = new Player(command->getArgument());
-                players_.push_back(player);
+                players_.push_back(new Player(command->getArgument()));
+                cout << "Players joined the game:" << endl;
+                cout << getPlayersNames() << endl;
                 command->saveEffect("Player [" + command->getArgument() + "] added. Transition to [playersadded]");
                 *phase = Phases::PLAYERSADDED;
             } else if(instruction == "gamestart" && *phase == Phases::PLAYERSADDED && players_.size() >= 2) {
@@ -563,12 +252,15 @@ void GameEngine::startupPhase() {
                 cout << "Territories assigned" << endl;
                 assignPlayingOrder();
                 cout << "Playing order determined" << endl;
+                cout << "Order of play of the players:" <<endl;
+                cout << getPlayingOrderPlayersNames() << endl;
                 initialReinforcement();
                 cout << "Initial reinforcement accomplished" << endl;
                 initialCardDrawing();
                 cout << "Initial cards drawn" << endl;
                 command->saveEffect("Game initiated. Territories distributed. Playing order determined. Initial reinforcement accomplished. Initial cards drawn. Transition to [assignreinforcement]");
                 *phase = Phases::ASSIGNREINFORCEMENT;
+                *mode = Modes::STARTUP;
             } else {
                 command->saveEffect("Wrong command. Command Ignored.");
                 cout << "ERROR!" << endl;
@@ -579,17 +271,15 @@ void GameEngine::startupPhase() {
         }
     }
     cout << "Game initialization done!" << endl;
+    printPlayPhaseGreeting();
 }
 
 
 
 void GameEngine::loadMap(string filename){
-    cout << "***  Inside loadMap  ***" << endl;
-
-    cout << "...loading map" << endl;
+    cout << "Loading map ..." << endl;
     map_ = MapLoader::loadMapFile(mapDirectory + filename);
-    cout << "...map loaded" << endl;
-
+    cout << "Map was loaded successfully!" << endl;
 };
 
 void GameEngine::validateMap(Phases *phase){
@@ -597,16 +287,6 @@ void GameEngine::validateMap(Phases *phase){
     *phase = Phases::MAPVALIDATED;
 };
 
-void GameEngine::createPlayers(Phases *phase){
-    cout << "***  Inside createPlayers  ***" << endl;
-    addPlayers();
-
-    vector<string> options {"Add a different number of players", "Assign territories"};
-    HelperFunctions::printOptions(options);
-
-    HelperFunctions::takeInput(phase, Phases::PLAYERSADDED);
-
-};
 
 /**
  * Assign territories to players
@@ -683,9 +363,8 @@ void GameEngine::initialCardDrawing() {
             }
         }
     }
-
-
 }
+
 
 void GameEngine::printTitle() {
     cout << ("****************************************") << endl;
@@ -696,32 +375,101 @@ void GameEngine::printTitle() {
     cout << ("           Welcome to WARZONE          ") << endl;
 }
 
-void GameEngine::addPlayers(){
-    while (true) {
-        cout << "Please enter the number of players: " << endl;
-        string input;
-        cin >> input;
-        if (HelperFunctions::isNumber(input)){
-            // TBI: HANDLE ADDING PLAYERS HERE
-            int numOfPlayers = stoi(input);
-            for (int i = 0; i < numOfPlayers; i++){
-                cout << "Please enter the name of player " << (i+1) << endl;
-                string name;
-                cin >> name;
-                Player *player = new Player(name);
-                GameEngine::addPlayersToList(player);
-            }
-            cout << numOfPlayers << " players have been added." << endl;
-
-            // Randomly assign cards and orders to players just for the sake of demo
-            GameEngine::assignRandomCardsToPlayers();
-            break;
-        }
-        else {
-            cout << "Invalid input" << endl;
-        }
-    }
+void GameEngine::printPlayPhaseGreeting() {
+    cout << ("****************************************") << endl;
+    cout << ("*           Setup complete             *") << endl;
+    cout << ("*                                      *") << endl;
+    cout << ("*             LET'S PLAY               *") << endl;
+    cout << ("****************************************") << endl << endl;
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// ----------------------------------PLAY----------------------------------------------//
+
+////////////////////////////////////////////////////////////SARAH _PART 3
+
+void GameEngine::mainGameLoop() {
+    bool ownAllContinents = false;
+    while (players_.size()!=1) {
+        // remove a player from the game if s/he does not own any territory
+
+        // add armies to each player Reinforcement Pool
+        reinforcementPhase();
+
+        // let each player decide his/her order list
+        issueOrdersPhase();
+
+        // execute each player orders from his/her order list
+        executeOrdersPhase();
+
+
+
+        for (auto &player :players_){
+            if(player->getTerritories().size() == 0){
+                removePlayer(player);
+            }
+        }
+    }
+    cout << "The winner of the game is : "<< players_.at(0)->getName()<< endl;
+}
+
+/**
+ * assign reinforcement for each player
+ */
+void GameEngine::reinforcementPhase() {
+    for (auto &player:players_){
+        int armies = floor(player->getTerritories().size()/3);
+        for(int i = 0; i<map_->getNumContinent();i++){
+            if (map_->getContinent()[i]->getOwner()==player){
+                armies = armies + map_->getContinent()[i]->getBonus();
+            }
+        }
+        if (armies<3){
+            armies = 3 ;
+        }
+        player->setReinforcementPool(armies);
+    }
+}
+
+/**
+ * asking the player to start their issuing their orders
+ */
+void GameEngine::issueOrdersPhase() {
+    for (auto &player : players_){
+        player->issueOrder();
+    }
+}
+
+/**
+ * execute player orders from their order list
+ */
+void GameEngine::executeOrdersPhase() {
+    int longestOrderList = 0 ;
+    // find the longest order list of a player
+    for (auto &player:players_){
+        if (player->getPlayerOrdersList()->size()>longestOrderList){
+            longestOrderList = player->getPlayerOrdersList()->size();
+        }
+    }
+    // execute all deploy orders of all players in round-robin fashion
+    for (int i = 0 ; i<longestOrderList; i++){
+        for (auto &player:players_){
+            if(player->getPlayerOrdersList()->size()>i){
+                if (player->getPlayerOrdersList()->getOrders().at(i)->getType() == DEPLOY){
+                    player->getPlayerOrdersList()->getOrders().at(i)->execute();
+                }
+            }
+        }
+    }
+    // execute all non-deploy orders of all prayers in round-robin fashion
+    for (int i = 0 ; i<longestOrderList; i++){
+        for (auto &player:players_){
+            if(player->getPlayerOrdersList()->size()>i){
+                if (player->getPlayerOrdersList()->getOrders().at(i)->getType() != DEPLOY){
+                    player->getPlayerOrdersList()->getOrders().at(i)->execute();
+                }
+            }
+        }
+    }
+
+}
