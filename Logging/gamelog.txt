@@ -1,8 +1,1 @@
-Adding to OrdersList: Deploy
-Adding to OrdersList: Advance
-Adding to OrdersList: Bomb
-Executing Deploy Order
-Executing Advance Order
-Executing Bomb Order
-Command: asdads
-Command's effect: Testing Logging Effect
+
