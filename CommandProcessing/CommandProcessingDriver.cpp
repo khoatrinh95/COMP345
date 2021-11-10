@@ -6,15 +6,12 @@
 
 Phases CheckCommandAndReturnPhase(Command* command) {
     string commander = command->getCommand();
-    stringstream ss(commander);
-    string comWord;
-    ss >> comWord; //get first token of input string
+    string comWord = command->getInstruction();
     std::transform(comWord.begin(), comWord.end(), comWord.begin(),
                    [](unsigned char c){ return std::tolower(c); }); //convert input to lowercase
 
     if (comWord.compare("loadmap") == 0) {
-        string secondWord;
-        ss >> secondWord; //get second token of input string, which is the map file specified (e.g. canada.map)
+        string secondWord = command->getArgument();
 
         //does not check if map exists
         if (secondWord.compare("") != 0) {
@@ -40,8 +37,7 @@ Phases CheckCommandAndReturnPhase(Command* command) {
         command->saveEffect(effect);
         return Phases::MAPVALIDATED;
     } else if (comWord.compare("addplayer") == 0) {
-        string secondWord;
-        ss >> secondWord; //get second token of input string which is the name of the player to be added
+        string secondWord = command->getArgument();
 
         // does not actually add any player
 
