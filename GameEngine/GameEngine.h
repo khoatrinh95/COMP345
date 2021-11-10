@@ -25,7 +25,7 @@ class CommandProcessor;
 enum class Phases{START, MAPLOADED, MAPVALIDATED, PLAYERSADDED, ASSIGNREINFORCEMENT, ISSUEORDERS, EXECUTEORDERS, WIN};
 enum class Modes{STARTUP, PLAY};
 
-class GameEngine
+class GameEngine: public Subject
 {
 public:
     GameEngine();
@@ -49,6 +49,9 @@ public:
     string getPlayingOrderPlayersNames() const;
     void startupPhase();
 
+    // Iloggable
+    virtual string stringToLog();
+
 private:
     const int MIN_NUM_PLAYERS;
     const int MAX_NUM_PLAYERS;
@@ -69,5 +72,7 @@ private:
     void initialCardDrawing();
     void printPlayPhaseGreeting();
     void assignArmies();
+    string phaseToString(Phases phase);
+    void transition(Phases phaseToTransition);
 };
 #endif //COMP345_N11_GAMEENGINE_H
