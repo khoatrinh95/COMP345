@@ -19,3 +19,13 @@ Game Engine - changing to phase: Players Added
 Game Engine - changing to phase: Players Added
 Game Engine - changing to phase: Players Added
 Game Engine - changing to phase: Assign Reinforcement
+Game Engine - changing to phase: Map Loaded
+Game Engine - changing to phase: Map Loaded
+Game Engine - changing to phase: Map Validated
+Game Engine - changing to phase: Players Added
+Game Engine - changing to phase: Players Added
+Game Engine - changing to phase: Players Added
+Game Engine - changing to phase: Players Added
+Game Engine - changing to phase: Players Added
+Game Engine - changing to phase: Players Added
+Game Engine - changing to phase: Assign Reinforcement
