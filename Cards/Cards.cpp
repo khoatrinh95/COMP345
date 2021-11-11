@@ -6,6 +6,7 @@
 #include <sstream>
 #include "../Cards/Cards.h"
 #include <ctime>
+#include <vector>
 
 using namespace std;
 
@@ -86,20 +87,33 @@ void Card::testType() {
     }
 
 }
-//////////////////////////////////////////////////////////Sarah
+/**
+ *
+ * @param player the player using his card to issue order
+ * @param numArmies number of armies will be used to issue order
+ * @param source the source territory
+ * @param target the target territory
+ */
 void Card::useCardtoCreateOrder(Player *player, int numArmies, Territory *source, Territory *target) {
+//    cout <<
     if (type.compare("bomb") == 0) {
-        player->getPlayerOrdersList()->add(new BombOrder(player,target));
+        BombOrder *bombOrder = new BombOrder(player,target);
+        player->getPlayerOrdersList()->add(bombOrder);
+        cout<<player->getName() << " used " << *this << " to issue "<<* bombOrder <<endl;
     } else if (type.compare("blockade") == 0) {
-        player->getPlayerOrdersList()->add(new BlockadeOrder(player, source));
+        BlockadeOrder *blockadeOrder = new BlockadeOrder(player, source);
+        player->getPlayerOrdersList()->add(blockadeOrder);
+        cout<<player->getName() << " used " << *this << " to issue "<< *blockadeOrder <<endl;
     } else if (type.compare("airlift") == 0) {
-        player->getPlayerOrdersList()->add(new AirliftOrder(player, numArmies, source, target));
+        AirliftOrder *airliftOrder = new AirliftOrder(player, numArmies, source, target);
+        player->getPlayerOrdersList()->add(airliftOrder);
+        cout<<player->getName() << " used " << *this << " to issue "<< *airliftOrder <<endl;
     } else if (type.compare("negotiate") == 0) {
-        player->getPlayerOrdersList()->add(new NegotiateOrder(player, target->getOwner()));
+        NegotiateOrder *negotiateOrder = new NegotiateOrder(player, target->getOwner());
+        player->getPlayerOrdersList()->add(negotiateOrder);
+        cout<<player->getName() << " used " << *this << " to issue "<< *negotiateOrder <<endl;
     }
-    //////////////missing adding the card back to the deck
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Deck::Deck(){
 }
@@ -265,6 +279,19 @@ bool Hand::playOneCard(int position, Deck* deck, Player *&player) {
 vector<Card *> Hand::getHand() const  {
     return hand;
 }
+
+void Hand::removeCard(Card *A_card) {
+    for (int i = 0 ; i<hand.size();i++){
+        if (hand.at(i) == A_card){
+            GameEngine::deck->addCard(A_card);
+            hand.erase(hand.begin() + i);
+            break;
+        }
+    }
+}
+
+
+
 
 
 

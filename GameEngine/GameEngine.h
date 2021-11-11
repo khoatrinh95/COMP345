@@ -42,6 +42,7 @@ public:
     void issueOrdersPhase();
     void executeOrdersPhase();
     void removePlayer(Player *player);
+    vector<Player* >getPlayingOrder();
 
     ////////////////////////////////////////////////////////////////////////////
     static Deck *deck;

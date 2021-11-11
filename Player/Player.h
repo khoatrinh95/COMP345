@@ -130,6 +130,10 @@ public:
      */
     int getReinforcementPool() const;
 
+    /**
+     * adding armies to player reinforcement pool
+     */
+    void assignReinforcementToPlayer (int );
 
     /**
      * determine player territory(s) that need to be defended
@@ -181,11 +185,6 @@ public:
      */
     void transferTerritory (Territory *newTerritory, Player *toTransfer);
 
-    /**
-     * remove a card from player hand of cards when a player use a card to issue order and put it back to the deck
-     * @param Card
-     */
-    void removeCardFromPlayerHand(Card *card);
     /**
      * Add an enemy player to the list of diplomatic relations for this player
      * @param player
