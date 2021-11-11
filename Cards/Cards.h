@@ -35,9 +35,7 @@ public:
     string getType() const; //accessor
     void setType(string typer); //mutator
 
-    //////////////////////////////////////////////////////Sarah
     void useCardtoCreateOrder(Player *player, int numArmies, Territory *source,Territory *target);
-    ///////////////////////////////////////////////////
 
 private:
     string type;
@@ -84,9 +82,8 @@ public:
 
     int getSize() const; //function to see the size of the player's hand
     string printHand() const; //prints out all cards on hand
-    //////////////////////////////////////////////////
     vector<Card *> getHand() const;
-    /////////////////////////////////////////////////////
+    void removeCard(Card * card);
 
 private:
     vector<Card*> hand;
