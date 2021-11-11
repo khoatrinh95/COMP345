@@ -19,6 +19,5 @@ void GameEngineDriver(){
     gameEngine->mainGameLoop();
 //
     delete logObserver;
-
-//    delete gameEngine;
+    delete gameEngine;
 }

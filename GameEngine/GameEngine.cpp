@@ -385,12 +385,15 @@ void GameEngine::mainGameLoop() {
         cout << "**\t REINFORCEMENT PHASE\t**"<<endl;
         cout << "***********************************"<<endl;
 
+        transition(Phases::ASSIGNREINFORCEMENT);
         reinforcementPhase();
 
         // let each player decide his/her order list
     cout << "***********************************"<<endl;
     cout << "**\t ISSUE ORDER PHASE\t**"<<endl;
     cout << "***********************************"<<endl;
+
+        transition(Phases::ISSUEORDERS);
         issueOrdersPhase();
         cout << endl;
 
@@ -399,9 +402,12 @@ void GameEngine::mainGameLoop() {
     cout << "***********************************"<<endl;
     cout << "**\t EXECUTE ORDER PHASE\t**"<<endl;
     cout << "***********************************"<<endl;
+
+        transition(Phases::EXECUTEORDERS);
         executeOrdersPhase();
         cout << endl;
     }
+    transition(Phases::WIN);
     cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<" ownes ";
     cout <<playingOrder.at(0)->getTerritories().size()<<" territories"<<endl;
 
