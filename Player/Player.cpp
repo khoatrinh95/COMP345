@@ -4,9 +4,11 @@
 
 #include "Player.h"
 #include <iostream>
-#include "../GameEngine/GameEngine.h"
 #include <vector>
-#include <math.h>
+#include <stdlib.h>
+#include <ctime>
+
+
 using namespace std;
 
 /**
@@ -75,7 +77,7 @@ Player::Player(const Player &anotherPlayer) {
  * destructor of player object
  */
 Player::~Player(){
-    cout<<"~player() destructing a player whose name is "<< name<<endl;
+//    cout<<"~player() destructing a player whose name is "<< name<<endl;
     for (auto &territory :territories){
         territory->removeOwner();
     }
@@ -159,7 +161,8 @@ vector<Territory*> Player::getTerritories() const {
  * @return list of territories
  */
 vector<Territory*> Player::toDefend() {
-    vector<Territory*> territories_to_be_defended;
+        cout <<"***"<< name << " is selecting the territories that he wants to defend"<< endl;
+        vector<Territory*> territories_to_be_defended;
     for (int i = 0 ; i<territories.size(); i++){
         territories_to_be_defended.push_back(territories.at(i));
     }
@@ -171,8 +174,8 @@ vector<Territory*> Player::toDefend() {
  * @return list of territories
  */
 vector<Territory*> Player::toAttack() {
-    bool inList = false;
-    vector<Territory*> territories_to_be_attacked;
+        cout << "***"<<name <<" is selecting territories to be attacked"<<endl;
+        vector<Territory*> territories_to_be_attacked;
     for (int i = 0; i < territories.size(); i++ ){
         for (int  j = 0 ; j< territories.at(i)->getNumAdjTerritories(); j++){
             if (territories.at(i)->getAdjTerritories()[j]->getOwner() != this ) {
@@ -180,7 +183,7 @@ vector<Territory*> Player::toAttack() {
             }
         }
     }
-    return territories_to_be_attacked;
+        return territories_to_be_attacked;
 }
 
 /**
@@ -188,65 +191,57 @@ vector<Territory*> Player::toAttack() {
  */
 void Player::issueOrder() {
     int count  = 0 ;
+    srand(time(0));
+    int randNum;
+    randNum = rand()%4+5;
+
     //  reinforcement armies to territories goes into rounds until player's reinforcement pool gets empty
+    vector<Territory*> territories_to_be_defended = toDefend();
     while (reinforcement_pool>0){
         // all deployer orders are created for all territories that needs to be defended until player's reinforcement gets empty
-        for (int i = 0 ; i < toDefend().size(); i++ ){
+        for (int i = 0 ; i < territories_to_be_defended.size(); i++ ){
             if (reinforcement_pool > 0){
-                DeployOrder * deploy = new DeployOrder(this,1,toDefend().at(i));
-                playerOrdersList->add(deploy);
-                reinforcement_pool = reinforcement_pool - 1 ;
-
-            }else if (count  == 0 ){
-                // if player's reinforcement pool gets empty before it deployer all territories in his to defend list then
-                // player will issue advance orders for these territories
-                for (int j =0 ;  toDefend().at(i)->getNumAdjTerritories(); j++) {
-                    if (toDefend().at(i)->getAdjTerritories()[j]->getOwner() == this &&
-                        toDefend().at(i)->getAdjTerritories()[j]->getNumberOfArmies() > 1) {
-                        AdvanceOrder *advance = new AdvanceOrder(this, 1,
-                                                                 toDefend().at(i)->getAdjTerritories()[j],
-                                                                 toDefend().at(i));
-                        playerOrdersList->add(advance);
-                        break;
-                    }
+                if (reinforcement_pool>5) {
+                    DeployOrder *deploy = new DeployOrder(this,5, territories_to_be_defended.at(i));
+//                    cout << name << " is issuing " << *deploy << endl;
+                    playerOrdersList->add(deploy);
+                    reinforcement_pool = reinforcement_pool - 5;
+                }else{
+                    DeployOrder *deploy = new DeployOrder(this, 1, territories_to_be_defended.at(i));
+//                    cout << name << " is issuing " << *deploy << endl;
+                    playerOrdersList->add(deploy);
+                    reinforcement_pool = reinforcement_pool - 1;
                 }
             }
-            count++;
+
         }
     }
+    cout << endl;
 
-
-    for ( int  i = 0 ; i < toAttack().size(); i++){
-        for ( int j = 0 ; j < toAttack().at(i)->getNumAdjTerritories() ; j ++ ) {
+    vector<Territory*> territories_to_be_attacked = toAttack();
+    for ( int  i = 0 ; i < territories_to_be_attacked.size(); i++){
+        for ( int j = 0 ; j < territories_to_be_attacked.at(i)->getNumAdjTerritories() ; j ++ ) {
             for (auto &territory : territories) {
-                if (toAttack().at(i)->getAdjTerritories()[j] == territory) {
+                if (territories_to_be_attacked.at(i)->getAdjTerritories()[j] == territory) {
                     // issue an advance order when player's territory number of armies exceed target territory's armies
-                   if (toAttack().at(i)->getAdjTerritories()[j]->getNumberOfArmies() < territory->getNumberOfArmies()-1){
-                       int armies = territory->getNumberOfArmies() - toAttack().at(i)->getAdjTerritories()[j]->getNumberOfArmies() +1 ;
-                       AdvanceOrder *advanceOrder = new AdvanceOrder(this, armies, territory, toAttack().at(i));
+                   if (i <territories_to_be_attacked.size()-2 ){
+                       AdvanceOrder *advanceOrder = new AdvanceOrder(this, randNum, territory, territories_to_be_attacked.at(i));
+//                       cout << name << " is issuing "<< *advanceOrder << endl;
                        playerOrdersList->add(advanceOrder);
                    }else{
                        // use player's hand of cards to issue an order
-                       if (playerCards->getSize() != 0){
-                           for (auto &card : playerCards->getHand()){
-                               // use the airlift card is in player's hand of cards and  player's territory number of army <= 1
-                               // do not use another card
-                               if (card->getType() == "airlift") {
-                                   if(territory->getNumberOfArmies() <= 1) {
-                                       continue;
-                                   }else{
-                                       // use the airlift card if player's territory armies > 1
-                                       playerCards->getHand().at(0)->useCardtoCreateOrder(this,ceil(territory->getNumberOfArmies()/2), territory,toAttack().at(i));
-                                       removeCardFromPlayerHand(playerCards->getHand().at(0));
-                                       break;
-                                   }
-                               }else {
-                                   // use any type of card to issue an order
-                                   playerCards->getHand().at(0)->useCardtoCreateOrder(this,0, territory,toAttack().at(i));
-                                   removeCardFromPlayerHand(playerCards->getHand().at(0));
-                                   break;
-                               }
+                       for (auto &card : playerCards->getHand()){
+                           if (card->getType() == "airlift") {
+                               card->useCardtoCreateOrder(this,randNum, territory,territories_to_be_attacked.at(i));
+                               playerCards->removeCard(card);
+                               break;
+                           }else {
+                               // use any type of card to issue an order
+                               card->useCardtoCreateOrder(this,0, territory,territories_to_be_attacked.at(i));
+                               playerCards->removeCard(card);
+                               break;
                            }
+
                        }
                    }
                 }
@@ -330,7 +325,6 @@ void Player::addTerritory(Territory *newTerritory) {
  * @param A_Territory
  */
 void Player::removeTerritory(Territory *A_Territory) {
-
     for (int i = 0; i<territories.size();i++){
         if (territories.at(i)->getId()==A_Territory->getId()){
             territories.at(i)->setOwner(nullptr);
@@ -387,18 +381,14 @@ int Player::getReinforcementPool() const {
         return reinforcement_pool;
 }
 
-/**
- * remove a card from player hand of cards when a player use a card to issue order and put it back to the deck
- * @param Card
- */
-void Player::removeCardFromPlayerHand(Card *card) {
-    for (int i = 0; i<playerCards->getSize(); i++){
-        if (playerCards->getHand().at(i) == card){
-            /////////////////////////////// we need to add the card back to the deck
-            playerCards->getHand().erase(next(begin(playerCards->getHand()), + i));
-        }
+    /**
+     * add new armies to player's reinforcement pool
+     * @param armies
+     */
+    void Player::assignReinforcementToPlayer(int armies) {
+        int newArmies = this->getReinforcementPool() + armies;
+        this->setReinforcementPool(newArmies);
     }
-}
 
 
 
