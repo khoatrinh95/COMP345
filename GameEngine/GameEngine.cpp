@@ -55,7 +55,7 @@ GameEngine::GameEngine(const GameEngine &anotherGameEngine) : MAP_DIRECTORY(anot
 // Destructor
 GameEngine::~GameEngine() {
     // Explicitly call destructor of Player because the players will be dynamically allocated at the beginning of the game
-    for (auto player : players_) {
+    for (auto &player : players_) {
         if(player != nullptr) {
             delete player;
             player = nullptr;
@@ -402,7 +402,7 @@ void GameEngine::mainGameLoop() {
         executeOrdersPhase();
         cout << endl;
     }
-    cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<"he ownes ";
+    cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<" ownes ";
     cout <<playingOrder.at(0)->getTerritories().size()<<" territories"<<endl;
 
 }
@@ -412,7 +412,7 @@ void GameEngine::mainGameLoop() {
  */
 void GameEngine::reinforcementPhase() {
     for (auto &player:playingOrder){
-        int armies = floor(player->getTerritories().size()/3);
+        int armies = floor(double(player->getTerritories().size())/3);
         cout << "Since "<< player->getName() << " owns "<< player->getTerritories().size()<< " territories, "<< armies;
         cout<<" armies will be added to his reinforcement pool"<< endl;
         for(int i = 0; i<map_->getNumContinent();i++){

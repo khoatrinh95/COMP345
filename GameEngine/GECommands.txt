@@ -1,9 +1,7 @@
 loadmap europe.map
 validatemap
+addplayer Gina
+addplayer Sarah
+addplayer Philo
 addplayer Fadi
-addplayer Ricky
-addplayer SARAH
-addplayer KERO
-addplayer ZAFT
-addplayer GINA
 gamestart

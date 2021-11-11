@@ -7,6 +7,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <ctime>
+#include "math.h"
 
 
 using namespace std;
@@ -193,7 +194,6 @@ void Player::issueOrder() {
     int count  = 0 ;
     srand(time(0));
     int randNum;
-    randNum = rand()%4+5;
 
     //  reinforcement armies to territories goes into rounds until player's reinforcement pool gets empty
     vector<Territory*> territories_to_be_defended = toDefend();
@@ -201,17 +201,21 @@ void Player::issueOrder() {
         // all deployer orders are created for all territories that needs to be defended until player's reinforcement gets empty
         for (int i = 0 ; i < territories_to_be_defended.size(); i++ ){
             if (reinforcement_pool > 0){
-                if (reinforcement_pool>5) {
-                    DeployOrder *deploy = new DeployOrder(this,5, territories_to_be_defended.at(i));
+                randNum = rand()%7+5;
+                if (reinforcement_pool>randNum) {
+                    DeployOrder *deploy = new DeployOrder(this,randNum, territories_to_be_defended.at(i));
 //                    cout << name << " is issuing " << *deploy << endl;
                     playerOrdersList->add(deploy);
-                    reinforcement_pool = reinforcement_pool - 5;
+                    reinforcement_pool = reinforcement_pool - randNum;
                 }else{
-                    DeployOrder *deploy = new DeployOrder(this, 1, territories_to_be_defended.at(i));
-//                    cout << name << " is issuing " << *deploy << endl;
+                    randNum = ceil(double (reinforcement_pool)/2);
+                    DeployOrder *deploy = new DeployOrder(this, randNum, territories_to_be_defended.at(i));
+//                    cout << name << " is issuing " << *deploy << "to defend"<<endl;
                     playerOrdersList->add(deploy);
-                    reinforcement_pool = reinforcement_pool - 1;
+                    reinforcement_pool = reinforcement_pool - randNum;
                 }
+            }else{
+                break;
             }
 
         }
@@ -221,6 +225,7 @@ void Player::issueOrder() {
     vector<Territory*> territories_to_be_attacked = toAttack();
     for ( int  i = 0 ; i < territories_to_be_attacked.size(); i++){
         for ( int j = 0 ; j < territories_to_be_attacked.at(i)->getNumAdjTerritories() ; j ++ ) {
+            randNum = rand()%10+1;
             for (auto &territory : territories) {
                 if (territories_to_be_attacked.at(i)->getAdjTerritories()[j] == territory) {
                     // issue an advance order when player's territory number of armies exceed target territory's armies
