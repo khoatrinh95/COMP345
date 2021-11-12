@@ -59,15 +59,9 @@ std::ostream &operator<<(std::ostream &output, const Order &order) {
     return order.print_(output);
 }
 
-// Validate and execute the Order. Invalid orders will have no effect.
 void Order::execute() {
-    if (validate()) {
-        execute_();
-        notify();
-    } else {
-        std::cout << "Order invalidated. Skipping..." << std::endl;
-        undo_();
-    }
+    execute_();
+    notify();
 }
 
 // Get order priority
@@ -356,7 +350,7 @@ void AdvanceOrder::execute_() {
 
     // Recalculate what number of armies may want to truely be moved if the kingdom of the territory has modified because of an attack
     int movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
-
+    std::cout << "=======An Advanced Order is executed ========";
     if (offensive) {
         // Simulate battle
         source_->removeArmies(movableArmiesFromSource);
@@ -385,6 +379,7 @@ void AdvanceOrder::execute_() {
         }
             // Successful attack: If all the defender's armies are eliminated, the attacker captures the territory
         else {
+            std::cout << "=======Successful Attack: (2) Ownership of a territory is transferred to the attacking player if a territory is conquered. ========";
             defender->transferTerritory(destination_, issuer_);
             destination_->addArmies(survivingAttackers);
             std::cout << "Attack is successful on the " << destination_->getName() << ". " << survivingAttackers
