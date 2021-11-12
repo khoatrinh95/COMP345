@@ -476,7 +476,9 @@ void GameEngine::executeOrdersPhase() {
             if(player->getPlayerOrdersList()->size()>i){
                 if (player->getPlayerOrdersList()->getOrders().at(i)->getType() == DEPLOY && playingOrder.size()!=1){
                     cout << "The execution for the order "<< *player->getPlayerOrdersList()->getOrders().at(i) << " of "<< player->getName()<<endl;
-                    player->getPlayerOrdersList()->getOrders().at(i)->execute();
+                    Order * order = player->getPlayerOrdersList()->getOrders().at(i);
+                    order->execute();
+                    player->getPlayerOrdersList()->removeOrder(order);
                 }
             }
             for (auto &player :playingOrder){
@@ -495,10 +497,12 @@ void GameEngine::executeOrdersPhase() {
         for (auto &player:playingOrder){
             if(player->getPlayerOrdersList()->size()>i && playingOrder.size()!=1){
                 if (player->getPlayerOrdersList()->getOrders().at(i)->getType() != DEPLOY){
-                    cout << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i) << " of ";
+                    cout <<"The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i) << " of ";
                     cout << player->getName() << endl;
                     Order * order= player->getPlayerOrdersList()->getOrders().at(i);
                     order->execute();
+                    player->getPlayerOrdersList()->removeOrder(order);
+
                 }
             }
             for (auto &player :playingOrder){
