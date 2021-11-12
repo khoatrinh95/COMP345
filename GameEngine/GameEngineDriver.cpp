@@ -15,9 +15,8 @@ void GameEngineDriver(){
     cout<< "***\t\t\t TESTING MAIN GAME LOOP \t\t\t***"<<endl;
     cout << "***************************************************************************"<<endl;
 
-//
     gameEngine->mainGameLoop();
-//
+
     delete logObserver;
     delete gameEngine;
 }

@@ -19,17 +19,15 @@ Card::Card(string type) {
 }
 
 Card::Card(const Card& c){
-    cout << "Inside copy constructor of Card" << endl;
     type = c.type;
     testType();
 }
 
 Card::~Card() {
-    cout << "Inside destructor of Card of type " << type << endl;
+    // nothing
 }
 
 Card& Card::operator=(const Card& c){
-    cout << "Inside operator = of Card" << endl;
     type = c.type;
     testType();
     return *this;
@@ -95,7 +93,6 @@ void Card::testType() {
  * @param target the target territory
  */
 void Card::useCardtoCreateOrder(Player *player, int numArmies, Territory *source, Territory *target) {
-//    cout <<
     if (type.compare("bomb") == 0) {
         BombOrder *bombOrder = new BombOrder(player,target);
         player->getPlayerOrdersList()->add(bombOrder);
@@ -122,14 +119,12 @@ Deck::Deck(vector<Card*> &cards) : cards(cards){
 }
 
 Deck::Deck(const Deck& d){
-    cout << "Inside copy constructor of Deck" << endl;
     for (Card* card : d.cards) {
         this->cards.push_back(new Card(*card));
     }
 }
 
 Deck::~Deck() {
-    cout << "Inside destructor of Deck" << endl;
     for (Card* card : cards) {
         if(card != nullptr) {
             delete card;
@@ -140,7 +135,6 @@ Deck::~Deck() {
 }
 
 Deck& Deck::operator=(const Deck& d){
-    cout << "Inside operator = of Deck" << endl;
     vector<Card*> copyOfDeck;
     for (int i = 0; i < d.cards.size(); i++) {
         copyOfDeck.push_back(new Card(*d.cards[i]));
@@ -198,14 +192,12 @@ Hand::Hand(const vector<Card*> &cards) : hand(cards){
 }
 
 Hand::Hand(const Hand& h){
-    cout << "Inside copy constructor of Hand" << endl;
     for (Card* card : h.hand) {
         this->hand.push_back(new Card(*card));
     }
 }
 
 Hand::~Hand() {
-    cout << "Inside destructor of Hand" << endl;
     for (Card* card : hand) {
         if(card != nullptr) {
             delete card;
@@ -216,7 +208,6 @@ Hand::~Hand() {
 }
 
 Hand& Hand::operator=(const Hand& h){
-    cout << "Inside operator = of Hand" << endl;
     vector<Card*> copyOfHand;
     for (int i = 0; i < h.hand.size(); i++) {
         copyOfHand.push_back(new Card(*h.hand[i]));
@@ -250,13 +241,11 @@ string Hand::printHand() const{
 }
 
 void Hand::drawFromDeck(Deck* deck) {
-    cout << "Drawing a card from the deck..." << endl;
     hand.push_back(deck->draw());
 }
 
 
 void Hand::playAllCards(Deck* deck, Player *&player) {
-    cout << "Playing all cards in hand!" << endl;
     int size = hand.size();
     for (int i = 0; i < size; i++) {
         deck->addCard(hand[0]->play(player));

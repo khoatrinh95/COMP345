@@ -1,7 +1,14 @@
+loadmap canada.map
 loadmap europe.map
 validatemap
-addplayer Gina
-addplayer Sarah
-addplayer Philo
 addplayer Fadi
+addplayer Ricky
+addplayer
+addplayer Sarah
+addplayer
+addplayer Khoa
+addplayer Thong
+addplayer Gina
+addplayer
+addplayer Philo
 gamestart
