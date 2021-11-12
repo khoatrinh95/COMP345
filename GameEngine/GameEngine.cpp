@@ -145,8 +145,6 @@ void GameEngine::removePlayer(Player *player) {
         if (playingOrder.at(i)->getName()==player->getName()){
             cout << "***\tRemoving "<< playingOrder.at(i)->getName() << " from the game"<<endl;
             playingOrder.erase(next(begin(playingOrder), + i));
-            delete player;
-            player = nullptr;
             break;
         }
     }
@@ -294,6 +292,14 @@ void GameEngine::assignTerritories() {
     }
     sort(vecTerritories.begin(), vecTerritories.end(), [](Territory *a, Territory *b) { return a->getContinent()->getBonus() > b->getContinent()->getBonus(); });
 
+    /////////////////////////////// for demo purpose only
+    cout << "\n================  Territories ordered according to amount of continent's bonus  =====================" << endl;
+    for(auto& ter : vecTerritories) {
+        cout << ter->getName() << " in " << ter->getContinent()->getName() << " = " << ter->getContinent()->getBonus() << endl;
+    }
+    cout << "\n==============  Assignment of territories to players ================" << endl;
+    ///////////////////////////////////////////
+
     // assigning the sorted territories to players repeatedly from 1 to N then from N to 1 until all territories are assigned
     for (int i = 0; i < map_->getNumTerritories(); i++) {
         int j = i % (2 * numPlayers);
@@ -305,6 +311,10 @@ void GameEngine::assignTerritories() {
         }
         vecTerritories.at(i)->setOwner(players_.at(k));
         players_.at(k)->addTerritory(vecTerritories.at(i));
+
+        /////////////////////////////// for demo purpose only
+        cout << vecTerritories.at(i)->getName() << " assigned to " << players_.at(k)->getName() << endl;
+        //////////////////////////////////////////////
     }
 };
 
@@ -358,7 +368,7 @@ void GameEngine::initialCardDrawing() {
 
 
 void GameEngine::printTitle() {
-    cout << ("****************************************") << endl;
+    cout << ("\n****************************************") << endl;
     cout << ("*                                      *") << endl;
     cout << ("*               WARZONE                *") << endl;
     cout << ("*                                      *") << endl;
@@ -367,7 +377,7 @@ void GameEngine::printTitle() {
 }
 
 void GameEngine::printPlayPhaseGreeting() {
-    cout << ("****************************************") << endl;
+    cout << ("\n****************************************") << endl;
     cout << ("*           Setup complete             *") << endl;
     cout << ("*                                      *") << endl;
     cout << ("*             LET'S PLAY               *") << endl;
