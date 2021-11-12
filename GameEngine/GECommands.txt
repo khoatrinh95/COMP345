@@ -1,5 +1,5 @@
 loadmap canada.map
-loadmap europe.map
+loadmap small.map
 validatemap
 addplayer Fadi
 addplayer Ricky

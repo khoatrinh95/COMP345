@@ -1,0 +1,45 @@
+; map: canada.map
+; map made with the map maker
+; yura.net Risk 1.0.9.2
+
+[files]
+pic canada_pic.png
+map canada_map.gif
+crd canada.cards
+
+[continents]
+Atlantic_Provinces 3 blue
+Central_Canada 4 cyan
+The_Prairie_Provinces 3 green
+The_West_Coast 2 orange
+The_Northern_Territories 3 yellow
+
+[countries]
+1 New_Brunswick 1 501 350
+2 Prince_Edward_Island 1 519 328
+3 Nova_Scotia 1 545 349
+4 Newfoundland_and_Labrador 1 553 298
+5 Quebec 2 460 310
+6 Ontario 2 391 363
+7 Manitoba 3 283 328
+8 Saskatchewan 3 238 319
+9 Alberta 3 195 304
+10 British_Columbia 4 144 288
+11 Nunavut 5 307 189
+12 Northwest_Territories 5 217 178
+13 Yukon_Territory 4 147 145
+
+[borders]
+1 5 3 2
+2 1 3 4
+3 1 2
+4 5 2
+5 1 4 6
+6 5 7
+7 6 8 11 12
+8 7 9 11 12
+9 8 12 10
+10 9 13 12
+11 7 8 12
+12 7 8 9 10 11 13
+13 10 12
