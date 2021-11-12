@@ -95,8 +95,7 @@ void  orderDriver()
 
     std::cout << "========== " << "Finish one turn of a game !!!!!==========" << std::endl;
     std::cout << "========== " << "One card is given to a player if they conquer at least 1 territory in a turn ==========" << std::endl;
-    std::cout << "========== " << "Size " << player->getTerritories().size() << "==========" << std::endl;
-    std::cout << "========== " << "Size " << enemy->getTerritories().size() << "==========" << std::endl;
+
     //(3) one card is given to a player if they conquer at least one territory in a turn (not more than one card per turn)
     if (player->getTerritories().size() >=1) {
         std::cout << "========== " << "Player Thong wins 1 more territory in this turn because originally he has only 2 territories. He will be given 1 card ==========" << std::endl;
