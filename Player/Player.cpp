@@ -214,7 +214,7 @@ void Player::issueOrder() {
             count++;
         }
     }
-
+//wefwefa
 
     for ( int  i = 0 ; i < toAttack().size(); i++){
         for ( int j = 0 ; j < toAttack().at(i)->getNumAdjTerritories() ; j ++ ) {
