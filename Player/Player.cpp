@@ -191,8 +191,6 @@ vector<Territory*> Player::toAttack() {
  * add an order to player orders list
  */
 void Player::issueOrder() {
-    int count  = 0 ;
-    srand(time(0));
     int randNum;
 
     //  reinforcement armies to territories goes into rounds until player's reinforcement pool gets empty
@@ -224,32 +222,40 @@ void Player::issueOrder() {
 
     vector<Territory*> territories_to_be_attacked = toAttack();
     for ( int  i = 0 ; i < territories_to_be_attacked.size(); i++){
+        bool found = false;
+        randNum = rand()%7+5;
         for ( int j = 0 ; j < territories_to_be_attacked.at(i)->getNumAdjTerritories() ; j ++ ) {
-            randNum = rand()%10+1;
             for (auto &territory : territories) {
                 if (territories_to_be_attacked.at(i)->getAdjTerritories()[j] == territory) {
                     // issue an advance order when player's territory number of armies exceed target territory's armies
-                   if (i <territories_to_be_attacked.size()-2 ){
+                   if (i <territories_to_be_attacked.size() -2 ){
                        AdvanceOrder *advanceOrder = new AdvanceOrder(this, randNum, territory, territories_to_be_attacked.at(i));
 //                       cout << name << " is issuing "<< *advanceOrder << endl;
                        playerOrdersList->add(advanceOrder);
+                       found = true;
+                       break;
                    }else{
                        // use player's hand of cards to issue an order
                        for (auto &card : playerCards->getHand()){
                            if (card->getType() == "airlift") {
                                card->useCardtoCreateOrder(this,randNum, territory,territories_to_be_attacked.at(i));
                                playerCards->removeCard(card);
+                               found = true;
                                break;
                            }else {
                                // use any type of card to issue an order
                                card->useCardtoCreateOrder(this,0, territory,territories_to_be_attacked.at(i));
                                playerCards->removeCard(card);
+                               found = true;
                                break;
                            }
-
                        }
+
                    }
                 }
+            }
+            if(found){
+                break;
             }
         }
     }

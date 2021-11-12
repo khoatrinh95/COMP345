@@ -86,6 +86,7 @@ public:
     void add(Order* order);
     void move(int area, int targetRange);
     void remove(int target);
+    void removeOrder(Order * order);
 
     // Iloggable
     virtual string stringToLog();

@@ -703,6 +703,17 @@ string OrdersList::stringToLog(){
     return "Adding to OrdersList: ";
 }
 
+void OrdersList::removeOrder(Order *An_order) {
+    for (int i = 0 ; i<orders_.size();i++){
+        if (orders_.at(i) == An_order){
+            delete An_order;
+            orders_.at(i);
+            orders_.erase(orders_.begin() + i);
+            break;
+        }
+    }
+}
+
 
 string DeployOrder::stringToLog() {
     return "Executing Deploy Order";
