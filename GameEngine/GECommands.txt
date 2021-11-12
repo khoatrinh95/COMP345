@@ -1,5 +1,5 @@
-loadmap europe.map
 loadmap canada.map
+loadmap europe.map
 validatemap
 addplayer Fadi
 addplayer Ricky
@@ -8,7 +8,7 @@ addplayer Sarah
 addplayer
 addplayer Khoa
 addplayer Thong
-addplayer Joe
+addplayer Gina
 addplayer
-addplayer Bill
+addplayer Philo
 gamestart

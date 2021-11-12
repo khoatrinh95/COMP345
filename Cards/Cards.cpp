@@ -6,6 +6,7 @@
 #include <sstream>
 #include "../Cards/Cards.h"
 #include <ctime>
+#include <vector>
 
 using namespace std;
 
@@ -18,17 +19,15 @@ Card::Card(string type) {
 }
 
 Card::Card(const Card& c){
-    cout << "Inside copy constructor of Card" << endl;
     type = c.type;
     testType();
 }
 
 Card::~Card() {
-    cout << "Inside destructor of Card of type " << type << endl;
+    // nothing
 }
 
 Card& Card::operator=(const Card& c){
-    cout << "Inside operator = of Card" << endl;
     type = c.type;
     testType();
     return *this;
@@ -86,20 +85,32 @@ void Card::testType() {
     }
 
 }
-//////////////////////////////////////////////////////////Sarah
+/**
+ *
+ * @param player the player using his card to issue order
+ * @param numArmies number of armies will be used to issue order
+ * @param source the source territory
+ * @param target the target territory
+ */
 void Card::useCardtoCreateOrder(Player *player, int numArmies, Territory *source, Territory *target) {
     if (type.compare("bomb") == 0) {
-        player->getPlayerOrdersList()->add(new BombOrder(player,target));
+        BombOrder *bombOrder = new BombOrder(player,target);
+        player->getPlayerOrdersList()->add(bombOrder);
+        cout<<player->getName() << " used " << *this << " to issue "<<* bombOrder <<endl;
     } else if (type.compare("blockade") == 0) {
-        player->getPlayerOrdersList()->add(new BlockadeOrder(player, source));
+        BlockadeOrder *blockadeOrder = new BlockadeOrder(player, source);
+        player->getPlayerOrdersList()->add(blockadeOrder);
+        cout<<player->getName() << " used " << *this << " to issue "<< *blockadeOrder <<endl;
     } else if (type.compare("airlift") == 0) {
-        player->getPlayerOrdersList()->add(new AirliftOrder(player, numArmies, source, target));
+        AirliftOrder *airliftOrder = new AirliftOrder(player, numArmies, source, target);
+        player->getPlayerOrdersList()->add(airliftOrder);
+        cout<<player->getName() << " used " << *this << " to issue "<< *airliftOrder <<endl;
     } else if (type.compare("negotiate") == 0) {
-        player->getPlayerOrdersList()->add(new NegotiateOrder(player, target->getOwner()));
+        NegotiateOrder *negotiateOrder = new NegotiateOrder(player, target->getOwner());
+        player->getPlayerOrdersList()->add(negotiateOrder);
+        cout<<player->getName() << " used " << *this << " to issue "<< *negotiateOrder <<endl;
     }
-    //////////////missing adding the card back to the deck
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Deck::Deck(){
 }
@@ -108,14 +119,12 @@ Deck::Deck(vector<Card*> &cards) : cards(cards){
 }
 
 Deck::Deck(const Deck& d){
-    cout << "Inside copy constructor of Deck" << endl;
     for (Card* card : d.cards) {
         this->cards.push_back(new Card(*card));
     }
 }
 
 Deck::~Deck() {
-    cout << "Inside destructor of Deck" << endl;
     for (Card* card : cards) {
         if(card != nullptr) {
             delete card;
@@ -126,7 +135,6 @@ Deck::~Deck() {
 }
 
 Deck& Deck::operator=(const Deck& d){
-    cout << "Inside operator = of Deck" << endl;
     vector<Card*> copyOfDeck;
     for (int i = 0; i < d.cards.size(); i++) {
         copyOfDeck.push_back(new Card(*d.cards[i]));
@@ -184,14 +192,12 @@ Hand::Hand(const vector<Card*> &cards) : hand(cards){
 }
 
 Hand::Hand(const Hand& h){
-    cout << "Inside copy constructor of Hand" << endl;
     for (Card* card : h.hand) {
         this->hand.push_back(new Card(*card));
     }
 }
 
 Hand::~Hand() {
-    cout << "Inside destructor of Hand" << endl;
     for (Card* card : hand) {
         if(card != nullptr) {
             delete card;
@@ -202,7 +208,6 @@ Hand::~Hand() {
 }
 
 Hand& Hand::operator=(const Hand& h){
-    cout << "Inside operator = of Hand" << endl;
     vector<Card*> copyOfHand;
     for (int i = 0; i < h.hand.size(); i++) {
         copyOfHand.push_back(new Card(*h.hand[i]));
@@ -236,13 +241,11 @@ string Hand::printHand() const{
 }
 
 void Hand::drawFromDeck(Deck* deck) {
-    cout << "Drawing a card from the deck..." << endl;
     hand.push_back(deck->draw());
 }
 
 
 void Hand::playAllCards(Deck* deck, Player *&player) {
-    cout << "Playing all cards in hand!" << endl;
     int size = hand.size();
     for (int i = 0; i < size; i++) {
         deck->addCard(hand[0]->play(player));
@@ -265,6 +268,19 @@ bool Hand::playOneCard(int position, Deck* deck, Player *&player) {
 vector<Card *> Hand::getHand() const  {
     return hand;
 }
+
+void Hand::removeCard(Card *A_card) {
+    for (int i = 0 ; i<hand.size();i++){
+        if (hand.at(i) == A_card){
+            GameEngine::deck->addCard(A_card);
+            hand.erase(hand.begin() + i);
+            break;
+        }
+    }
+}
+
+
+
 
 
 

@@ -237,7 +237,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
         }
     } else if (comWord.compare("gamestart") == 0) {
         if (*phase != Phases::PLAYERSADDED) {
-            cout << "gamestart is only accepted during the phase PLAYERSADDED." << endl;
+            cout << "gamestart is only accepted during the phase PLAYERSADDED."<< endl;
             command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
@@ -246,7 +246,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
         }
     } else if (comWord.compare("replay") == 0) {
         if (*phase != Phases::WIN) {
-            cout << "replay is only accepted during the phase WIN." << endl;
+            cout << "replay is only accepted during the phase WIN."<< endl;
             command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
@@ -255,7 +255,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
         }
     } else if (comWord.compare("quit") == 0) {
         if (*phase != Phases::WIN) {
-            cout << "quit is only accepted during the phase WIN." << endl;
+            cout << "quit is only accepted during the phase WIN."<< endl;
             command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
@@ -354,12 +354,12 @@ std::string trim(const std::string &s) {
  */
 bool FileLineReader::readFromLine() {
     string lineBeingRead;
-    getline(*_ifstr,lineBeingRead);
-    if (lineBeingRead.compare("") != 0) {
+    if (_ifstr->eof()) {
+        return false;
+    } else {
+        getline(*_ifstr,lineBeingRead);
         currentLine = trim(lineBeingRead);
         return true;
-    } else {
-        return false;
     }
 }
 

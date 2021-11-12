@@ -55,7 +55,7 @@ GameEngine::GameEngine(const GameEngine &anotherGameEngine) : MAP_DIRECTORY(anot
 // Destructor
 GameEngine::~GameEngine() {
     // Explicitly call destructor of Player because the players will be dynamically allocated at the beginning of the game
-    for (auto player : players_) {
+    for (auto &player : players_) {
         if(player != nullptr) {
             delete player;
             player = nullptr;
@@ -141,11 +141,11 @@ void GameEngine::addPlayersToList(Player* player) {
  * @param player
  */
 void GameEngine::removePlayer(Player *player) {
-    for (int i = 0; i<players_.size();i++){
-        if (players_.at(i)->getName()==player->getName()){
-            players_.erase(next(begin(players_), + i));
-            delete player;
-            player = nullptr;
+    for (int i = 0; i<playingOrder.size();i++){
+        if (playingOrder.at(i)->getName()==player->getName()){
+            cout << "***\tRemoving "<< playingOrder.at(i)->getName() << " from the game"<<endl;
+            playingOrder.erase(next(begin(playingOrder), + i));
+            break;
         }
     }
 }
@@ -292,6 +292,14 @@ void GameEngine::assignTerritories() {
     }
     sort(vecTerritories.begin(), vecTerritories.end(), [](Territory *a, Territory *b) { return a->getContinent()->getBonus() > b->getContinent()->getBonus(); });
 
+    /////////////////////////////// for demo purpose only
+    cout << "\n================  Territories ordered according to amount of continent's bonus  =====================" << endl;
+    for(auto& ter : vecTerritories) {
+        cout << ter->getName() << " in " << ter->getContinent()->getName() << " = " << ter->getContinent()->getBonus() << endl;
+    }
+    cout << "\n==============  Assignment of territories to players ================" << endl;
+    ///////////////////////////////////////////
+
     // assigning the sorted territories to players repeatedly from 1 to N then from N to 1 until all territories are assigned
     for (int i = 0; i < map_->getNumTerritories(); i++) {
         int j = i % (2 * numPlayers);
@@ -303,6 +311,10 @@ void GameEngine::assignTerritories() {
         }
         vecTerritories.at(i)->setOwner(players_.at(k));
         players_.at(k)->addTerritory(vecTerritories.at(i));
+
+        /////////////////////////////// for demo purpose only
+        cout << vecTerritories.at(i)->getName() << " assigned to " << players_.at(k)->getName() << endl;
+        //////////////////////////////////////////////
     }
 };
 
@@ -356,7 +368,7 @@ void GameEngine::initialCardDrawing() {
 
 
 void GameEngine::printTitle() {
-    cout << ("****************************************") << endl;
+    cout << ("\n****************************************") << endl;
     cout << ("*                                      *") << endl;
     cout << ("*               WARZONE                *") << endl;
     cout << ("*                                      *") << endl;
@@ -365,7 +377,7 @@ void GameEngine::printTitle() {
 }
 
 void GameEngine::printPlayPhaseGreeting() {
-    cout << ("****************************************") << endl;
+    cout << ("\n****************************************") << endl;
     cout << ("*           Setup complete             *") << endl;
     cout << ("*                                      *") << endl;
     cout << ("*             LET'S PLAY               *") << endl;
@@ -375,48 +387,64 @@ void GameEngine::printPlayPhaseGreeting() {
 
 // ----------------------------------PLAY----------------------------------------------//
 
-////////////////////////////////////////////////////////////SARAH _PART 3
 
 void GameEngine::mainGameLoop() {
-    bool ownAllContinents = false;
-    while (players_.size()!=1) {
-        // remove a player from the game if s/he does not own any territory
-
+    while (playingOrder.size()!=1) {
         // add armies to each player Reinforcement Pool
+        cout << "***********************************"<<endl;
+        cout << "**\t REINFORCEMENT PHASE\t**"<<endl;
+        cout << "***********************************"<<endl;
+
+        transition(Phases::ASSIGNREINFORCEMENT);
         reinforcementPhase();
 
         // let each player decide his/her order list
+    cout << "***********************************"<<endl;
+    cout << "**\t ISSUE ORDER PHASE\t**"<<endl;
+    cout << "***********************************"<<endl;
+
+        transition(Phases::ISSUEORDERS);
         issueOrdersPhase();
+        cout << endl;
 
         // execute each player orders from his/her order list
+
+    cout << "***********************************"<<endl;
+    cout << "**\t EXECUTE ORDER PHASE\t**"<<endl;
+    cout << "***********************************"<<endl;
+
+        transition(Phases::EXECUTEORDERS);
         executeOrdersPhase();
-
-
-
-        for (auto &player :players_){
-            if(player->getTerritories().size() == 0){
-                removePlayer(player);
-            }
-        }
+        cout << endl;
     }
-    cout << "The winner of the game is : "<< players_.at(0)->getName()<< endl;
+    transition(Phases::WIN);
+    cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<" ownes ";
+    cout <<playingOrder.at(0)->getTerritories().size()<<" territories"<<endl;
+
 }
 
 /**
  * assign reinforcement for each player
  */
 void GameEngine::reinforcementPhase() {
-    for (auto &player:players_){
-        int armies = floor(player->getTerritories().size()/3);
+    for (auto &player:playingOrder){
+        int armies = floor(double(player->getTerritories().size())/3);
+        cout << "Since "<< player->getName() << " owns "<< player->getTerritories().size()<< " territories, "<< armies;
+        cout<<" armies will be added to his reinforcement pool"<< endl;
         for(int i = 0; i<map_->getNumContinent();i++){
             if (map_->getContinent()[i]->getOwner()==player){
+                cout <<"Adding "<<map_->getContinent()[i]->getName()<<" bonus armies to "<<player->getName()<<" to his reinforcement pool"<< endl;
                 armies = armies + map_->getContinent()[i]->getBonus();
             }
         }
         if (armies<3){
+            cout << "However,the number of armies calculated to "<<player->getName()<<" is less than 3; therefore, the player "
+                                                                              "will be given 3 armies instead"<< endl;
             armies = 3 ;
         }
-        player->setReinforcementPool(armies);
+        player->assignReinforcementToPlayer(armies);
+        cout<< player->getName() << " has new "<< player->getReinforcementPool() << " armies in his reinforcement pool" << endl;
+        cout<<endl;
     }
 }
 
@@ -424,8 +452,10 @@ void GameEngine::reinforcementPhase() {
  * asking the player to start their issuing their orders
  */
 void GameEngine::issueOrdersPhase() {
-    for (auto &player : players_){
+    for (auto &player : playingOrder){
+        cout << "***\t\tIt is "<<player->getName() << " turn to issue Orders\t\t***"<<endl;
         player->issueOrder();
+        cout<<endl;
     }
 }
 
@@ -435,32 +465,53 @@ void GameEngine::issueOrdersPhase() {
 void GameEngine::executeOrdersPhase() {
     int longestOrderList = 0 ;
     // find the longest order list of a player
-    for (auto &player:players_){
+    for (auto &player:playingOrder){
         if (player->getPlayerOrdersList()->size()>longestOrderList){
             longestOrderList = player->getPlayerOrdersList()->size();
         }
     }
-    // execute all deploy orders of all players in round-robin fashion
+//     execute all deploy orders of all players in round-robin fashion
     for (int i = 0 ; i<longestOrderList; i++){
-        for (auto &player:players_){
+        for (auto &player:playingOrder){
             if(player->getPlayerOrdersList()->size()>i){
-                if (player->getPlayerOrdersList()->getOrders().at(i)->getType() == DEPLOY){
+                if (player->getPlayerOrdersList()->getOrders().at(i)->getType() == DEPLOY && playingOrder.size()!=1){
+                    cout << "The execution for the order "<< *player->getPlayerOrdersList()->getOrders().at(i) << " of "<< player->getName()<<endl;
                     player->getPlayerOrdersList()->getOrders().at(i)->execute();
                 }
+            }
+            for (auto &player :playingOrder){
+                if(player->getTerritories().size() == 0){
+                    removePlayer(player);
+                    break;
+                }
+            }
+            if (playingOrder.size() == 1){
+                break;
             }
         }
     }
     // execute all non-deploy orders of all prayers in round-robin fashion
     for (int i = 0 ; i<longestOrderList; i++){
-        for (auto &player:players_){
-            if(player->getPlayerOrdersList()->size()>i){
+        for (auto &player:playingOrder){
+            if(player->getPlayerOrdersList()->size()>i && playingOrder.size()!=1){
                 if (player->getPlayerOrdersList()->getOrders().at(i)->getType() != DEPLOY){
-                    player->getPlayerOrdersList()->getOrders().at(i)->execute();
+                    cout << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i) << " of ";
+                    cout << player->getName() << endl;
+                    Order * order= player->getPlayerOrdersList()->getOrders().at(i);
+                    order->execute();
                 }
+            }
+            for (auto &player :playingOrder){
+                if(player->getTerritories().size() == 0){
+                    removePlayer(player);
+                    break;
+                }
+            }
+            if (playingOrder.size() == 1){
+                break;
             }
         }
     }
-
 }
 
 // Iloggable
@@ -495,3 +546,8 @@ void GameEngine::transition(Phases phaseToTransition) {
     contentToLog = phaseString;
     notify();
 }
+
+vector<Player *> GameEngine::getPlayingOrder() {
+    return playingOrder;
+}
+
