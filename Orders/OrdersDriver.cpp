@@ -46,34 +46,7 @@ void  orderDriver()
     std::cout << "===== " << "Player Thong added a negotiate order targeting Player Khoa =====" << std::endl;
     ordersList.add(new NegotiateOrder(player, enemy));
 
-
-    // Test invalid
-  //  ordersList.add(new DeployOrder(player, 3, california));
-
-    std::cout << "===== " << "6 orders are added to the OrderList=====" << std::endl;
-
-//    // adding random cards to player
-//    vector<Card*>cards;
-//    cards.push_back(new Card("bomb"));
-//    cards.push_back(new Card("reinforcement"));
-//    Hand * handOfCards = new Hand(cards);
-//    player->setPlayerCards(handOfCards);
-//    std::cout << "===== " << "Player Thong has some random cards =====" << std::endl;
-//
-//    // adding random cards to enemy
-//    vector<Card*>cardsEnemy;
-//    cards.push_back(new Card("bomb"));
-//    cards.push_back(new Card("reinforcement"));
-//    Hand * handOfCardsEnemy = new Hand(cardsEnemy);
-//    enemy->setPlayerCards(handOfCardsEnemy);
-//    std::cout << "===== " << "Player Khoa has some random cards =====" << std::endl;
-
-
-
-//    GameEngine::addPlayersToList(player);
-//    GameEngine::addPlayersToList(enemy);
-    // Show the OrderList
-
+    std::cout << "===== " << "6 orders were added to the OrderList=====" << std::endl;
     std::cout << "========== " << "Here is original orders list: " << ordersList << " ==========" << std::endl;
     for (const auto &order : ordersList.getOrders())
     {
