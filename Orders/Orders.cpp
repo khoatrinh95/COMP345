@@ -704,14 +704,24 @@ string OrdersList::stringToLog(){
 }
 
 void OrdersList::removeOrder(Order *An_order) {
+//    cout<<"size"<<orders_.size()<<endl;
     for (int i = 0 ; i<orders_.size();i++){
-        if (orders_.at(i) == An_order){
+        if (this->orders_.at(i)== An_order){
+            orders_.erase(next(begin(orders_), + i));
             delete An_order;
-            orders_.at(i);
-            orders_.erase(orders_.begin() + i);
             break;
         }
+
+
+
+//        if (orders_.at(i) == An_order){
+//            delete An_order;
+//            orders_.at(i);
+//            orders_.erase(orders_.begin() + i);
+//            break;
+//        }
     }
+//    cout << "after"<<orders_.size()<<endl;
 }
 
 
