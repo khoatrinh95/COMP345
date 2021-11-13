@@ -3,10 +3,9 @@
 
 
 [continents]
-Building_A 3 blue
-Building_B 4 cyan
-Building_C 3 green
-Building_D 2 orange
+Building_A 30 blue
+Building_B 40 cyan
+Building_C 20 green
 
 
 [countries]
@@ -18,22 +17,14 @@ Building_D 2 orange
 6 Room_6 2 391 363
 7 Room_7 3 283 328
 8 Room_8 3 238 319
-9 Room_9 3 195 304
-10 Room_10 4 144 288
-11 Room_11 4 307 189
-12 Room_12 4 217 178
 
 
 [borders]
-1 2 3 4 10
+1 2 3 4 7
 2 1 3
 3 1 2
 4 5 6 1 7
 5 4 6
 6 5 6
-7 8 9 10 4
-8 7 9
-9 7 8
-10 7 11 12 1
-11 10 12
-12 10 11
+7 8 1 4
+8 7
