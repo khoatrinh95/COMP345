@@ -72,7 +72,7 @@ private:
     void initialReinforcement();
     void initialCardDrawing();
     void printPlayPhaseGreeting();
-    void assignArmies();
+    string modeToString(Modes mode);
     string phaseToString(Phases phase);
     void transition(Phases phaseToTransition);
 };

@@ -183,7 +183,8 @@ string GameEngine::getPlayingOrderPlayersNames() const {
  */
 void GameEngine::startupPhase() {
     printTitle();
-
+    cout << "The game is currently in state: " << phaseToString(*phase) << endl;
+    cout << "The game is currently in mode: " << modeToString(*mode) << endl;
     // get commands until getting to the playing mode
     while (*phase != Phases::ASSIGNREINFORCEMENT) {
         Command *command = commandProcessor->getCommand();
@@ -200,8 +201,10 @@ void GameEngine::startupPhase() {
                 // loading map
                 cout << "Loading map \"" << command->getArgument() << "\"... " << endl;
                 loadMap(command->getArgument());
+                cout << "The loaded map is described as follows:" << endl << *map_ << endl;
                 command->saveEffect("Map [" + command->getArgument() + "] loaded. Transition to [maploaded]");
                 transition(Phases::MAPLOADED);
+                cout << "The game is currently in state: " << phaseToString(*phase) << endl;
             } else if(instruction == "validatemap" && *phase == Phases::MAPLOADED) {
 
                 // validating map and printing the result
@@ -212,6 +215,7 @@ void GameEngine::startupPhase() {
                         cout << "The map is valid." << endl;
                         command->saveEffect("Map validated. Transition to [mapvalidated]");
                         transition(Phases::MAPVALIDATED);
+                        cout << "The game is currently in state: " << phaseToString(*phase) << endl;
                         break;
                     case 1:
                         cout << "The map is not a connected graph" << endl;
@@ -234,6 +238,7 @@ void GameEngine::startupPhase() {
                 cout << getPlayersNames() << endl;
                 command->saveEffect("Player [" + command->getArgument() + "] added. Transition to [playersadded]");
                 transition(Phases::PLAYERSADDED);
+                cout << "The game is currently in state: " << phaseToString(*phase) << endl;
             } else if(instruction == "gamestart" && *phase == Phases::PLAYERSADDED && players_.size() >= MIN_NUM_PLAYERS) {
 
                 // initializing the game
@@ -250,7 +255,9 @@ void GameEngine::startupPhase() {
                 cout << "Initial cards drawn" << endl;
                 command->saveEffect("Game initiated. Territories distributed. Playing order determined. Initial reinforcement accomplished. Initial cards drawn. Transition to [assignreinforcement]");
                 transition(Phases::ASSIGNREINFORCEMENT);
-                *mode = Modes::STARTUP;
+                cout << "The game is currently in state: " << phaseToString(*phase) << endl;
+                *mode = Modes::PLAY;
+                cout << "The game is currently in mode: " << modeToString(*mode) << endl;
             } else {
                 command->saveEffect("Wrong command. Command Ignored.");
                 cout << "ERROR!" << endl;
@@ -265,13 +272,20 @@ void GameEngine::startupPhase() {
 }
 
 
-
+/**
+ * Loads the map form a file
+ * @param filename
+ */
 void GameEngine::loadMap(string filename){
     cout << "Loading map ..." << endl;
     map_ = MapLoader::loadMapFile(MAP_DIRECTORY + filename);
     cout << "Map was loaded successfully!" << endl;
 };
 
+/**
+ * validates the loaded map
+ * @param phase
+ */
 void GameEngine::validateMap(Phases *phase){
     cout << "***  Inside validateMap  ***" << endl;
     transition(Phases::MAPVALIDATED);
@@ -387,7 +401,9 @@ void GameEngine::printPlayPhaseGreeting() {
 
 // ----------------------------------PLAY----------------------------------------------//
 
-
+/**
+ * Main game loop
+ */
 void GameEngine::mainGameLoop() {
     while (playingOrder.size()!=1) {
         // add armies to each player Reinforcement Pool
@@ -523,6 +539,16 @@ string GameEngine::stringToLog() {
     return "Game Engine - changing to phase: ";
 }
 
+string GameEngine::modeToString(Modes mode) {
+    switch(mode) {
+        case Modes::STARTUP:
+            return "Startup";
+        case Modes::PLAY:
+            return "Play";
+    }
+    return "";
+}
+
 string GameEngine::phaseToString(Phases phase) {
     switch(phase){
         case Phases::START:
@@ -542,6 +568,7 @@ string GameEngine::phaseToString(Phases phase) {
         case Phases::WIN:
             return "Win";
     }
+    return "";
 }
 
 void GameEngine::transition(Phases phaseToTransition) {
