@@ -230,7 +230,7 @@ void Player::issueOrder() {
                     // issue an advance order when player's territory number of armies exceed target territory's armies
                     ///////////////////////// for demo purpose to force a player to use a card to issue an order
                     ///////////////////////// we subtracted 1 form territories to be attacked
-                   if (i < territories_to_be_attacked.size() -1 ){
+                   if (i < territories_to_be_attacked.size()-1 ){
                        AdvanceOrder *advanceOrder = new AdvanceOrder(this, randNum, territory, territories_to_be_attacked.at(i));
                        playerOrdersList->add(advanceOrder);
                        found = true;

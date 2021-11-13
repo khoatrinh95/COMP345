@@ -480,54 +480,62 @@ void GameEngine::issueOrdersPhase() {
  */
 void GameEngine::executeOrdersPhase() {
     int longestOrderList = 0 ;
+    int sum = 0 ;
     // find the longest order list of a player
     for (auto &player:playingOrder){
+        sum = sum + player->getPlayerOrdersList()->size();
         if (player->getPlayerOrdersList()->size()>longestOrderList){
             longestOrderList = player->getPlayerOrdersList()->size();
         }
     }
-//     execute all deploy orders of all players in round-robin fashion
-    for (int i = 0 ; i<longestOrderList; i++){
-        for (auto &player:playingOrder){
-            if(player->getPlayerOrdersList()->size()>i){
-                if (player->getPlayerOrdersList()->getOrders().at(i)->getType() == DEPLOY && playingOrder.size()!=1){
-                    cout << "The execution for the order "<< *player->getPlayerOrdersList()->getOrders().at(i) << " of "<< player->getName()<<endl;
-                    Order * order = player->getPlayerOrdersList()->getOrders().at(i);
+
+    bool reach_end = false;
+    while(!reach_end) {
+        for (auto &player: playingOrder) {
+            int i = 0;
+            for (; i < longestOrderList; i++) {
+                if (i < player->getPlayerOrdersList()->size() &&
+                    player->getPlayerOrdersList()->getOrders().at(i)->getType() == DEPLOY) {
+                    cout << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i)
+                         << " of " << player->getName() << endl;
+                    Order *order = player->getPlayerOrdersList()->getOrders().at(i);
                     order->execute();
                     player->getPlayerOrdersList()->removeOrder(order);
-                }
-            }
-            for (auto &player :playingOrder){
-                if(player->getTerritories().size() == 0){
-                    removePlayer(player);
+                    sum = sum-1;
                     break;
                 }
             }
-            if (playingOrder.size() == 1){
-                break;
+            if (i>player->getPlayerOrdersList()->size() && player == playingOrder.at(playingOrder.size()-1)){
+                reach_end = true;
             }
         }
     }
-    // execute all non-deploy orders of all prayers in round-robin fashion
-    for (int i = 0 ; i<longestOrderList; i++){
-        for (auto &player:playingOrder){
-            if(player->getPlayerOrdersList()->size()>i && playingOrder.size()!=1){
-                if (player->getPlayerOrdersList()->getOrders().at(i)->getType() != DEPLOY){
-                    cout <<"The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i) << " of ";
+    bool onePlayer  = false;
+    while (sum>0 && !onePlayer){
+        for (auto &player: playingOrder) {
+            int i = 0;
+            for (; i < longestOrderList; i++) {
+                if (i < player->getPlayerOrdersList()->size()) {
+                    cout << i << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i)
+                         << " of ";
                     cout << player->getName() << endl;
-                    Order * order= player->getPlayerOrdersList()->getOrders().at(i);
+                    Order *order = player->getPlayerOrdersList()->getOrders().at(i);
                     order->execute();
                     player->getPlayerOrdersList()->removeOrder(order);
-
+                    sum = sum - 1;
+                    break;
                 }
             }
             for (auto &player :playingOrder){
                 if(player->getTerritories().size() == 0){
+                    sum =sum-player->getPlayerOrdersList()->size();
                     removePlayer(player);
                     break;
                 }
             }
-            if (playingOrder.size() == 1){
+            if (playingOrder.size() == 1) {
+                sum = sum - playingOrder.at(0)->getPlayerOrdersList()->size();
+                onePlayer  = true;
                 break;
             }
         }
