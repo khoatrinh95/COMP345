@@ -199,7 +199,7 @@ void Player::issueOrder() {
         // all deployer orders are created for all territories that needs to be defended until player's reinforcement gets empty
         for (int i = 0 ; i < territories_to_be_defended.size(); i++ ){
             if (reinforcement_pool > 0){
-                randNum = rand()%7+5;
+                randNum = rand()%40+5;
                 if (reinforcement_pool>randNum) {
                     DeployOrder *deploy = new DeployOrder(this,randNum, territories_to_be_defended.at(i));
 //                    cout << name << " is issuing " << *deploy << endl;
@@ -223,14 +223,15 @@ void Player::issueOrder() {
     vector<Territory*> territories_to_be_attacked = toAttack();
     for ( int  i = 0 ; i < territories_to_be_attacked.size(); i++){
         bool found = false;
-        randNum = rand()%7+5;
+        randNum = rand()%20+5;
         for ( int j = 0 ; j < territories_to_be_attacked.at(i)->getNumAdjTerritories() ; j ++ ) {
             for (auto &territory : territories) {
                 if (territories_to_be_attacked.at(i)->getAdjTerritories()[j] == territory) {
                     // issue an advance order when player's territory number of armies exceed target territory's armies
-                   if (i <territories_to_be_attacked.size() -2 ){
+                    ///////////////////////// for demo purpose to force a player to use a card to issue an order
+                    ///////////////////////// we subtracted 1 form territories to be attacked
+                   if (i < territories_to_be_attacked.size() -1 ){
                        AdvanceOrder *advanceOrder = new AdvanceOrder(this, randNum, territory, territories_to_be_attacked.at(i));
-//                       cout << name << " is issuing "<< *advanceOrder << endl;
                        playerOrdersList->add(advanceOrder);
                        found = true;
                        break;
