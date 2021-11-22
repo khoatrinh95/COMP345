@@ -18,6 +18,7 @@ class Territory;
 class Hand;
 class Order;
 class OrdersList;
+class Card;
 
 
 class Player {
@@ -27,7 +28,11 @@ private:
     Hand *playerCards;
     OrdersList *playerOrdersList;
     vector<Player*> diplomaticRelations_;
-    bool neutral = false;
+    bool neutral;
+    int reinforcement_pool;
+
+
+
 public:
     /**
      * default constructor for Player object
@@ -39,7 +44,7 @@ public:
      * parameterized constructor for Player
      * @param name player name
      */
-    Player(const string &name);
+    Player(string name);
 
     /**
      * parameterized constructor for Player
@@ -54,6 +59,11 @@ public:
      */
     Player(const Player &anotherPlayer);
 
+    /**
+     * parameterized constructor for Player
+     * @param neutral
+     */
+    Player(string _name, bool neutral);
     /**
      * destructor for player object
      */
@@ -109,6 +119,23 @@ public:
     vector<Territory*> getTerritories() const;
 
     /**
+     * set a player number of armies
+     * @param armies
+     */
+    void setReinforcementPool(int armies);
+
+    /**
+     * get player number of armies
+     * @return
+     */
+    int getReinforcementPool() const;
+
+    /**
+     * adding armies to player reinforcement pool
+     */
+    void assignReinforcementToPlayer (int );
+
+    /**
      * determine player territory(s) that need to be defended
      * @return list of territories
      */
@@ -148,10 +175,15 @@ public:
     void addTerritory(Territory *newTerritory);
 
     /**
-     * remove a territory from player list of territories
-     * @param A_Territory
-     */
+ * remove a territory from player list of territories
+ * @param A_Territory
+ */
     void removeTerritory(Territory *A_Territory);
+    /**
+     * transfer a territory to player list of territories
+     * @param newTerritory
+     */
+    void transferTerritory (Territory *newTerritory, Player *toTransfer);
 
     /**
      * Add an enemy player to the list of diplomatic relations for this player
@@ -171,6 +203,7 @@ public:
      */
     bool isNeutral();
 };
+
 
 
 #endif //COMP345_N11_PLAYER_H

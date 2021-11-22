@@ -4,7 +4,11 @@
 
 #include "Player.h"
 #include <iostream>
-#include "../GameEngine/GameEngine.h"
+#include <vector>
+#include <stdlib.h>
+#include <ctime>
+#include "math.h"
+
 
 using namespace std;
 
@@ -16,6 +20,7 @@ Player::Player() {
     playerCards = new Hand();
     playerOrdersList = new OrdersList();
     vector<Territory*> territories;
+    neutral = false;
 }
 
 
@@ -30,6 +35,7 @@ Player::Player(string Name, vector<Territory *> &territories) {
     this->territories = territories;
     this->playerCards = new Hand();
     this->playerOrdersList = new OrdersList();
+    neutral = false;
     }
 
 
@@ -37,7 +43,10 @@ Player::Player(string Name, vector<Territory *> &territories) {
  * a constructor that takes only player name as parameter
  * @param name
   */
-Player::Player(const string &name) : name(name) {}
+Player::Player(string name) : name(name), neutral(false) {
+        playerCards = new Hand();
+        playerOrdersList = new OrdersList();
+}
 
 /**
  * Copy constructor that do a deep copy of a player's members
@@ -53,13 +62,23 @@ Player::Player(const Player &anotherPlayer) {
         newTerritory->setOwner(this);
         addTerritory(newTerritory);
     }
+    this->neutral = anotherPlayer.neutral;
 }
+
+/**
+ * a constructor that takes only player neutral parameter
+ * @param name
+  */
+    Player::Player(string _name, bool _neutral) : name(_name), neutral(_neutral) {
+        playerCards = new Hand();
+        playerOrdersList = new OrdersList();
+    }
 
 /**
  * destructor of player object
  */
 Player::~Player(){
-    cout<<"~player() destructing a player whose name is "<< name<<endl;
+//    cout<<"~player() destructing a player whose name is "<< name<<endl;
     for (auto &territory :territories){
         territory->removeOwner();
     }
@@ -143,11 +162,11 @@ vector<Territory*> Player::getTerritories() const {
  * @return list of territories
  */
 vector<Territory*> Player::toDefend() {
-    Continent *continent = new Continent(12,"South America",7);
-    vector<Territory*> territories_to_be_defended;
-    territories_to_be_defended.push_back(new Territory(12,"Colombia", 4,continent));
-    territories_to_be_defended.push_back(new Territory(21,"Brazil", 2,continent));
-    territories_to_be_defended.push_back(new Territory(100,"Argentina", 1,continent));
+        cout <<"***"<< name << " is selecting the territories that he wants to defend"<< endl;
+        vector<Territory*> territories_to_be_defended;
+    for (int i = 0 ; i<territories.size(); i++){
+        territories_to_be_defended.push_back(territories.at(i));
+    }
     return territories_to_be_defended;
 }
 
@@ -156,20 +175,91 @@ vector<Territory*> Player::toDefend() {
  * @return list of territories
  */
 vector<Territory*> Player::toAttack() {
-    Continent *continent = new Continent(10,"Europe",5);
-    vector<Territory*> territories_to_be_attacked;
-    territories_to_be_attacked.push_back(new Territory(3,"England", 5,continent));
-    territories_to_be_attacked.push_back(new Territory(7,"Italy", 3,continent));
-    territories_to_be_attacked.push_back(new Territory(10,"Greece", 2,continent));
-    return territories_to_be_attacked;
+        cout << "***"<<name <<" is selecting territories to be attacked"<<endl;
+        vector<Territory*> territories_to_be_attacked;
+    for (int i = 0; i < territories.size(); i++ ){
+        for (int  j = 0 ; j< territories.at(i)->getNumAdjTerritories(); j++){
+            if (territories.at(i)->getAdjTerritories()[j]->getOwner() != this ) {
+                territories_to_be_attacked.push_back(territories.at(i)->getAdjTerritories()[j]);
+            }
+        }
+    }
+        return territories_to_be_attacked;
 }
 
 /**
  * add an order to player orders list
  */
 void Player::issueOrder() {
-    DeployOrder *anOrder = new DeployOrder();
-    playerOrdersList->add(anOrder);
+    int randNum;
+
+    //  reinforcement armies to territories goes into rounds until player's reinforcement pool gets empty
+    vector<Territory*> territories_to_be_defended = toDefend();
+    while (reinforcement_pool>0){
+        // all deployer orders are created for all territories that needs to be defended until player's reinforcement gets empty
+        for (int i = 0 ; i < territories_to_be_defended.size(); i++ ){
+            if (reinforcement_pool > 0){
+                randNum = rand()%40+5;
+                if (reinforcement_pool>randNum) {
+                    DeployOrder *deploy = new DeployOrder(this,randNum, territories_to_be_defended.at(i));
+//                    cout << name << " is issuing " << *deploy << endl;
+                    playerOrdersList->add(deploy);
+                    reinforcement_pool = reinforcement_pool - randNum;
+                }else{
+                    randNum = ceil(double (reinforcement_pool)/2);
+                    DeployOrder *deploy = new DeployOrder(this, randNum, territories_to_be_defended.at(i));
+//                    cout << name << " is issuing " << *deploy << "to defend"<<endl;
+                    playerOrdersList->add(deploy);
+                    reinforcement_pool = reinforcement_pool - randNum;
+                }
+            }else{
+                break;
+            }
+
+        }
+    }
+    cout << endl;
+
+    vector<Territory*> territories_to_be_attacked = toAttack();
+    for ( int  i = 0 ; i < territories_to_be_attacked.size(); i++){
+        bool found = false;
+        randNum = rand()%20+5;
+        for ( int j = 0 ; j < territories_to_be_attacked.at(i)->getNumAdjTerritories() ; j ++ ) {
+            for (auto &territory : territories) {
+                if (territories_to_be_attacked.at(i)->getAdjTerritories()[j] == territory) {
+                    // issue an advance order when player's territory number of armies exceed target territory's armies
+                    ///////////////////////// for demo purpose to force a player to use a card to issue an order
+                    ///////////////////////// we subtracted 1 form territories to be attacked
+                   if (i < territories_to_be_attacked.size()-1 ){
+                       AdvanceOrder *advanceOrder = new AdvanceOrder(this, randNum, territory, territories_to_be_attacked.at(i));
+                       playerOrdersList->add(advanceOrder);
+                       found = true;
+                       break;
+                   }else{
+                       // use player's hand of cards to issue an order
+                       for (auto &card : playerCards->getHand()){
+                           if (card->getType() == "airlift") {
+                               card->useCardtoCreateOrder(this,randNum, territory,territories_to_be_attacked.at(i));
+                               playerCards->removeCard(card);
+                               found = true;
+                               break;
+                           }else {
+                               // use any type of card to issue an order
+                               card->useCardtoCreateOrder(this,0, territory,territories_to_be_attacked.at(i));
+                               playerCards->removeCard(card);
+                               found = true;
+                               break;
+                           }
+                       }
+
+                   }
+                }
+            }
+            if(found){
+                break;
+            }
+        }
+    }
 }
 
 /**
@@ -190,6 +280,7 @@ Player &Player::operator=(const Player &anotherPlayer) {
             newTerritory->setOwner(this);
             addTerritory(newTerritory);
         }
+        this->neutral = anotherPlayer.neutral;
     }
     return *this;
 }
@@ -202,28 +293,31 @@ Player &Player::operator=(const Player &anotherPlayer) {
  */
 ostream &operator<<(ostream &out, const Player &player) {
     if (player.territories.empty()){
-        out << "Player name is "<<player.name<<", and he has no territories"<<endl;
+        out << "Player's name is "<<player.name<<", and he/she has no territories"<<endl;
     }else{
-        out << "Player name is "<< player.name<< ", and he has the following territories:"<<endl<<"\t";
-        for (auto &territory : player.territories){
-            out << *territory << endl<<"\t";
+        out << "Player name is "<< player.name<< ", and he/she has the following territories:"<<endl<<"\t";
+        for (auto &territory : player.territories) {
+            if(territory != nullptr) {
+                out << *territory << endl<<"\t";
+            }
         }
         out<<endl;
     }
 
-    if (player.playerCards->getSize()==0){
+    if (player.playerCards == nullptr || player.playerCards->getSize()==0){
         out<<"This player does not have a hand of cards"<<endl;
     } else{
         out<<"player hand of cards is :"<<endl;
         out<<*player.playerCards;
     }
 
-    if (player.playerOrdersList->size()== 0){
+    if (player.playerOrdersList == nullptr || player.playerOrdersList->size()== 0){
         out<<"This player does not have any orders in his list"<<endl;
     } else{
         out <<"Player orders list contain these orders"<<endl;
         out <<*player.playerOrdersList<<endl;
     }
+    out << player.name << " has " << player.reinforcement_pool << " army(ies) in his/her reinforcement pool." << endl;
     out<< endl;
 
     return out;
@@ -235,6 +329,7 @@ ostream &operator<<(ostream &out, const Player &player) {
  */
 void Player::addTerritory(Territory *newTerritory) {
     this->territories.push_back(newTerritory);
+    newTerritory->setOwner(this);
 }
 
 /**
@@ -244,9 +339,19 @@ void Player::addTerritory(Territory *newTerritory) {
 void Player::removeTerritory(Territory *A_Territory) {
     for (int i = 0; i<territories.size();i++){
         if (territories.at(i)->getId()==A_Territory->getId()){
+            territories.at(i)->setOwner(nullptr);
             territories.erase(next(begin(territories), + i));
         }
     }
+}
+/**
+ * move the a territory from one player to another player
+ * @param newTerritory
+ * @param toTransfer
+ */
+void Player::transferTerritory(Territory *newTerritory, Player *toTransfer) {
+    removeTerritory(newTerritory);
+    toTransfer->addTerritory(newTerritory);
 }
 
 /**
@@ -272,6 +377,30 @@ vector<Player *> Player::getRelations() const {
 bool Player::isNeutral() {
     return neutral;
 }
+/**
+ * set a player number of armies
+ * @param armies
+ */
+void Player::setReinforcementPool(int armies) {
+    reinforcement_pool = armies;
+}
+
+/**
+ * get player number of armies
+ * @return
+ */
+int Player::getReinforcementPool() const {
+        return reinforcement_pool;
+}
+
+    /**
+     * add new armies to player's reinforcement pool
+     * @param armies
+     */
+    void Player::assignReinforcementToPlayer(int armies) {
+        int newArmies = this->getReinforcementPool() + armies;
+        this->setReinforcementPool(newArmies);
+    }
 
 
 

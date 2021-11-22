@@ -11,4 +11,6 @@ add_executable(COMP345_N11
         Cards/CardsDriver.cpp Cards/Cards.h Cards/Cards.cpp
         Map/MapDriver.h Map/MapDriver.cpp Map/Map.cpp Map/Map.h
         Cards/CardDriver.h Orders/OrdersDriver.h GameEngine/GameEngineDriver.cpp GameEngine/GameEngineDriver.h
-        )
+        CommandProcessing/CommandProcessing.cpp CommandProcessing/CommandProcessing.h CommandProcessing/CommandProcessingDriver.cpp CommandProcessing/CommandProcessingDriver.h
+        Logging/LoggingObserver.h
+        Logging/LoggingObserver.cpp Logging/LoggingDriver.cpp Logging/LoggingDriver.h)

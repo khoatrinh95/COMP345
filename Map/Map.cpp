@@ -6,31 +6,23 @@
 
 // MapLoader default constructor
 MapLoader::MapLoader() {
-    cout << "into MapLoader()" << endl;
     // nothing
-    cout << "out of MapLoader()" << endl;
 }
 
 // MapLoader copy constructor
 MapLoader::MapLoader(MapLoader const &anotherMapLoader) {
-    cout << "into MapLoader(MapLoader)" << endl;
     // nothing
-    cout << "out of MapLoader(MapLoader)" << endl;
 }
 
 // overloading the assignment operator for MapLoader
 MapLoader& MapLoader::operator = (MapLoader const &anotherMapLoader) {
-    cout << "into = MapLoader" << endl;
     // nothing
-    cout << "out of = MapLoader" << endl;
     return *this;
 }
 
 // MapLoader destructor
 MapLoader::~MapLoader() {
-    cout << "into ~MapLoader()" << endl;
     // nothing
-    cout << "out ~MapLoader()" << endl;
 }
 
 // static function that reads a map file and returns a pointer to a map object
@@ -224,17 +216,14 @@ Map* MapLoader::loadMapFile(std::string fileName) {
 
 // Map default constructor
 Map::Map() {
-    cout << "into Map()" << endl;
     territories = nullptr;
     continents = nullptr;
     numTerritories = 0;
     numContinents = 0;
-    cout << "out of Map()" << endl;
 }
 
 // Map copy constructor
 Map::Map(Map const &anotherMap) {
-    cout << "into Map(Map)" << endl;
     territories = nullptr;
     continents = nullptr;
     numTerritories = anotherMap.numTerritories;
@@ -308,12 +297,10 @@ Map::Map(Map const &anotherMap) {
             }
         }
     }
-    cout << "out of Map(Map)" << endl;
 }
 
 // overloading the assignment operator for Map
 Map& Map::operator = (Map const &anotherMap) {
-    cout << "into  = Map" << endl;
     territories = nullptr;
     continents = nullptr;
     numTerritories = anotherMap.numTerritories;
@@ -387,13 +374,11 @@ Map& Map::operator = (Map const &anotherMap) {
             }
         }
     }
-    cout << "out of = Map" << endl;
     return *this;
 }
 
 // Map destructor
 Map::~Map() {
-    cout << "into ~Map()" << endl;
     // deallocating territories
     if (territories != nullptr && numTerritories > 0) {
         for (int i = 0; i < numTerritories; i++) {
@@ -413,7 +398,6 @@ Map::~Map() {
         delete[] continents;
         continents = nullptr;
     }
-    cout << "out of ~Map()" << endl;
 }
 
 // a method that checks whether a map is valid or not, and returns an int
@@ -522,7 +506,6 @@ bool Map::checkConnectivity(Territory *ter, Territory **path, bool withinContine
 
 // Territory default constructor
 Territory::Territory() {
-    cout << "into Territory()" << endl;
     adjTerritories = nullptr;
     continent = nullptr;
     owner = nullptr;
@@ -532,12 +515,10 @@ Territory::Territory() {
     name = "";
     pendingIncomingArmies = 0;
     pendingOutgoingArmies = 0;
-    cout << "out of Territory()" << endl;
 }
 
 // Territory parametrized constructor
 Territory::Territory(int id, string name, int armies, Continent* continent) {
-    cout << "into Territory(param)" << endl;
     adjTerritories = nullptr;
     this->continent = continent;
     owner = nullptr;
@@ -547,12 +528,10 @@ Territory::Territory(int id, string name, int armies, Continent* continent) {
     this->name = name;
     pendingIncomingArmies = 0;
     pendingOutgoingArmies = 0;
-    cout << "out of Territory(param)" << endl;
 }
 
 // Territory copy constructor
 Territory::Territory(Territory const &anotherTerritory) {
-    cout << "into Territory(Territory)" << endl;
     id = anotherTerritory.id;
     name = anotherTerritory.name;
     owner = nullptr;
@@ -575,12 +554,10 @@ Territory::Territory(Territory const &anotherTerritory) {
     if (anotherTerritory.adjTerritories != nullptr && anotherTerritory.numAdjTerritories > 0) {
         adjTerritories = new Territory*[numAdjTerritories];
     }
-    cout << "out of Territory(Territory)" << endl;
 }
 
 // overloading the assignment operator for Territory
 Territory& Territory::operator = (Territory const &anotherTerritory) {
-    cout << "into = Territory" << endl;
     id = anotherTerritory.id;
     name = anotherTerritory.name;
     owner = nullptr;
@@ -606,13 +583,11 @@ Territory& Territory::operator = (Territory const &anotherTerritory) {
             adjTerritories[i] = nullptr;
         }
     }
-    cout << "out of = Territory" << endl;
     return *this;
 }
 
 // Territory destructor
 Territory::~Territory() {
-    cout << "into ~Territory()" << endl;
     // removing any reference to this territory in the adjacent territories, then deallocating memory reserved to list of adjacent territories
     if (adjTerritories != nullptr && numAdjTerritories > 0) {
         for (int i = 0; i < numAdjTerritories; i++) {
@@ -648,7 +623,6 @@ Territory::~Territory() {
         owner->removeTerritory(this);
         owner = nullptr;
     }
-    cout << "out of ~Territory()" << endl;
 }
 
 // mutator that sets ownership of territory to a player
@@ -762,47 +736,39 @@ int Territory::getNumberOfMovableArmies() const {
     return numArmies + pendingIncomingArmies - pendingOutgoingArmies;
 }
 
+// Returns the containing continent
+Continent * Territory::getContinent() const {
+    return continent;
+}
+
 // Continent default constructor
 Continent::Continent() {
-    cout << "into Continent()" << endl;
     id = -1;
     name = "";
     bonus = 0;
     territories = nullptr;
     numTerritories = 0;
     owner = nullptr;
-    cout << "out of Continent()" << endl;
 }
 
 // Continent parametrized constructor
 Continent::Continent(int id, string name, int bonus) {
-    cout << "into Continent(param)" << endl;
     this->id = id;
     this->name = name;
     this->bonus = bonus;
     territories = nullptr;
     numTerritories = 0;
     owner = nullptr;
-    cout << "out of Continent(param)" << endl;
 }
 
 // Continent copy constructor
 Continent::Continent(Continent const &anotherContinent) {
-    cout << "into Continent(Continent)" << endl;
     id = anotherContinent.id;
     name = anotherContinent.name;
     bonus = anotherContinent.bonus;
     owner = nullptr;
     numTerritories = anotherContinent.numTerritories;
     territories = nullptr;
-
-//    // copying list of territories
-//    if (anotherContinent.territories != nullptr && anotherContinent.numTerritories > 0) {
-//        territories = new Territory*[numTerritories];
-//        for (int i = 0; i < numTerritories; i++) {
-//            territories[i] = anotherContinent.territories[i];
-//        }
-//    }
 
     // creating empty list of territories
     if (anotherContinent.territories != nullptr && anotherContinent.numTerritories > 0) {
@@ -811,12 +777,10 @@ Continent::Continent(Continent const &anotherContinent) {
             territories[i] = nullptr;
         }
     }
-    cout << "out of Continent(Continent)" << endl;
 }
 
 // overloading the assignment operator for Continent
 Continent& Continent::operator = (Continent const &anotherContinent) {
-    cout << "into = Continent" << endl;
     id = anotherContinent.id;
     name = anotherContinent.name;
     bonus = anotherContinent.bonus;
@@ -824,26 +788,16 @@ Continent& Continent::operator = (Continent const &anotherContinent) {
     numTerritories = anotherContinent.numTerritories;
     territories = nullptr;
 
-//    // copying list of territories
-//    if (anotherContinent.territories != nullptr && anotherContinent.numTerritories > 0) {
-//        territories = new Territory*[numTerritories];
-//        for (int i = 0; i < numTerritories; i++) {
-//            territories[i] = anotherContinent.territories[i];
-//        }
-//    }
-
     // creating empty list of territories
     if (anotherContinent.territories != nullptr && anotherContinent.numTerritories > 0) {
         territories = new Territory*[numTerritories];
     }
 
-    cout << "out of = Continent" << endl;
     return *this;
 }
 
 // Continent destructor
 Continent::~Continent() {
-    cout << "into ~Continent()" << endl;
     // removing any reference to this continent in its territories, then deallocating memory reserved to list of territories
     if (territories != nullptr && numTerritories > 0) {
         for (int i = 0; i < numTerritories; i++) {
@@ -855,7 +809,6 @@ Continent::~Continent() {
         territories = nullptr;
     }
     owner = nullptr;
-    cout << "out of ~Continent()" << endl;
 }
 
 // accessor to get name of the owner of this continent
@@ -882,6 +835,7 @@ ostream& operator << (ostream &stream, const MapLoader &mapLoader) {
     // do nothing
     return stream;
 }
+
 
 ostream& operator << (ostream &stream, const Map &map) {
     stream << "Number of Territories: " << map.numTerritories;
@@ -919,6 +873,16 @@ ostream& operator << (ostream &stream, const Territory &territory) {
     }
     return stream;
 }
+///////////////////////////////////////////////////////////////////////////////Sarah
+int Territory::getNumAdjTerritories() const {
+    return numAdjTerritories;
+}
+
+Territory **Territory::getAdjTerritories() const {
+    return adjTerritories;
+}
+/////////////////////////////////////////////////////////////////////////////////
+
 
 ostream& operator << (ostream& stream, const Continent& continent) {
     stream << "ID: " << continent.id << ", Name: " << continent.name << ", Number of territories: " << continent.numTerritories << ", Bonus: " << continent.bonus;
@@ -938,6 +902,11 @@ ostream& operator << (ostream& stream, const Continent& continent) {
     }
     return stream;
 }
+//////////////////////////////////////////////////////////sarah
+int Continent::getBonus() const {
+    return bonus;
+}
+//////////////////////////////////////////////////////////////////////
 
 ////// for demo purpose only, to be removed later
 void Map::setOwnerOfTerritory(Player *player) {
@@ -950,4 +919,22 @@ void Map::setOwnerOfTerritory(Player *player) {
 void Map::makeContinentContain2Territories() {
     continents[0]->territories[1] = continents[1]->territories[0];
     continents[0]->territories[0]->numArmies = 111;
+}
+
+/////////////////////////////////////////////////////////////SARAH
+int Map::getNumContinent() {
+    return this->numContinents;
+}
+
+Continent **Map::getContinent() const {
+    return this->continents;
+}
+/////////////////////////////////////////////////////////////////////
+
+int Map::getNumTerritories() {
+    return numTerritories;
+}
+
+Territory **Map::getTerritories() const {
+    return territories;
 }
