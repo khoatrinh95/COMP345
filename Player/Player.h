@@ -13,6 +13,7 @@ using namespace std;
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
 #include "../Orders/Orders.h"
+#include "../PlayerStrategy/PlayerStrategy.h"
 
 class Territory;
 class Hand;
@@ -30,7 +31,7 @@ private:
     vector<Player*> diplomaticRelations_;
     bool neutral;
     int reinforcement_pool;
-
+    PlayerStrategy* ps;
 
 
 public:

@@ -5,12 +5,33 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(COMP345_N11
         TestDriver.cpp TestDriver.h
-        Player/Player.cpp Player/Player.h Player/PlayerDriver.h Player/PlayerDriver.cpp
-        Orders/Orders.cpp Orders/Orders.h Orders/OrdersDriver.cpp
-        GameEngine/GameEngine.cpp GameEngine/GameEngine.h
-        Cards/CardsDriver.cpp Cards/Cards.h Cards/Cards.cpp
-        Map/MapDriver.h Map/MapDriver.cpp Map/Map.cpp Map/Map.h
-        Cards/CardDriver.h Orders/OrdersDriver.h GameEngine/GameEngineDriver.cpp GameEngine/GameEngineDriver.h
-        CommandProcessing/CommandProcessing.cpp CommandProcessing/CommandProcessing.h CommandProcessing/CommandProcessingDriver.cpp CommandProcessing/CommandProcessingDriver.h
+        Player/Player.cpp
+        Player/Player.h
+        Player/PlayerDriver.h
+        Player/PlayerDriver.cpp
+        Orders/Orders.cpp
+        Orders/Orders.h
+        Orders/OrdersDriver.cpp
+        Orders/OrdersDriver.h
+        GameEngine/GameEngine.cpp
+        GameEngine/GameEngine.h
+        GameEngine/GameEngineDriver.cpp
+        GameEngine/GameEngineDriver.h
+        Cards/CardsDriver.cpp
+        Cards/CardDriver.h
+        Cards/Cards.h
+        Cards/Cards.cpp
+        Map/MapDriver.h
+        Map/MapDriver.cpp
+        Map/Map.cpp
+        Map/Map.h
+        CommandProcessing/CommandProcessing.cpp
+        CommandProcessing/CommandProcessing.h
+        CommandProcessing/CommandProcessingDriver.cpp
+        CommandProcessing/CommandProcessingDriver.h
         Logging/LoggingObserver.h
-        Logging/LoggingObserver.cpp Logging/LoggingDriver.cpp Logging/LoggingDriver.h)
+        Logging/LoggingObserver.cpp
+        Logging/LoggingDriver.cpp
+        Logging/LoggingDriver.h
+        PlayerStrategy/PlayerStrategy.cpp
+        PlayerStrategy/PlayerStrategy.h)
