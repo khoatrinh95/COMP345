@@ -2,7 +2,7 @@
 // Created by Khoa Trinh on 2021-11-21.
 //
 
-#include "../../../../../../Desktop/PlayerStrategy.h"
+#include "PlayerStrategy.h"
 
 // THONG
 void HumanPlayer::toDefend() {
