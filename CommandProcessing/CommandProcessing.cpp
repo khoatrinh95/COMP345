@@ -345,6 +345,11 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                 string substr;
                 getline( strs, substr, '-' );
                 if (substr[0] == 'M' || substr[0] == 'm') { //map argument
+                    if (mapProvided == true) {
+                        cout << "There were more than one -M arguments provided in the tournament command.";
+                        command->saveEffect("There were more than one -M arguments provided in the tournament command.");
+                        return false;
+                    }
                     stringstream ssMap(substr.substr(1));
                     string substrMap;
                     ssMap >> substrMap; //extracting first map (there will be at least one map always)
@@ -372,6 +377,11 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                     command->setMapList(mapList);
                     mapProvided = true;
                 } else if (substr[0] == 'P' || substr[0] == 'p') { //player strategies argument
+                    if (playerStrategiesProvided == true) {
+                        cout << "There were more than one -P arguments provided in the tournament command.";
+                        command->saveEffect("There were more than one -P arguments provided in the tournament command.");
+                        return false;
+                    }
                     stringstream ssPlayerStrats(substr.substr(1));
                     string substrPStrats;
                     ssPlayerStrats >> substrPStrats; //extracting first player strat (there will be at least one map always)
@@ -404,6 +414,11 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                     command->setplayerStrategiesList(playerStrategiesList);
                     playerStrategiesProvided = true;
                 } else if (substr[0] == 'G' || substr[0] == 'g') { //games argument
+                    if (gamesProvided == true) {
+                        cout << "There were more than one -G arguments provided in the tournament command.";
+                        command->saveEffect("There were more than one -G arguments provided in the tournament command.");
+                        return false;
+                    }
                     stringstream ssGames(substr.substr(1));
                     string substrNum;
                     getline( ssGames, substrNum, '-' ); //extracting games
@@ -433,6 +448,11 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                     command->setNumOfGames(numOfGames);
                     gamesProvided = true;
                 } else if (substr[0] == 'D' || substr[0] == 'd') { //duration argument
+                    if (turnsProvided == true) {
+                        cout << "There were more than one -D arguments provided in the tournament command.";
+                        command->saveEffect("There were more than one -D arguments provided in the tournament command.");
+                        return false;
+                    }
                     stringstream ssDuration(substr.substr(1));
                     string substrNum;
                     getline( ssDuration, substrNum, '-' ); //extracting games
