@@ -51,24 +51,24 @@ int main(int argc, char* argv[]){
 //    cout << "End of testing command processor" << endl;
 //    cout << "****************************************************************************" << endl;
 
-    /* uncomment the block below for driver tests for the command processor's tournament command (part 2)
-     * To run, go to the top bar menu in CLion and click on Run, then go to Edit Configurations,
-     * then in program arguments either type "-console" or "-file ../CommandProcessing/tournamentTest.txt"
-     * without quotation marks.
-     */
-    if (argv[1] != NULL && (strcmp(argv[1], "-file") == 0)) {
-        if (argv[2] != NULL) {
-            string filename = argv[2];
-            TournamentCommandDriver(filename);
-        } else {
-            cout << "Please specify a file name.";
-        }
-    } else if (argv[1] != NULL && (strcmp(argv[1], "-console") == 0)) {
-        TournamentCommandDriver("");
-    } else {
-        TournamentCommandDriver("");
-    }
-    cout << "\n****************************************************************************" << endl;
-    cout << "End of testing the command processor's tournament command" << endl;
-    cout << "****************************************************************************" << endl;
+//    /* uncomment the block below for driver tests for the command processor's tournament command (part 2)
+//     * To run, go to the top bar menu in CLion and click on Run, then go to Edit Configurations,
+//     * then in program arguments either type "-console" or "-file ../CommandProcessing/tournamentTest.txt"
+//     * without quotation marks.
+//     */
+//    if (argv[1] != NULL && (strcmp(argv[1], "-file") == 0)) {
+//        if (argv[2] != NULL) {
+//            string filename = argv[2];
+//            TournamentCommandDriver(filename);
+//        } else {
+//            cout << "Please specify a file name.";
+//        }
+//    } else if (argv[1] != NULL && (strcmp(argv[1], "-console") == 0)) {
+//        TournamentCommandDriver("");
+//    } else {
+//        TournamentCommandDriver("");
+//    }
+//    cout << "\n****************************************************************************" << endl;
+//    cout << "End of testing the command processor's tournament command" << endl;
+//    cout << "****************************************************************************" << endl;
 }
