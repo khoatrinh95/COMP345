@@ -56,8 +56,18 @@ public:
 
     /**
      * copy constructor for player
+     * @param Name player name
+     * @param territories player list of territories
+     * @param ps a player strategy
+     */
+
+    Player(string Name, vector<Territory*> & territories, PlayerStrategy* ps);
+
+    /**
+     * copy constructor for player
      * @param anotherPlayer
      */
+
     Player(const Player &anotherPlayer);
 
     /**

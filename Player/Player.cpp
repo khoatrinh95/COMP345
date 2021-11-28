@@ -405,6 +405,16 @@ int Player::getReinforcementPool() const {
         this->setReinforcementPool(newArmies);
     }
 
+    Player::Player(string Name, vector<Territory *> &territories, PlayerStrategy *ps) {
+        this->name = Name;
+        this->territories = territories;
+        this->playerCards = new Hand();
+        this->playerOrdersList = new OrdersList();
+        neutral = false;
+        this->ps = ps;
+        this->ps->setPlayer(this);
+    }
+
 
 
 
