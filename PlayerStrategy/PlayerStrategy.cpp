@@ -68,3 +68,17 @@ void CheaterPlayer::toAttack() {
 void CheaterPlayer::issueOrder() {
 
 }
+
+PlayerStrategy::PlayerStrategy(Player* p) {
+    player = p;
+}
+
+PlayerStrategy::~PlayerStrategy() {
+    delete player;
+}
+
+PlayerStrategy::PlayerStrategy() {}
+
+void PlayerStrategy::setPlayer(Player *p) {
+    player = p;
+}
