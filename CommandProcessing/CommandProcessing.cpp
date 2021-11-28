@@ -110,6 +110,38 @@ string Command::getArgument() {
     return argument;
 }
 
+void Command::setMapList(vector<string> mapList) {
+    this->mapList = mapList;
+}
+
+vector<string> Command::getMapList() {
+    return this->mapList;
+}
+
+void Command::setplayerStrategiesList(vector<string> playerStrategiesList) {
+    this->playerStrategiesList = playerStrategiesList;
+}
+
+vector<string> Command::getplayerStrategiesList() {
+    return this->playerStrategiesList;
+}
+
+void Command::setNumOfGames(int num) {
+    this->numOfGames = num;
+}
+
+int Command::getNumOfGames() {
+    return this->numOfGames;
+}
+
+void Command::setNumOfTurns(int num) {
+    this->numOfTurns = num;
+}
+
+int Command::getNumOfTurns() {
+    return this->numOfTurns;
+}
+
 /*
  * Command Processor portion
  */
@@ -180,6 +212,29 @@ string CommandProcessor::readCommand() {
     return commander;
 }
 
+/*
+ * The following are helper functions to remove leading and trailing white spaces for easier string processing
+ * Used in validate() and reading from files
+ */
+
+const std::string WHITESPACE = " \n\r\t\f\v";
+
+std::string ltrim(const std::string &s)
+{
+    size_t start = s.find_first_not_of(WHITESPACE);
+    return (start == std::string::npos) ? "" : s.substr(start);
+}
+
+std::string rtrim(const std::string &s)
+{
+    size_t end = s.find_last_not_of(WHITESPACE);
+    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+}
+
+std::string trim(const std::string &s) {
+    return rtrim(ltrim(s));
+}
+
 /**
  * validate function to verify that the command entered is valid for the game state the game is in
  * @param command a command object we are testing for valid existing command + valid game state to execute in
@@ -191,7 +246,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
     stringstream ss(commander);
     string comWord, comArg;
     ss >> comWord; //get first token of input string
-    if(comWord == "loadmap" || comWord == "addplayer") {
+    if(comWord == "loadmap" || comWord == "addplayer" || comWord == "tournament") {
         ss >> comArg;
     }
     std::transform(comWord.begin(), comWord.end(), comWord.begin(),
@@ -262,6 +317,210 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
             command->setInstruction(comWord);
             return true;
         }
+    } else if (comWord.compare("tournament") == 0) {
+        if (*phase != Phases::START) {
+            cout << "quit is only accepted during the phase START."<< endl;
+            command->saveEffect("Unable to proceed with the command at the current game state.");
+            return false;
+        } else {
+            command->setInstruction(comWord);
+            comArg = commander.substr(11);
+            stringstream strs( comArg );
+
+            bool mapProvided = false;
+            bool playerStrategiesProvided = false;
+            bool gamesProvided = false;
+            bool turnsProvided = false;
+
+            vector<string> mapList;
+            int mapCounter = 0;
+            vector<string> playerStrategiesList;
+            int playerStrategiesCounter = 0;
+
+            int numOfGames;
+            int numOfTurns;
+
+            while( strs.good() ) //loop through the argument part of the command to extract inputs
+            {
+                string substr;
+                getline( strs, substr, '-' );
+                if (substr[0] == 'M' || substr[0] == 'm') { //map argument
+                    if (mapProvided == true) {
+                        cout << "There were more than one -M arguments provided in the tournament command.";
+                        command->saveEffect("There were more than one -M arguments provided in the tournament command.");
+                        return false;
+                    }
+                    stringstream ssMap(substr.substr(1));
+                    string substrMap;
+                    ssMap >> substrMap; //extracting first map (there will be at least one map always)
+                    if (substrMap.find('-') != std::string::npos || substrMap == "") {
+                        cout << "No maps were specified for the map argument of the tournament command. " << endl;
+                        command->saveEffect("No maps were specified for the map argument of the tournament command.");
+                        return false;
+                    }
+                    substrMap = trim(substrMap);
+                    substrMap.erase(std::remove(substrMap.begin(), substrMap.end(), ','), substrMap.end());
+                    mapList.push_back(substrMap);
+                    mapCounter += 1;
+                    while (ssMap.good()) { //extracting additional maps
+                        getline( ssMap, substrMap, ',' );
+                        substrMap = trim(substrMap);
+                        if (substrMap == "") continue;
+                        mapList.push_back(substrMap);
+                        mapCounter += 1;
+                        if (mapCounter > 5) {
+                            cout << "More than 5 maps were given in the map argument of the tournament command. " << endl;
+                            command->saveEffect("More than 5 maps were given in the map argument of the tournament command. ");
+                            return false;
+                        }
+                    }
+                    command->setMapList(mapList);
+                    mapProvided = true;
+                } else if (substr[0] == 'P' || substr[0] == 'p') { //player strategies argument
+                    if (playerStrategiesProvided == true) {
+                        cout << "There were more than one -P arguments provided in the tournament command.";
+                        command->saveEffect("There were more than one -P arguments provided in the tournament command.");
+                        return false;
+                    }
+                    stringstream ssPlayerStrats(substr.substr(1));
+                    string substrPStrats;
+                    ssPlayerStrats >> substrPStrats; //extracting first player strat (there will be at least one map always)
+                    if (substrPStrats.find('-') != std::string::npos || substrPStrats == "") {
+                        cout << "No player strategies were specified for the player stategies argument of the tournament command. " << endl;
+                        command->saveEffect("No player stategies were specified for the player stategies argument of the tournament command.");
+                        return false;
+                    }
+                    substrPStrats = trim(substrPStrats);
+                    substrPStrats.erase(std::remove(substrPStrats.begin(), substrPStrats.end(), ','), substrPStrats.end());
+                    playerStrategiesList.push_back(substrPStrats);
+                    playerStrategiesCounter += 1;
+                    while (ssPlayerStrats.good()) { //extracting additional player strats
+                        getline( ssPlayerStrats, substrPStrats, ',' );
+                        substrPStrats = trim(substrPStrats);
+                        if (substrPStrats == "") continue;
+                        playerStrategiesList.push_back(substrPStrats);
+                        playerStrategiesCounter += 1;
+                        if (playerStrategiesCounter > 4) {
+                            cout << "More than 4 player stategies were given in the map argument of the tournament command. " << endl;
+                            command->saveEffect("More than 4 player stategies were given in the map argument of the tournament command. ");
+                            return false;
+                        }
+                    }
+                    if (playerStrategiesCounter < 2) {
+                        cout << "Less than 2 player stategies were given in the map argument of the tournament command. " << endl;
+                        command->saveEffect("Less than 2 player stategies were given in the map argument of the tournament command. ");
+                        return false;
+                    }
+                    command->setplayerStrategiesList(playerStrategiesList);
+                    playerStrategiesProvided = true;
+                } else if (substr[0] == 'G' || substr[0] == 'g') { //games argument
+                    if (gamesProvided == true) {
+                        cout << "There were more than one -G arguments provided in the tournament command.";
+                        command->saveEffect("There were more than one -G arguments provided in the tournament command.");
+                        return false;
+                    }
+                    stringstream ssGames(substr.substr(1));
+                    string substrNum;
+                    getline( ssGames, substrNum, '-' ); //extracting games
+                    substrNum = trim(substrNum);
+                    if (substrNum.find('-') != std::string::npos || substrNum == "") {
+                        cout << "No number was specified for the number of games argument of the tournament command. " << endl;
+                        command->saveEffect("No number was specified for the number of games argument of the tournament command. ");
+                        return false;
+                    } else if (substrNum.find(' ') != std::string::npos) {
+                        cout << "More than one number was specified for the number of games argument of the tournament command. " << endl;
+                        command->saveEffect("More than one number was specified for the number of games argument of the tournament command. ");
+                        return false;
+                    } else if (substrNum.find('.') != std::string::npos) {
+                        cout << "The number specified for the number of games argument of the tournament command was not a whole number." << endl;
+                        command->saveEffect("The number specified for the number of games argument of the tournament command was not a whole number. ");
+                        return false;
+                    }
+                    try {
+                        numOfGames = std::stoi(substrNum); //parse int from string
+                    }
+                    catch(exception &err)
+                    {
+                        cout << "No number was specified for the number of games argument of the tournament command. " << endl;
+                        command->saveEffect("No number was specified for the number of games argument of the tournament command. ");
+                        return false;
+                    }
+                    command->setNumOfGames(numOfGames);
+                    gamesProvided = true;
+                } else if (substr[0] == 'D' || substr[0] == 'd') { //duration argument
+                    if (turnsProvided == true) {
+                        cout << "There were more than one -D arguments provided in the tournament command.";
+                        command->saveEffect("There were more than one -D arguments provided in the tournament command.");
+                        return false;
+                    }
+                    stringstream ssDuration(substr.substr(1));
+                    string substrNum;
+                    getline( ssDuration, substrNum, '-' ); //extracting games
+                    substrNum = trim(substrNum);
+                    if (substrNum.find('-') != std::string::npos || substrNum == "") {
+                        cout << "No valid number was specified for the max number of turns argument of the tournament command. "
+                             << endl;
+                        command->saveEffect(
+                                "No valid number was specified for the max number of turns argument of the tournament command. ");
+                        return false;
+                    }  else if (substrNum.find(' ') != std::string::npos) {
+                        cout << "More than one number was specified for the max number of turns argument of the tournament command. " << endl;
+                        command->saveEffect("More than one number was specified for the max number of turns argument of the tournament command. ");
+                        return false;
+                    } else if (substrNum.find('.') != std::string::npos) {
+                        cout << "The number specified for the max number of turns argument of the tournament command was not a whole number." << endl;
+                        command->saveEffect("The number specified for the max number of turns argument of the tournament command was not a whole number. ");
+                        return false;
+                    }
+                    try {
+                        numOfTurns = std::stoi(substrNum); //parse int from string
+                    }
+                    catch (exception &err) {
+                        cout << "No number was specified for the max number of turns argument of the tournament command. "
+                             << endl;
+                        command->saveEffect(
+                                "No number was specified for the max number of turns argument of the tournament command. ");
+                        return false;
+                    }
+                    command->setNumOfTurns(numOfTurns);
+                    turnsProvided = true;
+                } else if (substr.length() > 0) {
+                    cout << "An unexpected argument was found while reading through the tournament command."
+                         << endl;
+                    command->saveEffect(
+                            "An unexpected argument was found while reading through the tournament command.");
+                    return false;
+                }
+            }
+
+            if (turnsProvided == false) {
+                cout << "The tournament command is missing the -D argument. " << endl;
+                command->saveEffect(
+                        "The tournament command is missing the -D argument.");
+                return false;
+            } else if (gamesProvided == false) {
+                cout << "The tournament command is missing the -G argument. " << endl;
+                command->saveEffect(
+                        "The tournament command is missing the -G argument.");
+                return false;
+            } else if (mapProvided == false) {
+                cout << "The tournament command is missing the -M argument. " << endl;
+                command->saveEffect(
+                        "The tournament command is missing the -M argument.");
+                return false;
+            } else if (playerStrategiesProvided == false) {
+                cout << "The tournament command is missing the -P argument. " << endl;
+                command->saveEffect(
+                        "The tournament command is missing the -P argument.");
+                return false;
+            }
+
+            command->setArgument(comArg);
+            return true;
+        }
+    } else if (comWord.compare("eof") == 0) {
+        command->setInstruction(comWord);
+        return true;
     } else {
         cout << "The command entered was not recognized." << endl;
         command->saveEffect("The command entered was not recognized. ");
@@ -321,32 +580,6 @@ FileLineReader::~FileLineReader() {
 void FileLineReader::setFStr(fstream* ifstr) {
     _ifstr = ifstr;
 }
-
-/*
- * The following are helper functions to remove leading and trailing white spaces in the text file's lines
- */
-
-const std::string WHITESPACE = " \n\r\t\f\v";
-
-std::string ltrim(const std::string &s)
-{
-    size_t start = s.find_first_not_of(WHITESPACE);
-    return (start == std::string::npos) ? "" : s.substr(start);
-}
-
-std::string rtrim(const std::string &s)
-{
-    size_t end = s.find_last_not_of(WHITESPACE);
-    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
-}
-
-std::string trim(const std::string &s) {
-    return rtrim(ltrim(s));
-}
-
-/*
- * Back to file line reader
- */
 
 /**
  * reads one singular line from the file
@@ -433,8 +666,8 @@ string FileCommandProcessorAdapter::readCommand() {
         cout << commander << " has been read from the file." << endl;
         return commander;
     } else {
-        cout << "There are no more commands to be read from the file. Aborting program." << endl;
-        exit(0);
+        cout << "There are no more commands to be read from the file." << endl;
+        return "EOF";
     }
 }
 

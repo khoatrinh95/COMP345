@@ -11,6 +11,7 @@
 #include "Orders/OrdersDriver.h"
 #include "CommandProcessing/CommandProcessingDriver.h"
 #include "Logging/LoggingDriver.h"
+#include "CommandProcessing/TournamentCommandDriver.h"
 using namespace std;
 
 

@@ -8,6 +8,7 @@
 #include "CommandProcessing.h"
 
 void CommandProcessingDriver(string basicString);
-
+Phases CheckCommandAndReturnPhase(Command* command);
+void PhasesLoop(Phases* currentPhase, CommandProcessor* comPro);
 
 #endif //COMP345_N11_COMMANDPROCESSINGDRIVER_H
