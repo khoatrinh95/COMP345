@@ -21,6 +21,7 @@ class Map;
 class Territory;
 class Deck;
 class CommandProcessor;
+class PlayerStrategy;
 
 enum class Phases{START, MAPLOADED, MAPVALIDATED, PLAYERSADDED, ASSIGNREINFORCEMENT, ISSUEORDERS, EXECUTEORDERS, WIN};
 enum class Modes{STARTUP, PLAY};
@@ -49,6 +50,7 @@ public:
     string getPlayersNames() const;
     string getPlayingOrderPlayersNames() const;
     void startupPhase();
+    static vector<PlayerStrategy*>strategyType ;
 
     // Iloggable
     virtual string stringToLog();

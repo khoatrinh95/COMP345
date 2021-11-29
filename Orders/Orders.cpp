@@ -3,6 +3,7 @@
 #include <iterator>
 #include <math.h>
 #include <algorithm>
+#include "../PlayerStrategy/PlayerStrategy.h"
 
 namespace {
     // Orders are sorted by priority using a custom comparator.
@@ -350,6 +351,11 @@ void AdvanceOrder::execute_() {
 
     // Recalculate what number of armies may want to truely be moved if the kingdom of the territory has modified because of an attack
     int movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
+
+    if(movableArmiesFromSource>0  && defender->getStrategy() == GameEngine::strategyType.at(strategy::Neutral)){
+        defender->setStrategy(strategy::Aggressive);
+    }
+
     std::cout << "=======An Advanced Order is executed ========";
     if (offensive) {
         // Simulate battle

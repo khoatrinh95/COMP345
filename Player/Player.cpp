@@ -169,6 +169,7 @@ vector<Territory*> Player::toDefend() {
 //        territories_to_be_defended.push_back(territories.at(i));
 //    }
 //    return territories_to_be_defended;
+
 }
 
 /**
@@ -193,7 +194,7 @@ vector<Territory*> Player::toAttack() {
  * add an order to player orders list
  */
 void Player::issueOrder() {
-    ps->issueOrder();
+    ps->issueOrder(this);
 //    int randNum;
 //
 //    //  reinforcement armies to territories goes into rounds until player's reinforcement pool gets empty
@@ -414,6 +415,17 @@ int Player::getReinforcementPool() const {
         this->ps = ps;
         this->ps->setPlayer(this);
     }
+
+    void Player::setStrategy(int strategy) {
+        this->ps=GameEngine::strategyType.at(strategy);
+        cout<<strategy<<endl;
+    }
+
+    PlayerStrategy *Player::getStrategy() const {
+        return ps;
+    }
+
+
 
 
 

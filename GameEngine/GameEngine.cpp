@@ -7,12 +7,17 @@
 #include <algorithm>
 #include <math.h>
 #include <string>
+#include "../PlayerStrategy/PlayerStrategy.h"
 
 
 
 
 Deck *GameEngine::deck = new Deck();
 Player *GameEngine::neutralPlayer = new Player("Neutral", true);
+vector<PlayerStrategy*>GameEngine:: strategyType = {new AggressivePlayerStrategy(),new HumanPlayerStrategy(),
+                                                    new NeutralPlayerStrategy(), new CheaterPlayerStrategy(),
+                                                    new BenevolentPlayerStrategy()
+};
 
 /*
 ===================================
