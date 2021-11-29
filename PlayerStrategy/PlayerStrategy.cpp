@@ -15,7 +15,7 @@
 
 
 
-vector<Territory*>  BenevolentPlayerStrategy::toDefend() {
+vector<Territory*>  BenevolentPlayerStrategy::toDefend(Player *player) {
 //    vector<Territory*>toDefend_Territories;
 //    vector<Territory* > orderTerritories = getPlayer()->getTerritories();
 //    sort(orderTerritories.begin(), orderTerritories.end(), [](const Territory& lhs, const Territory& rhs) {
@@ -27,7 +27,7 @@ vector<Territory*>  BenevolentPlayerStrategy::toDefend() {
 //    return toDefend_Territories;
 }
 
-vector<Territory*>  BenevolentPlayerStrategy::toAttack() {
+vector<Territory*>  BenevolentPlayerStrategy::toAttack(Player *player) {
 //    vector<Territory*>toAttack_Territories;
 //    return toAttack_Territories;
 }
@@ -77,12 +77,12 @@ void BenevolentPlayerStrategy::issueOrder(Player *player)  {
 
 
 
-vector<Territory*>  NeutralPlayerStrategy::toDefend() {
+vector<Territory*>  NeutralPlayerStrategy::toDefend(Player *player) {
     vector<Territory*>toDefend_Territories;
     return toDefend_Territories;
 }
 
-vector<Territory*>  NeutralPlayerStrategy::toAttack() {
+vector<Territory*>  NeutralPlayerStrategy::toAttack(Player *player) {
     vector<Territory*>toAttack_Territories;
     return toAttack_Territories;
 }
@@ -96,11 +96,11 @@ void NeutralPlayerStrategy::issueOrder(Player *player)  {
 
 
 
-vector<Territory *> HumanPlayerStrategy::toDefend() {
+vector<Territory *> HumanPlayerStrategy::toDefend(Player *player) {
     return vector<Territory *>();
 }
 
-vector<Territory *> HumanPlayerStrategy::toAttack() {
+vector<Territory *> HumanPlayerStrategy::toAttack(Player *player) {
     return vector<Territory *>();
 }
 
@@ -108,11 +108,11 @@ void HumanPlayerStrategy::issueOrder(Player *player)  {
 
 }
 
-vector<Territory *> AggressivePlayerStrategy::toDefend() {
+vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player) {
     return vector<Territory *>();
 }
 
-vector<Territory *> AggressivePlayerStrategy::toAttack() {
+vector<Territory *> AggressivePlayerStrategy::toAttack(Player *player) {
     return vector<Territory *>();
 }
 
@@ -120,11 +120,11 @@ void AggressivePlayerStrategy::issueOrder(Player *player)  {
 
 }
 
-vector<Territory *> CheaterPlayerStrategy::toDefend() {
+vector<Territory *> CheaterPlayerStrategy::toDefend(Player *player) {
     return vector<Territory *>();
 }
 
-vector<Territory *> CheaterPlayerStrategy::toAttack() {
+vector<Territory *> CheaterPlayerStrategy::toAttack(Player *player) {
     return vector<Territory *>();
 }
 
