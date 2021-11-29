@@ -14,6 +14,8 @@
 Deck *GameEngine::deck = new Deck();
 Player *GameEngine::neutralPlayer = new Player("Neutral", true);
 
+
+
 /*
 ===================================
  Implementation for GameEngine class
@@ -590,3 +592,7 @@ vector<Player *> GameEngine::getPlayingOrder() {
     return playingOrder;
 }
 
+Map* GameEngine::getMap()
+{
+    return map_;
+}

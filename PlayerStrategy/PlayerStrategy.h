@@ -5,6 +5,8 @@
 #ifndef COMP345_N11_PLAYERSTRATEGY_H
 #define COMP345_N11_PLAYERSTRATEGY_H
 
+#include "../Map/Map.h"
+#include "../Player/Player.h"
 class Player;
 
 class PlayerStrategy {
@@ -21,11 +23,21 @@ private:
     Player* player;
 };
 
-class HumanPlayer : public PlayerStrategy {
+class HumanPlayerStrategy : public PlayerStrategy
+{
 public:
-    virtual void toDefend();
-    virtual void toAttack();
-    virtual void issueOrder();
+    PlayerStrategy* clone() const;
+    std::vector<Territory*> toDefend(const Player* player) const;
+    std::vector<Territory*> toAttack(const Player* player) const;
+    void issueOrder(Player* player);
+
+protected:
+    std::ostream &print_(std::ostream &output) const;
+
+private:
+    void deployReinforcements_(Player* player, std::vector<Territory*> territoriesToDefend);
+    void issueAdvance_(Player* player, std::vector<Territory*> territoriesToDefend);
+    void playCard_(Player* player, std::vector<Territory*> territoriesToDefend);
 };
 
 class AgressivePlayer : public PlayerStrategy {

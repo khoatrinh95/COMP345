@@ -25,13 +25,12 @@ class Card;
 class Player {
 private:
     string name;
-    vector<Territory*> territories;
     Hand *playerCards;
     OrdersList *playerOrdersList;
     vector<Player*> diplomaticRelations_;
     bool neutral;
-    int reinforcement_pool;
     PlayerStrategy* ps;
+    OrdersList* orders_;
 
 
 public:
@@ -39,6 +38,7 @@ public:
      * default constructor for Player object
      */
     Player();
+    int reinforcement_pool;
 
 
     /**
@@ -213,6 +213,16 @@ public:
      * @return true or false
      */
     bool isNeutral();
+
+    //Thong
+    vector<Territory*> territories;
+    std::vector<Territory*> getOwnTerritoriesWithMovableArmies() const;
+    Hand* hand_;
+    bool committed_;
+    void addOrder(Order* order);
+
+
+
 };
 
 

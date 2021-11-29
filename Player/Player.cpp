@@ -415,6 +415,25 @@ int Player::getReinforcementPool() const {
         this->ps->setPlayer(this);
     }
 
+    //Thong
 
+// Get a list of territories with available armies for moving
+    std::vector<Territory*> Player::getOwnTerritoriesWithMovableArmies() const
+    {
+        std::vector<Territory*> territories;
+        for (const auto &territory : territories)
+        {
+            if (territory->getNumberOfMovableArmies() > 0)
+            {
+                territories.push_back(territory);
+            }
+        }
 
+        return territories;
+    }
+// Add an order to the player's list of orders
+    void Player::addOrder(Order* order)
+    {
+        orders_->add(order);
+    }
 
