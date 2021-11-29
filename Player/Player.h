@@ -21,7 +21,13 @@ class Order;
 class OrdersList;
 class Card;
 
-
+enum strategy:int{
+    Aggressive,
+    Human,
+    Neutral,
+    Cheater,
+    Benevolent
+};
 class Player {
 private:
     string name;
@@ -213,6 +219,9 @@ public:
      * @return true or false
      */
     bool isNeutral();
+
+    void setStrategy(int strategy );
+    PlayerStrategy * getStrategy()const;
 };
 
 

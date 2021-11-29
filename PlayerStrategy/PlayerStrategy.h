@@ -7,53 +7,53 @@
 
 class Player;
 
+#include <vector>
+using namespace std;
+class Territory;
+class Player;
 class PlayerStrategy {
 public:
-    PlayerStrategy();
-    PlayerStrategy(Player* p);
-    virtual ~PlayerStrategy();
-    void setPlayer(Player* p);
-    virtual void toDefend() = 0;
-    virtual void toAttack() = 0;
-    virtual void issueOrder() = 0;
+    virtual vector<Territory*>  toDefend() = 0;
+    virtual vector<Territory*>  toAttack() = 0;
+    virtual void issueOrder(Player *player) = 0;
 
-private:
-    Player* player;
+};
+//
+
+class HumanPlayerStrategy : public PlayerStrategy {
+public:
+    virtual vector<Territory*> toDefend();
+    virtual vector<Territory*> toAttack();
+    virtual void issueOrder(Player *player);
 };
 
-class HumanPlayer : public PlayerStrategy {
+class AggressivePlayerStrategy : public PlayerStrategy {
 public:
-    virtual void toDefend();
-    virtual void toAttack();
-    virtual void issueOrder();
+    virtual vector<Territory*> toDefend();
+    virtual vector<Territory*> toAttack();
+    virtual void issueOrder(Player *player);
 };
 
-class AgressivePlayer : public PlayerStrategy {
+class BenevolentPlayerStrategy : public PlayerStrategy {
 public:
-    virtual void toDefend();
-    virtual void toAttack();
-    virtual void issueOrder();
+//    BenevolentPlayerStrategy();
+    virtual vector<Territory*> toDefend();
+    virtual vector<Territory*> toAttack();
+    virtual void issueOrder(Player *player);
 };
 
-class BenevolentPlayer : public PlayerStrategy {
+class NeutralPlayerStrategy : public PlayerStrategy {
 public:
-    virtual void toDefend();
-    virtual void toAttack();
-    virtual void issueOrder();
+    virtual vector<Territory*>  toDefend();
+    virtual vector<Territory*>  toAttack();
+    virtual void issueOrder(Player *player);
 };
 
-class NeutralPlayer : public PlayerStrategy {
+class CheaterPlayerStrategy : public PlayerStrategy {
 public:
-    virtual void toDefend();
-    virtual void toAttack();
-    virtual void issueOrder();
-};
-
-class CheaterPlayer : public PlayerStrategy {
-public:
-    virtual void toDefend();
-    virtual void toAttack();
-    virtual void issueOrder();
+    virtual vector<Territory*> toDefend();
+    virtual vector<Territory*> toAttack();
+    virtual void issueOrder(Player *player);
 };
 
 #endif //COMP345_N11_PLAYERSTRATEGY_H
