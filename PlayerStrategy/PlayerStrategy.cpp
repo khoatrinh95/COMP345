@@ -120,14 +120,41 @@ void AggressivePlayerStrategy::issueOrder(Player *player)  {
 
 }
 
+// KHOA
+
+/**
+ * defend method does not do anything for Cheater as he only attacks
+ * @param player
+ * @return
+ */
 vector<Territory *> CheaterPlayerStrategy::toDefend(Player *player) {
+    // do nothing as cheater does not defend
     return vector<Territory *>();
 }
 
+/**
+ * attack method returns the list of all territories owned by this player
+ * @param player
+ * @return
+ */
 vector<Territory *> CheaterPlayerStrategy::toAttack(Player *player) {
-    return vector<Territory *>();
+    return player->getTerritories();
 }
 
+/**
+ * issue order method will go through every adjacent territory and issue an Advance Order with 10x
+ * the amount of army inside that territory -> guarantee conquer
+ * @param player
+ */
 void CheaterPlayerStrategy::issueOrder(Player *player) {
-
+    vector<Territory *> territories_of_this_player = toAttack(player);
+    for (auto &territory : territories_of_this_player){
+        Territory** adjTerritories = territory->getAdjTerritories();
+        for (int i = 0; i<territory->getNumAdjTerritories(); i++){
+            int armyToAttack = adjTerritories[i]->getNumberOfArmies()*10;
+            AdvanceOrder *advanceOrder = new AdvanceOrder(player, armyToAttack, territory, adjTerritories[i]);
+            player->getPlayerOrdersList()->add(advanceOrder);
+            player->setReinforcementPool(player->getReinforcementPool()+armyToAttack);
+        }
+    }
 }
