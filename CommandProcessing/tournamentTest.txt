@@ -1,9 +1,12 @@
 tournament -M Canada.map -P Neutral, Aggressive, -G 3 -D 15
 replay
 tournament -M -P -G -D
+tournament -M Canada.map -P Neutral, Aggressive, -G 3 -G 15
+tournament -M Canada.map -G 3 -D 15
 tournament -M a, b, c, d, e, f -P Cheater -G 32 35 -D 11.12
 tournament -M a, b, c, d, e -P Cheater -G 32 35 -D 11.12
 tournament -M a, b, c, d, e -P Cheater, Cheater, Cheater, Cheater, Cheater -G 32 35 -D 11.12
 tournament -M a, b, c, d, e -P Benevolent, Cheater -G 32 35 -D 11.12
 tournament -M a, b, c, d, e -P Benevolent, Cheater -G 32 -D 11.12
 tournament -P Aggressive, Benevolent, Neutral, Cheater -D 30 -M Map1, Map2, Map3 -G 4
+quit
