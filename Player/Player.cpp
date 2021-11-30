@@ -167,8 +167,10 @@ vector<Territory*> Player::getTerritories() const {
  * @return list of territories
  */
 vector<Territory*> Player::toDefend() {
+
     return {};
-//    ps->toDefend();
+//    ps->toDefend(this);
+
 //        cout <<"***"<< name << " is selecting the territories that he wants to defend"<< endl;
 //        vector<Territory*> territories_to_be_defended;
 //    for (int i = 0 ; i<territories.size(); i++){
@@ -183,8 +185,10 @@ vector<Territory*> Player::toDefend() {
  * @return list of territories
  */
 vector<Territory*> Player::toAttack() {
+
         return {};
-//    ps->toAttack();
+//    ps->toAttack(this);
+
 //        cout << "***"<<name <<" is selecting territories to be attacked"<<endl;
 //        vector<Territory*> territories_to_be_attacked;
 //    for (int i = 0; i < territories.size(); i++ ){
@@ -413,6 +417,7 @@ int Player::getReinforcementPool() const {
         this->setReinforcementPool(newArmies);
     }
 
+
     Player::Player(string Name, vector<Territory *> &territories, PlayerStrategy *ps) {
         this->name = Name;
         this->territories = territories;
@@ -421,6 +426,7 @@ int Player::getReinforcementPool() const {
         neutral = false;
         this->ps = ps;
     }
+
 
     void Player::setStrategy(int strategy) {
         this->ps=GameEngine::strategyType.at(strategy);
