@@ -7,22 +7,14 @@
 
 void GameEngineDriver(){
     cout << "\n****************************************************************************" << endl;
-    cout << "\t\tTesting game initialization" << endl;
+    cout << "\t\tTesting Part 2" << endl;
     cout << "****************************************************************************" << endl;
     GameEngine *gameEngine = new GameEngine();
     LogObserver *logObserver = new LogObserver(gameEngine);
-    gameEngine -> startupPhase();
-    cout << *gameEngine;
+    gameEngine->gamePlay();
 
-    cout << "\n****************************************************************************" << endl;
-    cout << "\t\tEnd of testing game initialization" << endl;
-    cout << "****************************************************************************" << endl;
+//    cout << *gameEngine;
 
-    cout << "***************************************************************************"<<endl;
-    cout<< "***\t\t\t TESTING MAIN GAME LOOP \t\t\t***"<<endl;
-    cout << "***************************************************************************"<<endl;
-
-    gameEngine->mainGameLoop();
 
     delete logObserver;
     delete gameEngine;

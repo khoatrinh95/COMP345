@@ -51,6 +51,7 @@ public:
     string getPlayingOrderPlayersNames() const;
     void startupPhase();
     static vector<PlayerStrategy*>strategyType ;
+    void gamePlay();
 
     // Iloggable
     virtual string stringToLog();
@@ -77,5 +78,10 @@ private:
     string modeToString(Modes mode);
     string phaseToString(Phases phase);
     void transition(Phases phaseToTransition);
+    string startupMapLoading(string map);
+    string startupMapValidation();
+    string startupGameInitialization();
+    string tournamentPlay(int numberOfMaxTurns);
+    void gameReset();
 };
 #endif //COMP345_N11_GAMEENGINE_H

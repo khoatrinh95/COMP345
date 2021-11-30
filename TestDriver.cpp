@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
 //    cout << "\n****************************************************************************" << endl;
 //    cout << "Testing game initialization and main loop" << endl;
 //    cout << "****************************************************************************" << endl;
-//    GameEngineDriver();
+    GameEngineDriver();
 //    cout << "\n****************************************************************************" << endl;
 //    cout << "End of testing game initialization and main loop" << endl;
 //    cout << "****************************************************************************" << endl;
