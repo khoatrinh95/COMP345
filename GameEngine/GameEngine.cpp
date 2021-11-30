@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <math.h>
 #include <string>
+#include "../Cards/Cards.h"
 #include "../PlayerStrategy/PlayerStrategy.h"
 
 
@@ -820,7 +821,7 @@ void GameEngine::gameReset() {
 void GameEngine::gamePlay() {
     Command *command = nullptr;
     string instruction;
-    while(true && instruction != "eof") {
+    while(instruction != "eof") {
         if(*mode == Modes::STARTUP && *phase == Phases::START) {
             startupPhase();
         }
