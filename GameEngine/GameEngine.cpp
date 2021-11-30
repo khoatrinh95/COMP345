@@ -149,7 +149,9 @@ void GameEngine::removePlayer(Player *player) {
     for (int i = 0; i<playingOrder.size();i++){
         if (playingOrder.at(i)->getName()==player->getName()){
             cout << "***\tRemoving "<< playingOrder.at(i)->getName() << " from the game"<<endl;
+//            player->getPlayerCards()->removeAllCards();
             playingOrder.erase(next(begin(playingOrder), + i));
+
             break;
         }
     }
@@ -410,7 +412,15 @@ void GameEngine::printPlayPhaseGreeting() {
  * Main game loop
  */
 void GameEngine::mainGameLoop() {
-    while (playingOrder.size()!=1) {
+    ////////////////////////////////////////////////////
+    playingOrder.at(0)->setStrategy(strategy::Benevolent);
+    playingOrder.at(1)->setStrategy(strategy::Neutral);
+//    playingOrder.at(2)->setStrategy(strategy::Benevolent);
+
+    ////////////////////////////////////////////////
+//    while (playingOrder.size()!=1) {
+int n = 5;
+    while (n >1){
         // add armies to each player Reinforcement Pool
         cout << "***********************************"<<endl;
         cout << "**\t REINFORCEMENT PHASE\t**"<<endl;
@@ -437,10 +447,13 @@ void GameEngine::mainGameLoop() {
         transition(Phases::EXECUTEORDERS);
         executeOrdersPhase();
         cout << endl;
+        n--;
     }
     transition(Phases::WIN);
     cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<" ownes ";
     cout <<playingOrder.at(0)->getTerritories().size()<<" territories"<<endl;
+    //playingOrder.at(0)->getPlayerCards()->removeAllCards();
+
 
 }
 
@@ -466,6 +479,7 @@ void GameEngine::reinforcementPhase() {
         player->assignReinforcementToPlayer(armies);
         cout<< player->getName() << " has new "<< player->getReinforcementPool() << " armies in his reinforcement pool" << endl;
         cout<<endl;
+
     }
 }
 
@@ -473,6 +487,7 @@ void GameEngine::reinforcementPhase() {
  * asking the player to start their issuing their orders
  */
 void GameEngine::issueOrdersPhase() {
+    cout << playingOrder.size();
     for (auto &player : playingOrder){
         cout << "***\t\tIt is "<<player->getName() << " turn to issue Orders\t\t***"<<endl;
         player->issueOrder();
@@ -593,5 +608,13 @@ void GameEngine::transition(Phases phaseToTransition) {
 
 vector<Player *> GameEngine::getPlayingOrder() {
     return playingOrder;
+}
+
+void GameEngine::winPhase() {
+    transition(Phases::WIN);
+    Command *command = commandProcessor->getCommand();
+    commandProcessor->validate(command, phase);
+
+
 }
 

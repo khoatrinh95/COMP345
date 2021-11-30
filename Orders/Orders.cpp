@@ -353,6 +353,7 @@ void AdvanceOrder::execute_() {
     int movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
 
     if(movableArmiesFromSource>0  && defender->getStrategy() == GameEngine::strategyType.at(strategy::Neutral)){
+        cout<< "an attack happen to one of the neutral player territories"<<endl;
         defender->setStrategy(strategy::Aggressive);
     }
 

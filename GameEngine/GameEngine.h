@@ -44,6 +44,7 @@ public:
     void executeOrdersPhase();
     void removePlayer(Player *player);
     vector<Player* >getPlayingOrder();
+    void winPhase();
 
     ////////////////////////////////////////////////////////////////////////////
     static Deck *deck;

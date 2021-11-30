@@ -1,19 +1,7 @@
-addplayer Fadi
-gamestart
-validatemap
-loadmap canada.map
 gamestart
 loadmap europe.map
-addplayer Fadi
 validatemap
 addplayer Fadi
 addplayer Ricky
 addplayer
-addplayer Sarah
-addplayer
-addplayer Khoa
-addplayer Thong
-addplayer Gina
-addplayer
-addplayer Philo
 gamestart
