@@ -13,6 +13,11 @@ using namespace std;
 
 
 // SARAH
+/**
+ * it orders the player list of territories according to number of armies
+ * @param player
+ * @return all territories belong to a player in ascending order according to the number of player
+ */
 
 vector<Territory*>  BenevolentPlayerStrategy::toDefend(Player *player) {
     vector<Territory*>toDefend_Territories;
@@ -25,12 +30,20 @@ vector<Territory*>  BenevolentPlayerStrategy::toDefend(Player *player) {
     }
     return toDefend_Territories;
 }
-
+/**
+ * the benevolent player does not attack any territories
+ * @param player
+ * @return empty vector of territories
+ */
 vector<Territory*>  BenevolentPlayerStrategy::toAttack(Player *player) {
     vector<Territory*>toAttack_Territories;
     return toAttack_Territories;
 }
 
+/**
+ * issue order will go through all benevolent player territories to add armies to the the ones with least number of armies
+ * @param player
+ */
 void BenevolentPlayerStrategy::issueOrder(Player *player)  {
     vector<Territory*>toDefend_Territories = toDefend(player);
     for (auto &ter: toDefend_Territories){
@@ -67,7 +80,7 @@ void BenevolentPlayerStrategy::issueOrder(Player *player)  {
         // to protect the territories with the lowest number of armies
         if (i == territory->getNumAdjTerritories() && territory->getNumberOfArmies()<4){
             for (auto &card: player->getPlayerCards()->getHand()) {
-                if (card->getType() == "Airlift") {
+                if (card!= nullptr && card->getType() == "Airlift") {
                     card->useCardtoCreateOrder(player,2, toDefend_Territories.at(j),territory);
                     player->getPlayerCards()->removeCard(card);
                     j--;
