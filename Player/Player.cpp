@@ -460,15 +460,24 @@ int Player::getReinforcementPool() const {
     //Thong
 
 // Get a list of territories with available armies for moving
-    std::vector<Territory*> Player::getOwnTerritoriesWithMovableArmies() const
-    {
-        std::vector<Territory*> territories;
-        for (const auto &territory : territories)
-        {
-            if (territory->getNumberOfMovableArmies() > 0)
-            {
+    std::vector<Territory*> Player::getOwnTerritoriesWithMovableArmies() const {
+        std::vector<Territory *> territories;
+        for (const auto &territory: territories) {
+            if (territory->getNumberOfMovableArmies() > 0) {
                 territories.push_back(territory);
             }
         }
+    }
 
+// Check if the player has already issued an advance order from `source` to `destination`
+    bool Player::advancePairingExists_(Territory* source, Territory* destination)
+    {
+        auto issuedIterator = issuedDeploymentsAndAdvancements_.find(source);
+        if (issuedIterator != issuedDeploymentsAndAdvancements_.end())
+        {
+            std::vector<Territory*> pastAdvancements = issuedIterator->second;
+            return find(pastAdvancements.begin(), pastAdvancements.end(), destination) != pastAdvancements.end();
+        }
 
+        return false;
+    }

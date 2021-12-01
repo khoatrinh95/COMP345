@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <unordered_map>
+
 using namespace std;
 
 #include "../Map/Map.h"
@@ -38,6 +40,10 @@ private:
     bool neutral;
     int reinforcement_pool;
     PlayerStrategy* ps;
+
+    //THong
+    std::unordered_map<Territory*, std::vector<Territory*>> issuedDeploymentsAndAdvancements_;
+
 
 
 public:
@@ -230,7 +236,8 @@ public:
     std::vector<Territory*> getOwnTerritoriesWithMovableArmies() const;
     Hand* hand_;
     bool committed_;
-    void addOrder(Order* order);
+    bool advancePairingExists_(Territory* source, Territory* destination);
+
 
 
 
