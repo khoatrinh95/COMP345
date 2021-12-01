@@ -16,6 +16,7 @@
 
 
 vector<Territory*>  BenevolentPlayerStrategy::toDefend(Player *player) {
+    return {};
 //    vector<Territory*>toDefend_Territories;
 //    vector<Territory* > orderTerritories = getPlayer()->getTerritories();
 //    sort(orderTerritories.begin(), orderTerritories.end(), [](const Territory& lhs, const Territory& rhs) {
@@ -28,6 +29,7 @@ vector<Territory*>  BenevolentPlayerStrategy::toDefend(Player *player) {
 }
 
 vector<Territory*>  BenevolentPlayerStrategy::toAttack(Player *player) {
+    return {};
 //    vector<Territory*>toAttack_Territories;
 //    return toAttack_Territories;
 }

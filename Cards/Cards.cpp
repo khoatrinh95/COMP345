@@ -204,7 +204,7 @@ Hand::~Hand() {
             card = nullptr;
         }
     }
-    hand.erase(hand.begin(), hand.end());
+    hand.clear();
 }
 
 Hand& Hand::operator=(const Hand& h){
@@ -272,11 +272,22 @@ vector<Card *> Hand::getHand() const  {
 void Hand::removeCard(Card *A_card) {
     for (int i = 0 ; i<hand.size();i++){
         if (hand.at(i) == A_card){
-            GameEngine::deck->addCard(A_card);
+            if(GameEngine::deck != nullptr) {
+                GameEngine::deck->addCard(A_card);
+            }
             hand.erase(hand.begin() + i);
             break;
         }
     }
+}
+
+void Hand::removeAllCards() {
+    for (int i = 0 ; i < hand.size(); i++){
+        if (GameEngine::deck != nullptr){
+            GameEngine::deck->addCard(hand.at(i));
+        }
+    }
+    hand.clear();
 }
 
 
