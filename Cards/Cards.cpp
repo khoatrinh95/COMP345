@@ -178,6 +178,9 @@ void Deck::addCard(string type) {
 }
 
 Card* Deck::draw() {
+    if (cards.size() <= 0) {
+        return nullptr;
+    }
     srand((int)time(0));
     int random(rand() % cards.size());
     Card* toReturn = cards[random];

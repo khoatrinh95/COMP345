@@ -568,9 +568,11 @@ FileLineReader::FileLineReader(string filename) {
  * Destructor
  */
 FileLineReader::~FileLineReader() {
-    _ifstr->close();
-    delete _ifstr;
-    _ifstr = nullptr;
+    if (_ifstr != nullptr) {
+        _ifstr->close();
+        delete _ifstr;
+        _ifstr = nullptr;
+    }
 }
 
 /**
