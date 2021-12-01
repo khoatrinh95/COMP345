@@ -80,7 +80,9 @@ Player::Player(const Player &anotherPlayer) {
 Player::~Player(){
 //    cout<<"~player() destructing a player whose name is "<< name<<endl;
     for (auto &territory :territories){
-        territory->removeOwner();
+        if(territory != nullptr) {
+            territory->removeOwner();
+        }
     }
 
     if (playerCards != nullptr) {
@@ -162,13 +164,17 @@ vector<Territory*> Player::getTerritories() const {
  * @return list of territories
  */
 vector<Territory*> Player::toDefend() {
-    ps->toDefend();
+
+    return {};
+//    ps->toDefend(this);
+
 //        cout <<"***"<< name << " is selecting the territories that he wants to defend"<< endl;
 //        vector<Territory*> territories_to_be_defended;
 //    for (int i = 0 ; i<territories.size(); i++){
 //        territories_to_be_defended.push_back(territories.at(i));
 //    }
 //    return territories_to_be_defended;
+
 }
 
 /**
@@ -176,7 +182,10 @@ vector<Territory*> Player::toDefend() {
  * @return list of territories
  */
 vector<Territory*> Player::toAttack() {
-    ps->toAttack();
+
+        return {};
+//    ps->toAttack(this);
+
 //        cout << "***"<<name <<" is selecting territories to be attacked"<<endl;
 //        vector<Territory*> territories_to_be_attacked;
 //    for (int i = 0; i < territories.size(); i++ ){
@@ -193,7 +202,7 @@ vector<Territory*> Player::toAttack() {
  * add an order to player orders list
  */
 void Player::issueOrder() {
-    ps->issueOrder();
+//    ps->issueOrder(this);
 //    int randNum;
 //
 //    //  reinforcement armies to territories goes into rounds until player's reinforcement pool gets empty
@@ -405,15 +414,48 @@ int Player::getReinforcementPool() const {
         this->setReinforcementPool(newArmies);
     }
 
-    Player::Player(string Name, vector<Territory *> &territories, PlayerStrategy *ps) {
-        this->name = Name;
-        this->territories = territories;
-        this->playerCards = new Hand();
-        this->playerOrdersList = new OrdersList();
-        neutral = false;
-        this->ps = ps;
-        this->ps->setPlayer(this);
+
+    void Player::setStrategy(int strategy) {
+        this->ps=GameEngine::strategyType.at(strategy);
     }
+
+    PlayerStrategy *Player::getStrategy() const {
+        return ps;
+    }
+
+    strategy Player::parsePlayerStrategy(string strStrategy) {
+        if(strStrategy == "Aggressive") {
+            return Aggressive;
+        } else if(strStrategy == "Human") {
+            return Human;
+        } else if(strStrategy == "Neutral") {
+            return Neutral;
+        } else if(strStrategy == "Cheater") {
+            return Cheater;
+        } else if(strStrategy == "Benevolent") {
+            return Benevolent;
+        }
+        // else
+        return Neutral;
+    }
+
+    Player::Player(string name, strategy playingStrategy) : name(name), neutral(false) {
+        playerCards = new Hand();
+        playerOrdersList = new OrdersList();
+        setStrategy(playingStrategy);
+        reinforcement_pool = 0;
+    }
+
+    void Player::removeAllTerritories() {
+        for (int i = 0; i < territories.size(); i++) {
+            if (territories.at(i) != nullptr) {
+                territories.at(i)->setOwner(nullptr);
+            }
+        }
+        territories.clear();
+    }
+
+
 
     //Thong
 
@@ -429,11 +471,4 @@ int Player::getReinforcementPool() const {
             }
         }
 
-        return territories;
-    }
-// Add an order to the player's list of orders
-    void Player::addOrder(Order* order)
-    {
-        orders_->add(order);
-    }
 

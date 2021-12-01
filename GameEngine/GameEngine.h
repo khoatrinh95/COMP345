@@ -21,6 +21,7 @@ class Map;
 class Territory;
 class Deck;
 class CommandProcessor;
+class PlayerStrategy;
 
 enum class Phases{START, MAPLOADED, MAPVALIDATED, PLAYERSADDED, ASSIGNREINFORCEMENT, ISSUEORDERS, EXECUTEORDERS, WIN};
 enum class Modes{STARTUP, PLAY};
@@ -49,6 +50,8 @@ public:
     string getPlayersNames() const;
     string getPlayingOrderPlayersNames() const;
     void startupPhase();
+    static vector<PlayerStrategy*>strategyType ;
+    void gamePlay();
 
     // Iloggable
     virtual string stringToLog();
@@ -78,5 +81,10 @@ private:
     string modeToString(Modes mode);
     string phaseToString(Phases phase);
     void transition(Phases phaseToTransition);
+    string startupMapLoading(string map);
+    string startupMapValidation();
+    string startupGameInitialization();
+    string tournamentPlay(int numberOfMaxTurns);
+    void gameReset();
 };
 #endif //COMP345_N11_GAMEENGINE_H

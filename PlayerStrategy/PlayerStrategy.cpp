@@ -3,6 +3,9 @@
 //
 
 #include "PlayerStrategy.h"
+#include "../Player/Player.h"
+#include <math.h>
+#include "../Orders/Orders.h"
 #include "../GameEngine/GameEngine.h"
 #include "../Player/Player.h"
 #include <algorithm>
@@ -334,54 +337,130 @@ void HumanPlayerStrategy::playCard_(Player* player, std::vector<Territory*> terr
 
 
 // SARAH
-void BenevolentPlayer::toDefend() {
+
+
+
+
+vector<Territory*>  BenevolentPlayerStrategy::toDefend(Player *player) {
+    return {};
+//    vector<Territory*>toDefend_Territories;
+//    vector<Territory* > orderTerritories = getPlayer()->getTerritories();
+//    sort(orderTerritories.begin(), orderTerritories.end(), [](const Territory& lhs, const Territory& rhs) {
+//        return lhs.getNumberOfArmies() < rhs.getNumberOfArmies();
+//    });
+//    for(auto &territory : orderTerritories){
+//        toDefend_Territories.push_back(territory);
+//    }
+//    return toDefend_Territories;
+}
+
+vector<Territory*>  BenevolentPlayerStrategy::toAttack(Player *player) {
+    return {};
+//    vector<Territory*>toAttack_Territories;
+//    return toAttack_Territories;
+}
+
+void BenevolentPlayerStrategy::issueOrder(Player *player)  {
+//    vector<Territory*>toDefend_Territories = toDefend();
+//    // using all the reinforcement armies for territories that do not have enough armies to protect itself
+//    while (getPlayer()->getReinforcementPool()>0){
+//        for (auto &territory : toDefend_Territories){
+//            int playerArmies = this->getPlayer()->getReinforcementPool();
+//            if (playerArmies > 0 && territory->getNumberOfArmies()<5) {
+//                int armies = ceil(double(playerArmies) / 3);
+//                DeployOrder *deployOrder = new DeployOrder(getPlayer(), armies, territory);
+//                getPlayer()->getPlayerOrdersList()->add(deployOrder);
+//                getPlayer()->setReinforcementPool(playerArmies - armies);
+//            }
+//        }
+//    }
+//    int  j = toDefend_Territories.size()-1;
+//
+//    for (auto &territory : toDefend_Territories){
+//        int i = 0;
+//        //  if there is no enough armies in the reinforcement pool use advance order from adjacent territories
+//        // to the territories with the lowest number of armies
+//        for(  ; i<territory->getNumAdjTerritories();i++){
+//            if (territory->getOwner() == territory->getAdjTerritories()[i]->getOwner() &&
+//             territory->getNumberOfArmies()<territory->getAdjTerritories()[i]->getNumberOfArmies()-8){
+//                AdvanceOrder *advanceOrder = new AdvanceOrder(getPlayer(), 4, territory->getAdjTerritories()[i],
+//                                                              territory);
+//                getPlayer()->getPlayerOrdersList()->add(advanceOrder);
+//                break;
+//            }
+//        }
+//        //  if there is no enough armies in the reinforcement pool use Card to issue order
+//        // to protect the territories with the lowest number of armies
+//        if (i == territory->getNumAdjTerritories() && territory->getNumberOfArmies()<4){
+//            for (auto &card: getPlayer()->getPlayerCards()->getHand()) {
+//                if (card->getType() == "Airlift") {
+//                    AirliftOrder *airliftOrder = new AirliftOrder(getPlayer(), 2,toDefend_Territories.at(j) ,territory);
+//                    getPlayer()->getPlayerOrdersList()->add(airliftOrder);
+//                    j--;
+//                }
+//            }
+//        }
+//    }
+}
+
+
+
+vector<Territory*>  NeutralPlayerStrategy::toDefend(Player *player) {
+    vector<Territory*>toDefend_Territories;
+    return toDefend_Territories;
+}
+
+vector<Territory*>  NeutralPlayerStrategy::toAttack(Player *player) {
+    vector<Territory*>toAttack_Territories;
+    return toAttack_Territories;
+}
+
+void NeutralPlayerStrategy::issueOrder(Player *player)  {
 
 }
 
-void BenevolentPlayer::toAttack() {
 
+vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player) {
+    return vector<Territory *>();
 }
 
-void BenevolentPlayer::issueOrder() {
-
+vector<Territory *> AggressivePlayerStrategy::toAttack(Player *player) {
+    return vector<Territory *>();
 }
 
-void NeutralPlayer::toDefend() {
+void AggressivePlayerStrategy::issueOrder(Player *player)  {
 
 }
-
-void NeutralPlayer::toAttack() {
-
-}
-
-void NeutralPlayer::issueOrder() {
-
-}
-
 
 // KHOA
-void CheaterPlayer::toDefend() {
-
-}
-
-void CheaterPlayer::toAttack() {
-
-}
-
-void CheaterPlayer::issueOrder() {
-
-}
-
-PlayerStrategy::PlayerStrategy(Player* p) {
-    player = p;
-}
-
-PlayerStrategy::~PlayerStrategy() {
-    delete player;
-}
-
-PlayerStrategy::PlayerStrategy() {}
-
-void PlayerStrategy::setPlayer(Player *p) {
-    player = p;
-}
+/**
+ * defend method does not do anything for Cheater as he only attacks
+ * @param player
+ * @return
+ */
+vector<Territory *> CheaterPlayerStrategy::toDefend(Player *player) {
+    // do nothing as cheater does not defend
+    return vector<Territory *>();
+/**
+ * attack method returns the list of all territories owned by this player
+ * @param player
+ * @return
+ */
+vector<Territory *> CheaterPlayerStrategy::toAttack(Player *player) {
+    return player->getTerritories();
+/**
+ * issue order method will go through every adjacent territory and issue an Advance Order with 10x
+ * the amount of army inside that territory -> guarantee conquer
+ * @param player
+ */
+void CheaterPlayerStrategy::issueOrder(Player *player) {
+    vector<Territory *> territories_of_this_player = toAttack(player);
+    for (auto &territory : territories_of_this_player){
+        Territory** adjTerritories = territory->getAdjTerritories();
+        for (int i = 0; i<territory->getNumAdjTerritories(); i++){
+            int armyToAttack = adjTerritories[i]->getNumberOfArmies()*10;
+            AdvanceOrder *advanceOrder = new AdvanceOrder(player, armyToAttack, territory, adjTerritories[i]);
+            player->getPlayerOrdersList()->add(advanceOrder);
+            player->setReinforcementPool(player->getReinforcementPool()+armyToAttack);
+        }
+    }

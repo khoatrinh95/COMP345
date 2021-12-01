@@ -319,7 +319,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
         }
     } else if (comWord.compare("tournament") == 0) {
         if (*phase != Phases::START) {
-            cout << "quit is only accepted during the phase START."<< endl;
+            cout << "tournament is only accepted during the phase START."<< endl;
             command->saveEffect("Unable to proceed with the command at the current game state.");
             return false;
         } else {
@@ -346,7 +346,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                 getline( strs, substr, '-' );
                 if (substr[0] == 'M' || substr[0] == 'm') { //map argument
                     if (mapProvided == true) {
-                        cout << "There were more than one -M arguments provided in the tournament command.";
+                        cout << "There were more than one -M arguments provided in the tournament command." << endl;
                         command->saveEffect("There were more than one -M arguments provided in the tournament command.");
                         return false;
                     }
@@ -378,7 +378,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                     mapProvided = true;
                 } else if (substr[0] == 'P' || substr[0] == 'p') { //player strategies argument
                     if (playerStrategiesProvided == true) {
-                        cout << "There were more than one -P arguments provided in the tournament command.";
+                        cout << "There were more than one -P arguments provided in the tournament command." << endl;
                         command->saveEffect("There were more than one -P arguments provided in the tournament command.");
                         return false;
                     }
@@ -415,7 +415,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                     playerStrategiesProvided = true;
                 } else if (substr[0] == 'G' || substr[0] == 'g') { //games argument
                     if (gamesProvided == true) {
-                        cout << "There were more than one -G arguments provided in the tournament command.";
+                        cout << "There were more than one -G arguments provided in the tournament command." << endl;
                         command->saveEffect("There were more than one -G arguments provided in the tournament command.");
                         return false;
                     }
@@ -449,7 +449,7 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                     gamesProvided = true;
                 } else if (substr[0] == 'D' || substr[0] == 'd') { //duration argument
                     if (turnsProvided == true) {
-                        cout << "There were more than one -D arguments provided in the tournament command.";
+                        cout << "There were more than one -D arguments provided in the tournament command." << endl;
                         command->saveEffect("There were more than one -D arguments provided in the tournament command.");
                         return false;
                     }
@@ -568,9 +568,11 @@ FileLineReader::FileLineReader(string filename) {
  * Destructor
  */
 FileLineReader::~FileLineReader() {
-    _ifstr->close();
-    delete _ifstr;
-    _ifstr = nullptr;
+    if (_ifstr != nullptr) {
+        _ifstr->close();
+        delete _ifstr;
+        _ifstr = nullptr;
+    }
 }
 
 /**
@@ -633,10 +635,14 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(string filename) {
  * Destructor
  */
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
-    delete flr;
-    flr = nullptr;
-    delete comPro;
-    comPro = nullptr;
+    if (flr != nullptr) {
+        delete flr;
+        flr = nullptr;
+    }
+    if (comPro != nullptr) {
+        delete comPro;
+        comPro = nullptr;
+    }
 }
 
 /**

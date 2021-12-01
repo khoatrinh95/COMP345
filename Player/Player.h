@@ -21,16 +21,23 @@ class Order;
 class OrdersList;
 class Card;
 
-
+enum strategy:int{
+    Aggressive,
+    Human,
+    Neutral,
+    Cheater,
+    Benevolent
+};
 class Player {
 private:
     string name;
+    vector<Territory*> territories;
     Hand *playerCards;
     OrdersList *playerOrdersList;
     vector<Player*> diplomaticRelations_;
     bool neutral;
+    int reinforcement_pool;
     PlayerStrategy* ps;
-    OrdersList* orders_;
 
 
 public:
@@ -38,7 +45,6 @@ public:
      * default constructor for Player object
      */
     Player();
-    int reinforcement_pool;
 
 
     /**
@@ -214,8 +220,13 @@ public:
      */
     bool isNeutral();
 
+    void setStrategy(int strategy );
+    PlayerStrategy * getStrategy()const;
+    static strategy parsePlayerStrategy(string strStrategy);
+    Player(string name, strategy playingStrategy);
+    void removeAllTerritories();
+
     //Thong
-    vector<Territory*> territories;
     std::vector<Territory*> getOwnTerritoriesWithMovableArmies() const;
     Hand* hand_;
     bool committed_;
