@@ -805,8 +805,11 @@ Continent::~Continent() {
                 territories[i] = nullptr;
             }
         }
-        delete[] territories;
-        territories = nullptr;
+        if(territories != nullptr) {
+            delete[] territories;
+            territories = nullptr;
+        }
+
     }
     owner = nullptr;
 }

@@ -84,6 +84,7 @@ public:
     string printHand() const; //prints out all cards on hand
     vector<Card *> getHand() const;
     void removeCard(Card * card);
+    void removeAllCards();
 
 private:
     vector<Card*> hand;

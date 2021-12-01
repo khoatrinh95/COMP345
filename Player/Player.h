@@ -211,6 +211,9 @@ public:
 
     void setStrategy(int strategy );
     PlayerStrategy * getStrategy()const;
+    static strategy parsePlayerStrategy(string strStrategy);
+    Player(string name, strategy playingStrategy);
+    void removeAllTerritories();
 };
 
 

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <math.h>
 #include <string>
+#include "../Cards/Cards.h"
 #include "../PlayerStrategy/PlayerStrategy.h"
 
 
@@ -62,13 +63,23 @@ GameEngine::~GameEngine() {
     // Explicitly call destructor of Player because the players will be dynamically allocated at the beginning of the game
     for (auto &player : players_) {
         if(player != nullptr) {
+            if(player->getPlayerCards() != nullptr) {
+                player->getPlayerCards()->removeAllCards();
+            }
             delete player;
             player = nullptr;
         }
     }
     players_.clear();
-
     playingOrder.clear();
+
+    // delete strategies
+    for(auto &strategy : strategyType) {
+        if(strategy != nullptr) {
+            delete strategy;
+            strategy = nullptr;
+        }
+    }
 
     // Handle memory leak
     if(phase != nullptr) {
@@ -151,7 +162,6 @@ void GameEngine::removePlayer(Player *player) {
             cout << "***\tRemoving "<< playingOrder.at(i)->getName() << " from the game"<<endl;
 //            player->getPlayerCards()->removeAllCards();
             playingOrder.erase(next(begin(playingOrder), + i));
-
             break;
         }
     }
@@ -192,18 +202,83 @@ void GameEngine::startupPhase() {
     printTitle();
     cout << "The game is currently in state: " << phaseToString(*phase) << endl;
     cout << "The game is currently in mode: " << modeToString(*mode) << endl;
+
     // get commands until getting to the playing mode
-    while (*phase != Phases::ASSIGNREINFORCEMENT) {
-        Command *command = commandProcessor->getCommand();
+    string instruction;
+    Command *command = nullptr;
+    while (*mode == Modes::STARTUP && instruction != "eof") {
+        command = commandProcessor->getCommand();
         commandProcessor->validate(command, phase);
-        string instruction = command->getInstruction();
+        instruction = command->getInstruction();
         cout << "Processing command \"" << command->getCommand() << "\"... " << endl;
 
         // verify if a command is valid
         if(!instruction.empty()) {
 
             // perform the command's required action then save the effect and go to the next phase
-            if(instruction == "loadmap" && (*phase == Phases::START || *phase == Phases::MAPLOADED)) {
+            if(instruction == "tournament" && command->getMapList().size() >= 1 && command->getMapList().size() <= 5 && command->getplayerStrategiesList().size() >= 2  && command->getplayerStrategiesList().size() <= 4 && command->getNumOfGames() >= 1 && command->getNumOfGames() <= 5 && command->getNumOfTurns() >= 10 && command->getNumOfTurns() <= 50 && *phase == Phases::START) {
+                // playing in tournament
+                cout << "Playing a tournament..." << endl;
+                int numberOfGames = command->getNumOfGames(); // number of games in a tournament
+                int numberOfMaxTurns = command->getNumOfTurns(); // number of max turns in a game
+                vector<string> mapsList = command->getMapList(); // list of maps
+                int numberOfMaps = mapsList.size(); // number of maps
+
+                // add players
+                vector<string> playersList = command->getplayerStrategiesList();
+                for(int i = 0; i < playersList.size(); i++) {
+                    players_.push_back(new Player("Player" + to_string(i+1) + "_" + playersList.at(i),Player::parsePlayerStrategy(playersList.at(i))));
+                }
+
+                // prepare report of the results
+                string tournamentResult;
+                const int MAX_TABLE_CELL_LENGTH = 25;
+                tournamentResult.append(MAX_TABLE_CELL_LENGTH, ' ');
+                for(int i = 0; i < numberOfGames; i++) {
+                    string gameNumberText = "Game " + to_string(i + 1);
+                    tournamentResult += " | " + gameNumberText.append(MAX_TABLE_CELL_LENGTH - gameNumberText.length(), ' ');
+                }
+                string tournamentMapResult[numberOfMaps];
+
+                // for each map, load map, validate map then start games
+                for (int i = 0; i < numberOfMaps; i++) {
+                    cout << "loading map: " << mapsList.at(i) << endl;
+                    startupMapLoading(mapsList.at(i));
+                    string mapNumberText = "Map " + to_string(i + 1);
+                    tournamentMapResult[i] = mapNumberText.append(MAX_TABLE_CELL_LENGTH - mapNumberText.length(), ' ');
+                    string validationResult = startupMapValidation();
+                    if(validationResult != "Map validated. Transition to [mapvalidated]") {
+                        break;
+                    }
+                    // start games
+                    for(int j = 0; j < numberOfGames; j++) {
+                        cout << "*************************\n*\tGame " << j+1 << "\t\t*\n*************************\n" << endl;
+                        startupGameInitialization(); // initialize game
+                        string result = tournamentPlay(numberOfMaxTurns);
+                        cout << "Result: " << result << endl;
+                        tournamentMapResult[i] += " | " + result.append(MAX_TABLE_CELL_LENGTH - result.length(), ' ');
+
+                        // clear playing order list
+                        playingOrder.clear();
+
+                        // return all cards in a player's hand to the deck, and remove all territories
+                        for (auto &player : players_) {
+                            if(player != nullptr) {
+                                if(player->getPlayerCards() != nullptr) {
+                                    player->getPlayerCards()->removeAllCards();
+                                }
+                                player->removeAllTerritories();
+                            }
+                        }
+                    }
+                    tournamentResult += "\n" + tournamentMapResult[i];
+                }
+                cout << "Tournament Result:\n" << tournamentResult << endl;
+                command->saveEffect("Tournament played.");
+                contentToLog = "Game Engine - tournament result:\n" + tournamentResult;
+                notify();
+
+            } else if(instruction == "loadmap" && (*phase == Phases::START || *phase == Phases::MAPLOADED)) {
 
                 // loading map
                 cout << "Loading map \"" << command->getArgument() << "\"... " << endl;
@@ -235,6 +310,9 @@ void GameEngine::startupPhase() {
                         break;
                     default:
                         cout << "Unknown issue!" << endl;
+                }
+                if (validation > 0) {
+                    command->saveEffect("Map validation failed");
                 }
             } else if(instruction == "addplayer" && (*phase == Phases::MAPVALIDATED || *phase == Phases::PLAYERSADDED) && players_.size() < MAX_NUM_PLAYERS) {
 
@@ -274,9 +352,115 @@ void GameEngine::startupPhase() {
             cout << "Invalid command!" << endl;
         }
     }
-    cout << "Game initialization done!" << endl;
-    printPlayPhaseGreeting();
+    if(*phase == Phases::ASSIGNREINFORCEMENT) {
+        cout << "Game initialization done!" << endl;
+        printPlayPhaseGreeting();
+    }
 }
+
+string GameEngine::startupMapLoading(string map) {
+    // delete map
+    if(map_ != nullptr) {
+//        delete map_;
+        map_ = nullptr;
+    }
+
+    // loading map
+    cout << "Loading map \"" << map << "\"... " << endl;
+    loadMap(map);
+    cout << "The loaded map is described as follows:" << endl << *map_ << endl;
+    transition(Phases::MAPLOADED);
+    cout << "The game is currently in state: " << phaseToString(*phase) << endl;
+    return "Map [" + map + "] loaded. Transition to [maploaded]";
+}
+
+string GameEngine::startupMapValidation() {
+    // validating map and printing the result
+    cout << "Validating the map... " << endl;
+    int validation = map_->validate();
+    switch (validation) {
+        case 0:
+            cout << "The map is valid." << endl;
+            transition(Phases::MAPVALIDATED);
+            cout << "The game is currently in state: " << phaseToString(*phase) << endl;
+            return "Map validated. Transition to [mapvalidated]";
+        case 1:
+            cout << "The map is not a connected graph" << endl;
+            break;
+        case 2:
+            cout << "At least one continents is not a connected sub-graph" << endl;
+            break;
+        case 3:
+            cout << "At least one territory belongs to more than one continent" << endl;
+            break;
+        default:
+            cout << "Unknown issue!" << endl;
+    }
+    return "Map validation failed.";
+}
+
+string GameEngine::startupGameInitialization() {
+    // initializing the game
+    cout << "Starting the game... " << endl;
+    assignTerritories();
+    cout << "Territories assigned" << endl;
+    assignPlayingOrder();
+    cout << "Playing order determined" << endl;
+    cout << "Order of play of the players:" <<endl;
+    cout << getPlayingOrderPlayersNames() << endl;
+    initialReinforcement();
+    cout << "Initial reinforcement accomplished" << endl;
+    initialCardDrawing();
+    cout << "Initial cards drawn" << endl;
+    transition(Phases::ASSIGNREINFORCEMENT);
+    cout << "The game is currently in state: " << phaseToString(*phase) << endl;
+    *mode = Modes::PLAY;
+    cout << "The game is currently in mode: " << modeToString(*mode) << endl;
+    return "Game initiated. Territories distributed. Playing order determined. Initial reinforcement accomplished. Initial cards drawn. Transition to [assignreinforcement]";
+}
+
+
+string GameEngine::tournamentPlay(int numberOfMaxTurns) {
+    int turnCount = 0;
+    while (playingOrder.size() > 1 && turnCount < numberOfMaxTurns) {
+        turnCount++;
+        // add armies to each player Reinforcement Pool
+        cout << "***********************************"<<endl;
+        cout << "**\t REINFORCEMENT PHASE\t**"<<endl;
+        cout << "***********************************"<<endl;
+
+        transition(Phases::ASSIGNREINFORCEMENT);
+        reinforcementPhase();
+
+        // let each player decide his/her order list
+        cout << "***********************************"<<endl;
+        cout << "**\t ISSUE ORDER PHASE\t**"<<endl;
+        cout << "***********************************"<<endl;
+
+        transition(Phases::ISSUEORDERS);
+        issueOrdersPhase();
+        cout << endl;
+
+        // execute each player orders from his/her order list
+
+        cout << "***********************************"<<endl;
+        cout << "**\t EXECUTE ORDER PHASE\t**"<<endl;
+        cout << "***********************************"<<endl;
+
+        transition(Phases::EXECUTEORDERS);
+        executeOrdersPhase();
+        cout << endl;
+    }
+    transition(Phases::WIN);
+    if(playingOrder.size() == 1) {
+        cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<" ownes ";
+        cout <<playingOrder.at(0)->getTerritories().size()<<" territories"<<endl;
+        return playingOrder.at(0)->getName();
+    }
+    cout << "The game ended in draw" << endl;
+    return "Draw";
+}
+
 
 
 /**
@@ -308,8 +492,10 @@ void GameEngine::assignTerritories() {
     vector<Territory*> vecTerritories;
 
     // sorting territories descendingly according to number of bonus of their containing continent
-    for (int i = 0; i < map_->getNumTerritories(); i++) {
-        vecTerritories.push_back(territories[i]);
+    if(territories != nullptr) {
+        for (int i = 0; i < map_->getNumTerritories(); i++) {
+            vecTerritories.push_back(territories[i]);
+        }
     }
     sort(vecTerritories.begin(), vecTerritories.end(), [](Territory *a, Territory *b) { return a->getContinent()->getBonus() > b->getContinent()->getBonus(); });
 
@@ -351,6 +537,7 @@ void GameEngine::assignPlayingOrder() {
     for (int i = 0; i < numPlayers; i++) {
         alreadyAssignedPlayers[i] = 0;
     }
+    playingOrder.clear();
     while (numAssignedPlayers < numPlayers) {
         int playerIndex;
         do {
@@ -479,7 +666,6 @@ void GameEngine::reinforcementPhase() {
         player->assignReinforcementToPlayer(armies);
         cout<< player->getName() << " has new "<< player->getReinforcementPool() << " armies in his reinforcement pool" << endl;
         cout<<endl;
-
     }
 }
 
@@ -487,7 +673,6 @@ void GameEngine::reinforcementPhase() {
  * asking the player to start their issuing their orders
  */
 void GameEngine::issueOrdersPhase() {
-    cout << playingOrder.size();
     for (auto &player : playingOrder){
         cout << "***\t\tIt is "<<player->getName() << " turn to issue Orders\t\t***"<<endl;
         player->issueOrder();
@@ -525,7 +710,7 @@ void GameEngine::executeOrdersPhase() {
                     break;
                 }
             }
-            if (i>player->getPlayerOrdersList()->size() && player == playingOrder.at(playingOrder.size()-1)){
+            if (player->getPlayerOrdersList()->size() == 0 || (i>player->getPlayerOrdersList()->size() && player == playingOrder.at(playingOrder.size()-1))){
                 reach_end = true;
             }
         }
@@ -564,7 +749,7 @@ void GameEngine::executeOrdersPhase() {
 
 // Iloggable
 string GameEngine::stringToLog() {
-    return "Game Engine - changing to phase: ";
+    return "";
 }
 
 string GameEngine::modeToString(Modes mode) {
@@ -602,7 +787,7 @@ string GameEngine::phaseToString(Phases phase) {
 void GameEngine::transition(Phases phaseToTransition) {
     *phase = phaseToTransition;
     string phaseString = phaseToString(phaseToTransition);
-    contentToLog = phaseString;
+    contentToLog = "Game Engine - changing to phase: " + phaseString;
     notify();
 }
 
@@ -610,11 +795,89 @@ vector<Player *> GameEngine::getPlayingOrder() {
     return playingOrder;
 }
 
-void GameEngine::winPhase() {
-    transition(Phases::WIN);
-    Command *command = commandProcessor->getCommand();
-    commandProcessor->validate(command, phase);
+void GameEngine::gameReset() {
+    cout << "Resetting the game..." << endl;
+    cout << "\tClearing playing order" << endl;
+    // clear playing order list
+    playingOrder.clear();
 
+    cout << "\tReturning cards to the deck, ceding territories and removing players..." << endl;
+    // return all cards in a player's hand to the deck, cede owned territories, then remove the player
+    for (auto &player : players_) {
+        if(player != nullptr) {
+            if(player->getPlayerCards() != nullptr) {
+                player->getPlayerCards()->removeAllCards();
+            }
+            player->removeAllTerritories();
+            delete player;
+            player = nullptr;
+        }
+    }
+    players_.clear();
 
+    cout << "\tDeleting the map..." << endl;
+    // delete map
+    if(map_ != nullptr) {
+        delete map_;
+        map_ = nullptr;
+    }
+
+    cout << "\tResetting game's mode and phase..." << endl;
+    // reset mode and phase
+    *mode = Modes::STARTUP;
+    transition(Phases::START);
+
+    cout << "Game was reset successfully" << endl;
 }
+
+void GameEngine::gamePlay() {
+    Command *command = nullptr;
+    string instruction;
+    while(instruction != "eof") {
+        if(*mode == Modes::STARTUP && *phase == Phases::START) {
+            startupPhase();
+        }
+        if(*mode == Modes::PLAY && *phase == Phases::ASSIGNREINFORCEMENT) {
+            mainGameLoop();
+        }
+
+//        cout << "\nWant to play again?\nEnter \"replay\" to play again, or \"quit\" to exit the game.\nWhat's your choice?" << endl;
+//        command = commandProcessor->getCommand();
+//        commandProcessor->validate(command, phase);
+//        instruction = command->getInstruction();
+//        cout << "Processing command \"" << command->getCommand() << "\"... " << endl;
+
+//        // verify if a command is valid
+//        while(instruction != "quit" && instruction != "replay" && instruction != "eof") {
+//            cout << "Invalid choice!\nEnter \"replay\" to play again, or \"quit\" to exit the game.\nWhat's your choice?";
+//            command = commandProcessor->getCommand();
+//            commandProcessor->validate(command, phase);
+//            instruction = command->getInstruction();
+//            if(instruction == "eof") {
+//                cout << "End of the list of commands!" << endl;
+//            }
+//        }
+
+        // ask player for replay/quit after end of game
+        do {
+            cout << "Invalid choice!\nEnter \"replay\" to play again, or \"quit\" to exit the game.\nWhat's your choice?";
+            command = commandProcessor->getCommand();
+            commandProcessor->validate(command, phase);
+            instruction = command->getInstruction();
+            if(instruction == "eof") {
+                cout << "End of the list of commands!" << endl;
+            }
+        } while(instruction != "quit" && instruction != "replay" && instruction != "eof");
+
+        // perform the command's required action then save the effect and go to the next phase
+        if(instruction == "quit"  && *phase == Phases::WIN) {
+            cout << "Goodbye!" << endl;
+            return;
+        } else if(instruction == "replay"  && *phase == Phases::WIN) {
+            gameReset();
+        }
+    }
+}
+
+
 
