@@ -350,7 +350,11 @@ void AdvanceOrder::execute_() {
     bool offensive = issuer_ != defender;
 
     // Recalculate what number of armies may want to truely be moved if the kingdom of the territory has modified because of an attack
-    int movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
+    int movableArmiesFromSource = numberOfArmies_;
+    if (issuer_->getStrategy() != GameEngine::strategyType.at(strategy::Cheater)) {
+        movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
+    }
+
 
     if(movableArmiesFromSource>0  && defender->getStrategy() == GameEngine::strategyType.at(strategy::Neutral)){
         cout<< "an attack happen to one of the neutral player territories"<<endl;

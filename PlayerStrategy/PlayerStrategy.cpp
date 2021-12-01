@@ -157,7 +157,7 @@ vector<Territory *> CheaterPlayerStrategy::toAttack(Player *player) {
 }
 
 /**
- * issue order method will go through every adjacent territory and issue an Advance Order with 10x
+ * issue order method will go through every adjacent territory and issue an Advance Order with 2x
  * the amount of army inside that territory -> guarantee conquer
  * @param player
  */
@@ -166,7 +166,7 @@ void CheaterPlayerStrategy::issueOrder(Player *player) {
     for (auto &territory : territories_of_this_player){
         Territory** adjTerritories = territory->getAdjTerritories();
         for (int i = 0; i<territory->getNumAdjTerritories(); i++){
-            int armyToAttack = adjTerritories[i]->getNumberOfArmies()*10;
+            int armyToAttack = (adjTerritories[i]->getNumberOfArmies()==0? 10: adjTerritories[i]->getNumberOfArmies()*2);
             AdvanceOrder *advanceOrder = new AdvanceOrder(player, armyToAttack, territory, adjTerritories[i]);
             player->getPlayerOrdersList()->add(advanceOrder);
             player->setReinforcementPool(player->getReinforcementPool()+armyToAttack);
