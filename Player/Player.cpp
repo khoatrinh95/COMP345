@@ -418,16 +418,6 @@ int Player::getReinforcementPool() const {
     }
 
 
-    Player::Player(string Name, vector<Territory *> &territories, PlayerStrategy *ps) {
-        this->name = Name;
-        this->territories = territories;
-        this->playerCards = new Hand();
-        this->playerOrdersList = new OrdersList();
-        neutral = false;
-        this->ps = ps;
-    }
-
-
     void Player::setStrategy(int strategy) {
         this->ps=GameEngine::strategyType.at(strategy);
     }
