@@ -1,6 +1,6 @@
-    //
-    // Created by sarah on 2021-09-19.
-    //
+//
+// Created by sarah on 2021-09-19.
+//
 
 #include "Player.h"
 #include <iostream>
@@ -36,7 +36,7 @@ Player::Player(string Name, vector<Territory *> &territories) {
     this->playerCards = new Hand();
     this->playerOrdersList = new OrdersList();
     neutral = false;
-    }
+}
 
 
 /**
@@ -44,8 +44,11 @@ Player::Player(string Name, vector<Territory *> &territories) {
  * @param name
   */
 Player::Player(string name) : name(name), neutral(false) {
-        playerCards = new Hand();
-        playerOrdersList = new OrdersList();
+    playerCards = new Hand();
+    playerOrdersList = new OrdersList();
+    vector<Territory*> territories;
+    reinforcement_pool = 0;
+    ps = nullptr;
 }
 
 /**
@@ -69,10 +72,10 @@ Player::Player(const Player &anotherPlayer) {
  * a constructor that takes only player neutral parameter
  * @param name
   */
-    Player::Player(string _name, bool _neutral) : name(_name), neutral(_neutral) {
-        playerCards = new Hand();
-        playerOrdersList = new OrdersList();
-    }
+Player::Player(string _name, bool _neutral) : name(_name), neutral(_neutral) {
+    playerCards = new Hand();
+    playerOrdersList = new OrdersList();
+}
 
 /**
  * destructor of player object
@@ -164,17 +167,7 @@ vector<Territory*> Player::getTerritories() const {
  * @return list of territories
  */
 vector<Territory*> Player::toDefend() {
-
-    return {};
-//    ps->toDefend(this);
-
-//        cout <<"***"<< name << " is selecting the territories that he wants to defend"<< endl;
-//        vector<Territory*> territories_to_be_defended;
-//    for (int i = 0 ; i<territories.size(); i++){
-//        territories_to_be_defended.push_back(territories.at(i));
-//    }
-//    return territories_to_be_defended;
-
+    ps->toDefend(this);
 }
 
 /**
@@ -182,96 +175,14 @@ vector<Territory*> Player::toDefend() {
  * @return list of territories
  */
 vector<Territory*> Player::toAttack() {
-
-        return {};
-//    ps->toAttack(this);
-
-//        cout << "***"<<name <<" is selecting territories to be attacked"<<endl;
-//        vector<Territory*> territories_to_be_attacked;
-//    for (int i = 0; i < territories.size(); i++ ){
-//        for (int  j = 0 ; j< territories.at(i)->getNumAdjTerritories(); j++){
-//            if (territories.at(i)->getAdjTerritories()[j]->getOwner() != this ) {
-//                territories_to_be_attacked.push_back(territories.at(i)->getAdjTerritories()[j]);
-//            }
-//        }
-//    }
-//        return territories_to_be_attacked;
+    ps->toAttack(this);
 }
 
 /**
  * add an order to player orders list
  */
 void Player::issueOrder() {
-//    ps->issueOrder(this);
-//    int randNum;
-//
-//    //  reinforcement armies to territories goes into rounds until player's reinforcement pool gets empty
-//    vector<Territory*> territories_to_be_defended = toDefend();
-//    while (reinforcement_pool>0){
-//        // all deployer orders are created for all territories that needs to be defended until player's reinforcement gets empty
-//        for (int i = 0 ; i < territories_to_be_defended.size(); i++ ){
-//            if (reinforcement_pool > 0){
-//                randNum = rand()%40+5;
-//                if (reinforcement_pool>randNum) {
-//                    DeployOrder *deploy = new DeployOrder(this,randNum, territories_to_be_defended.at(i));
-////                    cout << name << " is issuing " << *deploy << endl;
-//                    playerOrdersList->add(deploy);
-//                    reinforcement_pool = reinforcement_pool - randNum;
-//                }else{
-//                    randNum = ceil(double (reinforcement_pool)/2);
-//                    DeployOrder *deploy = new DeployOrder(this, randNum, territories_to_be_defended.at(i));
-////                    cout << name << " is issuing " << *deploy << "to defend"<<endl;
-//                    playerOrdersList->add(deploy);
-//                    reinforcement_pool = reinforcement_pool - randNum;
-//                }
-//            }else{
-//                break;
-//            }
-//
-//        }
-//    }
-//    cout << endl;
-//
-//    vector<Territory*> territories_to_be_attacked = toAttack();
-//    for ( int  i = 0 ; i < territories_to_be_attacked.size(); i++){
-//        bool found = false;
-//        randNum = rand()%20+5;
-//        for ( int j = 0 ; j < territories_to_be_attacked.at(i)->getNumAdjTerritories() ; j ++ ) {
-//            for (auto &territory : territories) {
-//                if (territories_to_be_attacked.at(i)->getAdjTerritories()[j] == territory) {
-//                    // issue an advance order when player's territory number of armies exceed target territory's armies
-//                    ///////////////////////// for demo purpose to force a player to use a card to issue an order
-//                    ///////////////////////// we subtracted 1 form territories to be attacked
-//                   if (i < territories_to_be_attacked.size()-1 ){
-//                       AdvanceOrder *advanceOrder = new AdvanceOrder(this, randNum, territory, territories_to_be_attacked.at(i));
-//                       playerOrdersList->add(advanceOrder);
-//                       found = true;
-//                       break;
-//                   }else{
-//                       // use player's hand of cards to issue an order
-//                       for (auto &card : playerCards->getHand()){
-//                           if (card->getType() == "airlift") {
-//                               card->useCardtoCreateOrder(this,randNum, territory,territories_to_be_attacked.at(i));
-//                               playerCards->removeCard(card);
-//                               found = true;
-//                               break;
-//                           }else {
-//                               // use any type of card to issue an order
-//                               card->useCardtoCreateOrder(this,0, territory,territories_to_be_attacked.at(i));
-//                               playerCards->removeCard(card);
-//                               found = true;
-//                               break;
-//                           }
-//                       }
-//
-//                   }
-//                }
-//            }
-//            if(found){
-//                break;
-//            }
-//        }
-//    }
+    ps->issueOrder(this);
 }
 
 /**
@@ -402,82 +313,82 @@ void Player::setReinforcementPool(int armies) {
  * @return
  */
 int Player::getReinforcementPool() const {
-        return reinforcement_pool;
+    return reinforcement_pool;
 }
 
-    /**
-     * add new armies to player's reinforcement pool
-     * @param armies
-     */
-    void Player::assignReinforcementToPlayer(int armies) {
-        int newArmies = this->getReinforcementPool() + armies;
-        this->setReinforcementPool(newArmies);
-    }
+/**
+ * add new armies to player's reinforcement pool
+ * @param armies
+ */
+void Player::assignReinforcementToPlayer(int armies) {
+    int newArmies = this->getReinforcementPool() + armies;
+    this->setReinforcementPool(newArmies);
+}
 
 
-    void Player::setStrategy(int strategy) {
-        this->ps=GameEngine::strategyType.at(strategy);
-    }
+void Player::setStrategy(int strategy) {
+    this->ps=GameEngine::strategyType.at(strategy);
+}
 
-    PlayerStrategy *Player::getStrategy() const {
-        return ps;
-    }
+PlayerStrategy *Player::getStrategy() const {
+    return ps;
+}
 
-    strategy Player::parsePlayerStrategy(string strStrategy) {
-        if(strStrategy == "Aggressive") {
-            return Aggressive;
-        } else if(strStrategy == "Human") {
-            return Human;
-        } else if(strStrategy == "Neutral") {
-            return Neutral;
-        } else if(strStrategy == "Cheater") {
-            return Cheater;
-        } else if(strStrategy == "Benevolent") {
-            return Benevolent;
-        }
-        // else
+strategy Player::parsePlayerStrategy(string strStrategy) {
+    if(strStrategy == "Aggressive") {
+        return Aggressive;
+    } else if(strStrategy == "Human") {
+        return Human;
+    } else if(strStrategy == "Neutral") {
         return Neutral;
+    } else if(strStrategy == "Cheater") {
+        return Cheater;
+    } else if(strStrategy == "Benevolent") {
+        return Benevolent;
     }
+    // else
+    return Neutral;
+}
 
-    Player::Player(string name, strategy playingStrategy) : name(name), neutral(false) {
-        playerCards = new Hand();
-        playerOrdersList = new OrdersList();
-        setStrategy(playingStrategy);
-        reinforcement_pool = 0;
-    }
+Player::Player(string name, strategy playingStrategy) : name(name), neutral(false) {
+    playerCards = new Hand();
+    playerOrdersList = new OrdersList();
+    setStrategy(playingStrategy);
+    reinforcement_pool = 0;
+}
 
-    void Player::removeAllTerritories() {
-        for (int i = 0; i < territories.size(); i++) {
-            if (territories.at(i) != nullptr) {
-                territories.at(i)->setOwner(nullptr);
-            }
+void Player::removeAllTerritories() {
+    for (int i = 0; i < territories.size(); i++) {
+        if (territories.at(i) != nullptr) {
+            territories.at(i)->setOwner(nullptr);
         }
-        territories.clear();
     }
+    territories.clear();
+}
 
 
 
-    //Thong
+//Thong
 
 // Get a list of territories with available armies for moving
-    std::vector<Territory*> Player::getOwnTerritoriesWithMovableArmies() const {
-        std::vector<Territory *> territories;
-        for (const auto &territory: territories) {
-            if (territory->getNumberOfMovableArmies() > 0) {
-                territories.push_back(territory);
-            }
+std::vector<Territory*> Player::getOwnTerritoriesWithMovableArmies() const {
+    std::vector<Territory *> territories;
+    for (const auto &territory: territories) {
+        if (territory->getNumberOfMovableArmies() > 0) {
+            territories.push_back(territory);
         }
     }
+}
 
 // Check if the player has already issued an advance order from `source` to `destination`
-    bool Player::advancePairingExists_(Territory* source, Territory* destination)
-    {
-        auto issuedIterator = issuedDeploymentsAndAdvancements_.find(source);
-        if (issuedIterator != issuedDeploymentsAndAdvancements_.end())
-        {
-            std::vector<Territory*> pastAdvancements = issuedIterator->second;
-            return find(pastAdvancements.begin(), pastAdvancements.end(), destination) != pastAdvancements.end();
-        }
-
-        return false;
-    }
+//bool Player::advancePairingExists_(Territory* source, Territory* destination)
+//{
+//    auto issuedIterator = issuedDeploymentsAndAdvancements_.find(source);
+//    if (issuedIterator != issuedDeploymentsAndAdvancements_.end())
+//    {
+//        std::vector<Territory*> pastAdvancements = issuedIterator->second;
+//        return find(pastAdvancements.begin(), pastAdvancements.end(), destination) != pastAdvancements.end();
+//    }
+//
+//    return false;
+//}

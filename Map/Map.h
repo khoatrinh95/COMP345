@@ -55,7 +55,6 @@ public:
 
     int getNumTerritories();
     Territory **getTerritories() const;
-    std::vector<Territory*> getAdjacentTerritories(Territory* territory);
 private:
     Territory** territories;
     Continent** continents;
@@ -63,7 +62,6 @@ private:
     bool checkConnectivity(Territory *ter, Territory **path, bool withinContinent) const;
     friend Map* MapLoader::loadMapFile(string fileName);
     friend ostream& operator << (ostream &stream, const Map &map);
-    std::unordered_map<Territory*, std::vector<Territory*>> adjacencyList_;
 };
 
 class Territory{

@@ -160,6 +160,7 @@ void GameEngine::removePlayer(Player *player) {
     for (int i = 0; i<playingOrder.size();i++){
         if (playingOrder.at(i)->getName()==player->getName()){
             cout << "***\tRemoving "<< playingOrder.at(i)->getName() << " from the game"<<endl;
+            player->getPlayerCards()->removeAllCards();
             playingOrder.erase(next(begin(playingOrder), + i));
             break;
         }
@@ -598,7 +599,15 @@ void GameEngine::printPlayPhaseGreeting() {
  * Main game loop
  */
 void GameEngine::mainGameLoop() {
+    ////////////////////////////////////////////////////
+//    playingOrder.at(0)->setStrategy(strategy::Benevolent);
+//    playingOrder.at(1)->setStrategy(strategy::Neutral);
+////    playingOrder.at(2)->setStrategy(strategy::Benevolent);
+
+    ////////////////////////////////////////////////
     while (playingOrder.size()!=1) {
+//int n = 5;
+//    while (n >1){
         // add armies to each player Reinforcement Pool
         cout << "***********************************"<<endl;
         cout << "**\t REINFORCEMENT PHASE\t**"<<endl;
@@ -608,9 +617,9 @@ void GameEngine::mainGameLoop() {
         reinforcementPhase();
 
         // let each player decide his/her order list
-    cout << "***********************************"<<endl;
-    cout << "**\t ISSUE ORDER PHASE\t**"<<endl;
-    cout << "***********************************"<<endl;
+        cout << "***********************************"<<endl;
+        cout << "**\t ISSUE ORDER PHASE\t**"<<endl;
+        cout << "***********************************"<<endl;
 
         transition(Phases::ISSUEORDERS);
         issueOrdersPhase();
@@ -618,17 +627,20 @@ void GameEngine::mainGameLoop() {
 
         // execute each player orders from his/her order list
 
-    cout << "***********************************"<<endl;
-    cout << "**\t EXECUTE ORDER PHASE\t**"<<endl;
-    cout << "***********************************"<<endl;
+        cout << "***********************************"<<endl;
+        cout << "**\t EXECUTE ORDER PHASE\t**"<<endl;
+        cout << "***********************************"<<endl;
 
         transition(Phases::EXECUTEORDERS);
         executeOrdersPhase();
         cout << endl;
+//        n--;
     }
     transition(Phases::WIN);
     cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<" ownes ";
     cout <<playingOrder.at(0)->getTerritories().size()<<" territories"<<endl;
+    playingOrder.at(0)->getPlayerCards()->removeAllCards();
+
 
 }
 
@@ -648,7 +660,7 @@ void GameEngine::reinforcementPhase() {
         }
         if (armies<3){
             cout << "However,the number of armies calculated to "<<player->getName()<<" is less than 3; therefore, the player "
-                                                                              "will be given 3 armies instead"<< endl;
+                                                                                      "will be given 3 armies instead"<< endl;
             armies = 3 ;
         }
         player->assignReinforcementToPlayer(armies);
@@ -866,6 +878,3 @@ void GameEngine::gamePlay() {
         }
     }
 }
-
-
-
