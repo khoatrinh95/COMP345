@@ -617,9 +617,9 @@ void GameEngine::mainGameLoop() {
         reinforcementPhase();
 
         // let each player decide his/her order list
-        cout << "***********************************"<<endl;
-        cout << "**\t ISSUE ORDER PHASE\t**"<<endl;
-        cout << "***********************************"<<endl;
+    cout << "***********************************"<<endl;
+    cout << "**\t ISSUE ORDER PHASE\t**"<<endl;
+    cout << "***********************************"<<endl;
 
         transition(Phases::ISSUEORDERS);
         issueOrdersPhase();
@@ -627,9 +627,9 @@ void GameEngine::mainGameLoop() {
 
         // execute each player orders from his/her order list
 
-        cout << "***********************************"<<endl;
-        cout << "**\t EXECUTE ORDER PHASE\t**"<<endl;
-        cout << "***********************************"<<endl;
+    cout << "***********************************"<<endl;
+    cout << "**\t EXECUTE ORDER PHASE\t**"<<endl;
+    cout << "***********************************"<<endl;
 
         transition(Phases::EXECUTEORDERS);
         executeOrdersPhase();
@@ -660,7 +660,7 @@ void GameEngine::reinforcementPhase() {
         }
         if (armies<3){
             cout << "However,the number of armies calculated to "<<player->getName()<<" is less than 3; therefore, the player "
-                                                                                      "will be given 3 armies instead"<< endl;
+                                                                              "will be given 3 armies instead"<< endl;
             armies = 3 ;
         }
         player->assignReinforcementToPlayer(armies);
@@ -878,3 +878,6 @@ void GameEngine::gamePlay() {
         }
     }
 }
+
+
+

@@ -1,6 +1,6 @@
-//
-// Created by sarah on 2021-09-19.
-//
+    //
+    // Created by sarah on 2021-09-19.
+    //
 
 #include "Player.h"
 #include <iostream>
@@ -36,7 +36,7 @@ Player::Player(string Name, vector<Territory *> &territories) {
     this->playerCards = new Hand();
     this->playerOrdersList = new OrdersList();
     neutral = false;
-}
+    }
 
 
 /**
@@ -44,11 +44,11 @@ Player::Player(string Name, vector<Territory *> &territories) {
  * @param name
   */
 Player::Player(string name) : name(name), neutral(false) {
-    playerCards = new Hand();
-    playerOrdersList = new OrdersList();
-    vector<Territory*> territories;
-    reinforcement_pool = 0;
-    ps = nullptr;
+        playerCards = new Hand();
+        playerOrdersList = new OrdersList();
+        vector<Territory*> territories;
+        reinforcement_pool = 0;
+        ps = nullptr;
 }
 
 /**
@@ -72,10 +72,10 @@ Player::Player(const Player &anotherPlayer) {
  * a constructor that takes only player neutral parameter
  * @param name
   */
-Player::Player(string _name, bool _neutral) : name(_name), neutral(_neutral) {
-    playerCards = new Hand();
-    playerOrdersList = new OrdersList();
-}
+    Player::Player(string _name, bool _neutral) : name(_name), neutral(_neutral) {
+        playerCards = new Hand();
+        playerOrdersList = new OrdersList();
+    }
 
 /**
  * destructor of player object
@@ -313,82 +313,61 @@ void Player::setReinforcementPool(int armies) {
  * @return
  */
 int Player::getReinforcementPool() const {
-    return reinforcement_pool;
+        return reinforcement_pool;
 }
 
-/**
- * add new armies to player's reinforcement pool
- * @param armies
- */
-void Player::assignReinforcementToPlayer(int armies) {
-    int newArmies = this->getReinforcementPool() + armies;
-    this->setReinforcementPool(newArmies);
-}
+    /**
+     * add new armies to player's reinforcement pool
+     * @param armies
+     */
+    void Player::assignReinforcementToPlayer(int armies) {
+        int newArmies = this->getReinforcementPool() + armies;
+        this->setReinforcementPool(newArmies);
+    }
 
 
-void Player::setStrategy(int strategy) {
-    this->ps=GameEngine::strategyType.at(strategy);
-}
+    void Player::setStrategy(int strategy) {
+        this->ps=GameEngine::strategyType.at(strategy);
+    }
 
-PlayerStrategy *Player::getStrategy() const {
-    return ps;
-}
+    PlayerStrategy *Player::getStrategy() const {
+        return ps;
+    }
 
-strategy Player::parsePlayerStrategy(string strStrategy) {
-    if(strStrategy == "Aggressive") {
-        return Aggressive;
-    } else if(strStrategy == "Human") {
-        return Human;
-    } else if(strStrategy == "Neutral") {
+    strategy Player::parsePlayerStrategy(string strStrategy) {
+        if(strStrategy == "Aggressive") {
+            return Aggressive;
+        } else if(strStrategy == "Human") {
+            return Human;
+        } else if(strStrategy == "Neutral") {
+            return Neutral;
+        } else if(strStrategy == "Cheater") {
+            return Cheater;
+        } else if(strStrategy == "Benevolent") {
+            return Benevolent;
+        }
+        // else
         return Neutral;
-    } else if(strStrategy == "Cheater") {
-        return Cheater;
-    } else if(strStrategy == "Benevolent") {
-        return Benevolent;
     }
-    // else
-    return Neutral;
-}
 
-Player::Player(string name, strategy playingStrategy) : name(name), neutral(false) {
-    playerCards = new Hand();
-    playerOrdersList = new OrdersList();
-    setStrategy(playingStrategy);
-    reinforcement_pool = 0;
-}
+    Player::Player(string name, strategy playingStrategy) : name(name), neutral(false) {
+        playerCards = new Hand();
+        playerOrdersList = new OrdersList();
+        setStrategy(playingStrategy);
+        reinforcement_pool = 0;
+    }
 
-void Player::removeAllTerritories() {
-    for (int i = 0; i < territories.size(); i++) {
-        if (territories.at(i) != nullptr) {
-            territories.at(i)->setOwner(nullptr);
+    void Player::removeAllTerritories() {
+        for (int i = 0; i < territories.size(); i++) {
+            if (territories.at(i) != nullptr) {
+                territories.at(i)->setOwner(nullptr);
+            }
         }
+        territories.clear();
     }
-    territories.clear();
-}
 
 
 
-//Thong
 
-// Get a list of territories with available armies for moving
-std::vector<Territory*> Player::getOwnTerritoriesWithMovableArmies() const {
-    std::vector<Territory *> territories;
-    for (const auto &territory: territories) {
-        if (territory->getNumberOfMovableArmies() > 0) {
-            territories.push_back(territory);
-        }
-    }
-}
 
-// Check if the player has already issued an advance order from `source` to `destination`
-//bool Player::advancePairingExists_(Territory* source, Territory* destination)
-//{
-//    auto issuedIterator = issuedDeploymentsAndAdvancements_.find(source);
-//    if (issuedIterator != issuedDeploymentsAndAdvancements_.end())
-//    {
-//        std::vector<Territory*> pastAdvancements = issuedIterator->second;
-//        return find(pastAdvancements.begin(), pastAdvancements.end(), destination) != pastAdvancements.end();
-//    }
-//
-//    return false;
-//}
+
