@@ -604,8 +604,12 @@ void GameEngine::mainGameLoop() {
 //    playingOrder.at(1)->setStrategy(strategy::Neutral);
 ////    playingOrder.at(2)->setStrategy(strategy::Benevolent);
 
+
     ////////////////////////////////////////////////
     while (playingOrder.size()!=1) {
+//        for (auto&player:playingOrder){
+//            player->getStrategy()->print(player);
+//        }
 //int n = 5;
 //    while (n >1){
         // add armies to each player Reinforcement Pool
@@ -721,7 +725,7 @@ void GameEngine::executeOrdersPhase() {
             int i = 0;
             for (; i < longestOrderList; i++) {
                 if (i < player->getPlayerOrdersList()->size()) {
-                    cout << i << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i)
+                    cout << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i)
                          << " of ";
                     cout << player->getName() << endl;
                     Order *order = player->getPlayerOrdersList()->getOrders().at(i);

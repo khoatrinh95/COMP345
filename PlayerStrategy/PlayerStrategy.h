@@ -18,6 +18,9 @@ public:
     virtual vector<Territory*>  toDefend(Player *player) = 0;
     virtual vector<Territory*>  toAttack(Player *player) = 0;
     virtual void issueOrder(Player *player) = 0;
+    virtual void print(Player *player)=0;
+
+
     virtual PlayerStrategy* clone() const = 0;
     friend std::ostream &operator<<(std::ostream &output, const PlayerStrategy &strategy);
 protected:
@@ -48,10 +51,20 @@ private:
 class AggressivePlayerStrategy : public PlayerStrategy
 {
 public:
-    PlayerStrategy* clone() const;
-    std::vector<Territory*> toDefend(const Player* player) const;
-    std::vector<Territory*> toAttack(const Player* player) const;
+    virtual vector<Territory*> toDefend(Player *player);
+    virtual vector<Territory*> toAttack(Player *player);
+    virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
+};
     void issueOrder(Player* player);
+
+class AggressivePlayerStrategy : public PlayerStrategy {
+public:
+    virtual vector<Territory*> toDefend(Player *player);
+    virtual vector<Territory*> toAttack(Player *player);
+    virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
 
 protected:
     std::ostream &print_(std::ostream &output) const;
@@ -69,6 +82,8 @@ public:
     virtual vector<Territory*> toDefend(Player *player);
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
 };
 
 class NeutralPlayerStrategy : public PlayerStrategy {
@@ -76,6 +91,8 @@ public:
     virtual vector<Territory*>  toDefend(Player *player);
     virtual vector<Territory*>  toAttack(Player *player);
     virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
 };
 
 class CheaterPlayerStrategy : public PlayerStrategy {
@@ -83,6 +100,8 @@ public:
     virtual vector<Territory*> toDefend(Player *player);
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
 };
 
 #endif //COMP345_N11_PLAYERSTRATEGY_H

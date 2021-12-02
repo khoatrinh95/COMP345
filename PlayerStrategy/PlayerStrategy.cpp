@@ -625,9 +625,9 @@ vector<Territory*>  BenevolentPlayerStrategy::toAttack(Player *player) {
  */
 void BenevolentPlayerStrategy::issueOrder(Player *player)  {
     vector<Territory*>toDefend_Territories = toDefend(player);
-    for (auto &ter: toDefend_Territories){
-        cout<<*ter<<endl;
-    }
+//    for (auto &ter: toDefend_Territories){
+//        cout<<*ter<<endl;
+//    }
     // using all the reinforcement armies for territories that do not have enough armies to protect itself
     while (player->getReinforcementPool()>0){
         for (auto &territory : toDefend_Territories){
@@ -669,6 +669,10 @@ void BenevolentPlayerStrategy::issueOrder(Player *player)  {
     }
 }
 
+void BenevolentPlayerStrategy::print(Player *player) {
+    cout<< "Player "<<player->getName()<<"'s strategy is BENEVOLENT."<<endl;
+
+}
 
 
 vector<Territory*>  NeutralPlayerStrategy::toDefend(Player *player) {
@@ -682,6 +686,45 @@ vector<Territory*>  NeutralPlayerStrategy::toAttack(Player *player) {
 }
 
 void NeutralPlayerStrategy::issueOrder(Player *player)  {
+
+}
+
+void NeutralPlayerStrategy::print(Player *player) {
+    cout<< "Player "<<player->getName()<<"'s strategy is NEUTRAL."<<endl;
+
+}
+
+
+vector<Territory *> HumanPlayerStrategy::toDefend(Player *player) {
+    return vector<Territory *>();
+}
+
+vector<Territory *> HumanPlayerStrategy::toAttack(Player *player) {
+    return vector<Territory *>();
+}
+
+void HumanPlayerStrategy::issueOrder(Player *player)  {
+
+}
+
+void HumanPlayerStrategy::print(Player *player) {
+    cout<< "Player "<<player->getName()<<"'s strategy is HUMAN."<<endl;
+}
+
+vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player) {
+    return vector<Territory *>();
+}
+
+vector<Territory *> AggressivePlayerStrategy::toAttack(Player *player) {
+    return vector<Territory *>();
+}
+
+void AggressivePlayerStrategy::issueOrder(Player *player)  {
+
+}
+
+void AggressivePlayerStrategy::print(Player *player) {
+    cout<< "Player "<<player->getName()<<"'s strategy is AGGRESSIVE."<<endl;
 
 }
 
@@ -723,4 +766,9 @@ void CheaterPlayerStrategy::issueOrder(Player *player) {
             player->setReinforcementPool(player->getReinforcementPool()+armyToAttack);
         }
     }
+}
+
+void CheaterPlayerStrategy::print(Player *player) {
+    cout<< "Player "<<player->getName()<<"'s strategy is CHEATER."<<endl;
+
 }
