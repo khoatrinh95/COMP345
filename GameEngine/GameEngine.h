@@ -44,7 +44,6 @@ public:
     void executeOrdersPhase();
     void removePlayer(Player *player);
     vector<Player* >getPlayingOrder();
-    void winPhase();
 
     ////////////////////////////////////////////////////////////////////////////
     static Deck *deck;
@@ -57,6 +56,9 @@ public:
     // Iloggable
     virtual string stringToLog();
 
+    static Map* getMap();
+
+
 private:
     const int MIN_NUM_PLAYERS;
     const int MAX_NUM_PLAYERS;
@@ -66,7 +68,7 @@ private:
     Phases *phase;
     Modes *mode;
     vector<Player*> players_;
-    Map* map_ ;
+    static Map* map_ ;
     CommandProcessor *commandProcessor;
     void printTitle();
     void loadMap(string filename);

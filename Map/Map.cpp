@@ -941,3 +941,9 @@ int Map::getNumTerritories() {
 Territory **Map::getTerritories() const {
     return territories;
 }
+
+// Return a list of territories that are adjacent to the one specified
+std::vector<Territory*> Map::getAdjacentTerritories(Territory* territory)
+{
+    return adjacencyList_[territory];
+}
