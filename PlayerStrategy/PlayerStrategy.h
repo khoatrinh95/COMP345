@@ -21,23 +21,19 @@ public:
     virtual void print(Player *player)=0;
 
 
-    virtual PlayerStrategy* clone() const = 0;
-    friend std::ostream &operator<<(std::ostream &output, const PlayerStrategy &strategy);
-protected:
-    virtual std::ostream &print_(std::ostream &output) const = 0;
+//    virtual PlayerStrategy* clone() const = 0;
+//    friend std::ostream &operator<<(std::ostream &output, const PlayerStrategy &strategy);
+//protected:
+//    virtual std::ostream &print_(std::ostream &output) const = 0;
 };
 //
 
 
 class HumanPlayerStrategy : public PlayerStrategy {
-    PlayerStrategy *clone() const;
-
-    std::vector<Territory *> toDefend(const Player *player) const;
-
-    std::vector<Territory *> toAttack(const Player *player) const;
-
+    virtual vector<Territory*> toDefend(Player *player);
+    virtual vector<Territory*> toAttack(Player *player);
     void issueOrder(Player *player);
-
+    virtual void print(Player *player);
 protected:
     std::ostream &print_(std::ostream &output) const;
 
