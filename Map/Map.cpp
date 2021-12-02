@@ -77,7 +77,7 @@ Map* MapLoader::loadMapFile(std::string fileName) {
                     }
                 }
 
-                // creating the map's list of territories
+                    // creating the map's list of territories
                 else if (section == "countries") {
                     if (map->numTerritories > 0) {
                         map->territories = new Territory*[map->numTerritories];
@@ -117,8 +117,8 @@ Map* MapLoader::loadMapFile(std::string fileName) {
                     }
                 }
 
-                // if iter 1: count number of territories
-                // if iter 2: create Territory object when map-file's line is proper, add territories to their continents
+                    // if iter 1: count number of territories
+                    // if iter 2: create Territory object when map-file's line is proper, add territories to their continents
                 else if(section == "countries") {
                     if(i==0) {
                         map->numTerritories++;
@@ -170,8 +170,8 @@ Map* MapLoader::loadMapFile(std::string fileName) {
                     }
                 }
 
-                // if iter 1: count number of borders
-                // if iter 2: create and populate list of adjacent territories for each territory when map-file's line is proper
+                    // if iter 1: count number of borders
+                    // if iter 2: create and populate list of adjacent territories for each territory when map-file's line is proper
                 else if(section == "borders") {
                     int numBorders = 0;
                     int adjTerId = -1;

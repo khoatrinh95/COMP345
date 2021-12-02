@@ -214,6 +214,11 @@ public:
     static strategy parsePlayerStrategy(string strStrategy);
     Player(string name, strategy playingStrategy);
     void removeAllTerritories();
+
+    //Thong
+    std::vector<Territory*> getOwnTerritoriesWithMovableArmies() const;
+    bool committed_;
+    bool advancePairingExists_(Territory* source, Territory* destination);
 };
 
 
