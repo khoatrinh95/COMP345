@@ -721,7 +721,7 @@ void GameEngine::executeOrdersPhase() {
             int i = 0;
             for (; i < longestOrderList; i++) {
                 if (i < player->getPlayerOrdersList()->size()) {
-                    cout << i << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i)
+                    cout << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i)
                          << " of ";
                     cout << player->getName() << endl;
                     Order *order = player->getPlayerOrdersList()->getOrders().at(i);
