@@ -34,4 +34,4 @@ add_executable(COMP345_N11
         Logging/LoggingDriver.cpp
         Logging/LoggingDriver.h
         PlayerStrategy/PlayerStrategy.cpp
-        PlayerStrategy/PlayerStrategy.h CommandProcessing/TournamentCommandDriver.cpp CommandProcessing/TournamentCommandDriver.h)
+        PlayerStrategy/PlayerStrategy.h CommandProcessing/TournamentCommandDriver.cpp CommandProcessing/TournamentCommandDriver.h PlayerStrategy/PlayerStrategiesDriver.h)

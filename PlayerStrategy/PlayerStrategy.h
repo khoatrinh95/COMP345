@@ -48,16 +48,6 @@ private:
 
     void playCard_(Player *player, std::vector<Territory *> territoriesToDefend);
 };
-class AggressivePlayerStrategy : public PlayerStrategy
-{
-public:
-    virtual vector<Territory*> toDefend(Player *player);
-    virtual vector<Territory*> toAttack(Player *player);
-    virtual void issueOrder(Player *player);
-    virtual void print(Player *player);
-
-};
-    void issueOrder(Player* player);
 
 class AggressivePlayerStrategy : public PlayerStrategy {
 public:

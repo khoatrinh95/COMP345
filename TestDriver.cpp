@@ -3,6 +3,7 @@
 //
 
 #include "TestDriver.h"
+#include "PlayerStrategy/PlayerStrategiesDriver.h"
 
 int main(int argc, char* argv[]){
 //    cout << "Hello COMP345" << endl;
@@ -16,8 +17,8 @@ int main(int argc, char* argv[]){
 //    cout << "\n****************************************************************************" << endl;
 //    cout << "Testing game initialization and main loop" << endl;
 //    cout << "****************************************************************************" << endl;
-
-    GameEngineDriver();
+    PlayerStrategiesDriver();
+    // GameEngineDriver();
 
 //    cout << "\n****************************************************************************" << endl;
 //    cout << "End of testing game initialization and main loop" << endl;
