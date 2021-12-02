@@ -604,8 +604,12 @@ void GameEngine::mainGameLoop() {
 //    playingOrder.at(1)->setStrategy(strategy::Neutral);
 ////    playingOrder.at(2)->setStrategy(strategy::Benevolent);
 
+
     ////////////////////////////////////////////////
     while (playingOrder.size()!=1) {
+//        for (auto&player:playingOrder){
+//            player->getStrategy()->print(player);
+//        }
 //int n = 5;
 //    while (n >1){
         // add armies to each player Reinforcement Pool
