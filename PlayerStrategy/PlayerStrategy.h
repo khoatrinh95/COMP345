@@ -23,13 +23,25 @@ public:
 };
 //
 
-class HumanPlayerStrategy : public PlayerStrategy {
-public:
-    virtual vector<Territory*> toDefend(Player *player);
-    virtual vector<Territory*> toAttack(Player *player);
-    virtual void issueOrder(Player *player);
-    virtual void print(Player *player);
 
+class HumanPlayerStrategy : public PlayerStrategy {
+    PlayerStrategy *clone() const;
+
+    std::vector<Territory *> toDefend(const Player *player) const;
+
+    std::vector<Territory *> toAttack(const Player *player) const;
+
+    void issueOrder(Player *player);
+
+protected:
+    std::ostream &print_(std::ostream &output) const;
+
+private:
+    void deployReinforcements_(Player *player, std::vector<Territory *> territoriesToDefend);
+
+    void issueAdvance_(Player *player, std::vector<Territory *> territoriesToDefend);
+
+    void playCard_(Player *player, std::vector<Territory *> territoriesToDefend);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {
@@ -39,6 +51,14 @@ public:
     virtual void issueOrder(Player *player);
     virtual void print(Player *player);
 
+protected:
+    std::ostream &print_(std::ostream &output) const;
+
+private:
+    bool deployToTopTerritory_(Player* player, std::vector<Territory*> territoriesToDefend);
+    bool attackFromTopTerritory_(Player* player, Territory* attackFrom, std::vector<Territory*> territoriesToAttack);
+    bool advanceToRandomTerritory_(Player* player, std::vector<Territory*> territoriesToDefend);
+    bool playCard_(Player* player, std::vector<Territory*> territoriesToDefend);
 };
 
 class BenevolentPlayerStrategy : public PlayerStrategy {
