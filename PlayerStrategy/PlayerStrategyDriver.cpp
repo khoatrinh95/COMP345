@@ -1,6 +1,7 @@
-#include "PlayerStrategiesDriver.h"
+#include "PlayerStrategyDriver.h"
 
-int PlayerStrategiesDriver()
+
+void PlayerStrategiesDriver()
 {
     // Setup
     GameEngine gameEngine;
@@ -11,20 +12,21 @@ int PlayerStrategiesDriver()
     Player* player3 = new Player("Player 3");
     Player* player4 = new Player("Player 4");
 
-    player1->setStrategy(new HumanPlayerStrategy());
-    player2->setStrategy(new AggressivePlayerStrategy());
-    player3->setStrategy(new BenevolentPlayerStrategy());
-    player4->setStrategy(new NeutralPlayerStrategy());
+    player1->setStrategy( Human);
+    player2->setStrategy(Aggressive);
+    player3->setStrategy(Benevolent);
+    player4->setStrategy(Neutral);
 
-    gameEngine.setMap(loader.loadMap("resources/canada.map"));
-    gameEngine.setPlayers({ player1, player2, player3, player4 });
-    GameEngine::getDeck()->generateCards(20);
-
+    gameEngine.loadMap("../Maps/maps/canada.map");
+    gameEngine.addPlayersToList(player1);
+    gameEngine.addPlayersToList(player2);
+    gameEngine.addPlayersToList(player3);
+    gameEngine.addPlayersToList(player4);
     gameEngine.startupPhase();
 
     // Display the players at the start of the game
     std::cout << std::endl;
-    for (const auto &player : gameEngine.getCurrentPlayers())
+    for (const auto &player : gameEngine.getPlayers())
     {
         std::cout << *player << std::endl;
     }
@@ -47,7 +49,7 @@ int PlayerStrategiesDriver()
     // ======================================================================================================
 
     // Change the strategy for one of the players
-    player4->setStrategy(new HumanPlayerStrategy());
+    player4->setStrategy(Human);
 
     // Round 2
     std::cout << "\n============================ Simulated game: Round 2 ============================" << std::endl;
@@ -61,8 +63,5 @@ int PlayerStrategiesDriver()
     gameEngine.executeOrdersPhase();
 
 
-    // Clean up dynamically allocated memory
-    GameEngine::resetGameEngine();
-
-    return 0;
+    // todo: do we need to reset? Clean up dynamically allocated memory
 }

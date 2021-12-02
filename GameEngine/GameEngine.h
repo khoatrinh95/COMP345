@@ -56,7 +56,7 @@ public:
 
     // Iloggable
     virtual string stringToLog();
-
+    void loadMap(string filename);
 private:
     const int MIN_NUM_PLAYERS;
     const int MAX_NUM_PLAYERS;
@@ -69,7 +69,6 @@ private:
     Map* map_ ;
     CommandProcessor *commandProcessor;
     void printTitle();
-    void loadMap(string filename);
     void validateMap(Phases *phase);
     void assignTerritories();
     void assignPlayingOrder();
