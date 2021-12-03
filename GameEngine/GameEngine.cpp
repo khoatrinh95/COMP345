@@ -258,6 +258,14 @@ void GameEngine::startupPhase() {
                         cout << "Result: " << result << endl;
                         tournamentMapResult[i] += " | " + result.append(MAX_TABLE_CELL_LENGTH - result.length(), ' ');
 
+                        //////////////////////// for debugging
+                        if(!GameEngine::mapMatching(map_, map2)) {
+                            cout << "Map1:\n" << *map_ << endl;
+                            cout << "Map2:\n" << *map2 << endl;
+                            cout << "STOP" << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+                        }
+                        ////////////////////
+
                         // clear playing order list
                         playingOrder.clear();
 
@@ -451,11 +459,13 @@ string GameEngine::tournamentPlay(int numberOfMaxTurns) {
         executeOrdersPhase();
         cout << endl;
 
+        //////////////////////// for debugging
         if(!GameEngine::mapMatching(map_, map2)) {
             cout << "Map1:\n" << *map_ << endl;
             cout << "Map2:\n" << *map2 << endl;
             cout << "STOP" << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
         }
+        ////////////////////
     }
     transition(Phases::WIN);
     if(playingOrder.size() == 1) {
@@ -532,6 +542,11 @@ void GameEngine::assignTerritories() {
         /////////////////////////////// for demo purpose only
         cout << vecTerritories.at(i)->getName() << " assigned to " << players_.at(k)->getName() << endl;
         //////////////////////////////////////////////
+    }
+
+    //////////////////////// for debugging
+    if(!checkForNullOwnerOfTerritory()) {
+        cout << "STOP" << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
     }
 };
 
@@ -718,6 +733,14 @@ void GameEngine::executeOrdersPhase() {
                     cout << "The execution for the order " << *player->getPlayerOrdersList()->getOrders().at(i)
                          << " of " << player->getName() << endl;
                     Order *order = player->getPlayerOrdersList()->getOrders().at(i);
+
+
+                    ///////////////////////////// for debugging
+                    if(!checkForNullOwnerOfTerritory()) {
+                        cout << "STOP" << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+                    }
+                    //////////////////////////
+
                     order->execute();
                     player->getPlayerOrdersList()->removeOrder(order);
                     sum = sum-1;
@@ -739,6 +762,15 @@ void GameEngine::executeOrdersPhase() {
                          << " of ";
                     cout << player->getName() << endl;
                     Order *order = player->getPlayerOrdersList()->getOrders().at(i);
+
+
+
+                    ///////////////////////////// for debugging
+                    if(!checkForNullOwnerOfTerritory()) {
+                        cout << "STOP" << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+                    }
+                    //////////////////////////
+
                     order->execute();
                     player->getPlayerOrdersList()->removeOrder(order);
                     sum = sum - 1;
@@ -903,7 +935,7 @@ bool GameEngine::mapMatching(Map *map1, Map *map2) {
     int numTerritories1 = map1->getNumTerritories();
     int numTerritories2 = map2->getNumTerritories();
     if(numContinents1 != numContinents2 || numTerritories1 != numTerritories2) {
-        cout << "unequal num of ter/cont" << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+        cout << "unequal num of ter/cont" << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
         return false;
     }
     Territory ** territories1 = map1->getTerritories();
@@ -912,7 +944,18 @@ bool GameEngine::mapMatching(Map *map1, Map *map2) {
         Territory * ter1 = territories1[i];
         Territory * ter2 = territories2[i];
         if(ter1->getName() != ter2->getName() || ter1->getId() != ter2->getId() || ter1->getNumAdjTerritories() != ter2->getNumAdjTerritories()) {
-            cout << "map contains different territories" << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+            cout << "map contains different territories" << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+            return false;
+        }
+    }
+
+    Continent ** continents1 = map1->getContinent();
+    Continent ** continents2 = map2->getContinent();
+    for(int i = 0; i < numContinents1; i++) {
+        Continent * cont1 = continents1[i];
+        Continent * cont2 = continents2[i];
+        if(cont1->getName() != cont2->getName() || cont1->getBonus() != cont2->getBonus()) {
+            cout << "map contains different continents" << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
             return false;
         }
     }
@@ -920,5 +963,22 @@ bool GameEngine::mapMatching(Map *map1, Map *map2) {
     return true;
 }
 
+bool GameEngine::checkForNullOwnerOfTerritory() {
+    int numTerritories = map_->getNumTerritories();
+    for(int i = 0; i < numTerritories; i++) {
+        if(map_->getTerritories()[i]->getOwner() == nullptr) {
+            cout << "Territory with null owner\n" << *(map_->getTerritories()[i]) << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+            return false;
+        }
+    }
 
+//    int numContinents = map_->getNumContinent();
+//    for(int i = 0; i < numContinents; i++) {
+//        if(map_->getContinent()[i]->getOwner() == nullptr) {
+//            cout << "Continent with null owner\n" << *(map_->getContinent()[i]) << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+//            return false;
+//        }
+//    }
+    return true;
+}
 
