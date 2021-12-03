@@ -36,8 +36,8 @@ private:
     void deployReinforcements_(Player *player, std::vector<Territory *> territoriesToDefend);
 
     void issueAdvance_(Player *player, std::vector<Territory *> territoriesToDefend);
-
-    void playCard_(Player *player, std::vector<Territory *> territoriesToDefend);
+    void issueAirLift_(Player* player, std::vector<Territory*> territoriesToDefend);
+    bool playCard_(Player* player);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {
