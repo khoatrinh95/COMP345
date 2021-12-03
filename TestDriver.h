@@ -13,7 +13,7 @@
 #include "Logging/LoggingDriver.h"
 #include "CommandProcessing/TournamentCommandDriver.h"
 #include "PlayerStrategy/PlayerStrategy.h"
-#include "PlayerStrategy/PlayerStrategyDriver.h"
+#include "PlayerStrategy/PSDriver.h"
 using namespace std;
 
 
