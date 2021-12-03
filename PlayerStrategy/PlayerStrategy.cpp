@@ -15,39 +15,35 @@
 //// THONG
 //
 //
-//namespace
-//{
-//    // Custom comparator to sort Territories by the number of armies and then by the number of adjacent enemy territories.
-//    bool compareTerritoriesByEnemiesAndArmies(Territory* t1, Territory* t2, const Player* owner)
-//    {
-//        Map* map = GameEngine::getMap();
-//        int t1EnemyNeighbors = 0;
-//        for (const auto &territory : map->getAdjacentTerritories(t1))
-//        {
-//            if (territory->getOwner() != owner)
-//            {
-//                t1EnemyNeighbors++;
-//            }
-//        }
-//
-//        int t2EnemyNeighbors = 0;
-//        for (const auto &territory : map->getAdjacentTerritories(t2))
-//        {
-//            if (territory->getOwner() != owner)
-//            {
-//                t2EnemyNeighbors++;
-//            }
-//        }
-//
-//        if (t1->getNumberOfArmies() != t2->getNumberOfArmies())
-//        {
-//            return t1->getNumberOfArmies() > t2->getNumberOfArmies();
-//        }
-//
-//        return t1EnemyNeighbors > t2EnemyNeighbors;
-//    }
-//}
-//
+namespace
+{
+    // Custom comparator to sort Territories by the number of armies and then by the number of adjacent enemy territories.
+    bool compareTerritoriesByEnemiesAndArmies(Territory t1, Territory t2, Player owner)
+    {
+        if (t1.getNumberOfArmies() != t2.getNumberOfArmies())
+        {
+            return t1.getNumberOfArmies() > t2.getNumberOfArmies();
+        }
+
+        int t1EnemyNeighbors = 0;
+        int i=0;
+        for(; i<t1.getNumAdjTerritories();i++){
+            if(t1.getAdjTerritories()[i]->getOwner()->getName()!=owner.getName()){
+                t1EnemyNeighbors++;
+            }
+        }
+
+        int t2EnemyNeighbors = 0;
+        int j=0;
+        for(; j<t2.getNumAdjTerritories();j++){
+            if(t2.getAdjTerritories()[j]->getOwner()->getName()!=owner.getName()){
+                t2EnemyNeighbors++;
+            }
+        }
+        return t1EnemyNeighbors >= t2EnemyNeighbors;
+    }
+}
+
 ///*
 //===================================
 // Implementation for HumanPlayerStrategy class
@@ -696,6 +692,7 @@ void NeutralPlayerStrategy::print(Player *player) {
 
 
 vector<Territory *> HumanPlayerStrategy::toDefend(Player *player) {
+    // Needs human to make an interaction
     return player->getTerritories();
 }
 
@@ -704,7 +701,6 @@ vector<Territory *> HumanPlayerStrategy::toAttack(Player *player) {
     std::vector<Territory*> territoriesToAttack;
     std::unordered_set<Territory*> territoriesSeen;
     for (auto &territory : ownedTerritories) {
-        Territory** adjTerritories = territory->getAdjTerritories();
         for (int i = 0; i<territory->getNumAdjTerritories(); i++){
 
             bool isEnemyOwned = find(ownedTerritories.begin(), ownedTerritories.end(), territory->getAdjTerritories()[i]) == ownedTerritories.end();
@@ -736,7 +732,31 @@ vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player) {
 }
 
 vector<Territory *> AggressivePlayerStrategy::toAttack(Player *player) {
-    return vector<Territory *>();
+    std::vector<Territory*> sources = toDefend(player);
+    std::vector<Territory*> territoriesToAttack;
+    std::unordered_set<Territory*> territoriesSeen;
+
+    for (const auto &territory : sources)
+    {
+
+        auto sortLambda = [&player](auto t1, auto t2){ return compareTerritoriesByEnemiesAndArmies(t1, t2, *player); };
+        if (territory->getNumAdjTerritories() >0) {
+            sort(territory->getAdjTerritories()[0], territory->getAdjTerritories()[territory->getNumAdjTerritories()-1],
+                 sortLambda);
+            int i=0;
+            for(;i<territory->getNumAdjTerritories();i++){
+                bool isEnemyOwned = find(sources.begin(),sources.end(),territory->getAdjTerritories()[i])==sources.end();
+                bool alreadySeen = territoriesSeen.find(territory->getAdjTerritories()[i]) != territoriesSeen.end();
+                if(isEnemyOwned && !alreadySeen){
+                    territoriesToAttack.push_back(territory->getAdjTerritories()[i]);
+                    territoriesSeen.insert(territory->getAdjTerritories()[i]);
+                }
+
+            }
+        }
+    }
+
+    return territoriesToAttack;
 }
 
 void AggressivePlayerStrategy::issueOrder(Player *player)  {
