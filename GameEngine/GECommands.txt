@@ -1,4 +1,4 @@
-tournament -M germany.map, europe.map, cow.map, aztec.map, canada.map  -P Neutral, Aggressive, Benevolent, Cheater -G 3 -D 10
+tournament -M germany.map, europe.map, cow.map, aztec.map, canada.map  -P Neutral, Aggressive, Benevolent, Cheater -G 3 -D 15
 replay
 tournament -M canada.map  -P Neutral, Aggressive, Benevolent, Cheater -G 5 -D 10
 quit

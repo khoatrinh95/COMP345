@@ -182,7 +182,7 @@ void CheaterPlayerStrategy::issueOrder(Player *player) {
         for (int i = 0; i<territory->getNumAdjTerritories(); i++){
             int armyToAttack = (adjTerritories[i]->getNumberOfArmies()*2);
             if (armyToAttack == 0 || armyToAttack > 50) {
-                armyToAttack = 10;
+                armyToAttack = 20;
             }
             AdvanceOrder *advanceOrder = new AdvanceOrder(player, armyToAttack, territory, adjTerritories[i]);
             player->getPlayerOrdersList()->add(advanceOrder);

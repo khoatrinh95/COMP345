@@ -371,7 +371,7 @@ void GameEngine::startupPhase() {
 string GameEngine::startupMapLoading(string map) {
     // delete map
     if(map_ != nullptr) {
-//        delete map_;
+        delete map_;
         map_ = nullptr;
     }
 
@@ -865,22 +865,6 @@ void GameEngine::gamePlay() {
             mainGameLoop();
         }
 
-//        cout << "\nWant to play again?\nEnter \"replay\" to play again, or \"quit\" to exit the game.\nWhat's your choice?" << endl;
-//        command = commandProcessor->getCommand();
-//        commandProcessor->validate(command, phase);
-//        instruction = command->getInstruction();
-//        cout << "Processing command \"" << command->getCommand() << "\"... " << endl;
-
-//        // verify if a command is valid
-//        while(instruction != "quit" && instruction != "replay" && instruction != "eof") {
-//            cout << "Invalid choice!\nEnter \"replay\" to play again, or \"quit\" to exit the game.\nWhat's your choice?";
-//            command = commandProcessor->getCommand();
-//            commandProcessor->validate(command, phase);
-//            instruction = command->getInstruction();
-//            if(instruction == "eof") {
-//                cout << "End of the list of commands!" << endl;
-//            }
-//        }
 
         // ask player for replay/quit after end of game
         do {
