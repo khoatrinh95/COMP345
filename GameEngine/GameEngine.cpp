@@ -28,6 +28,7 @@ vector<PlayerStrategy*>GameEngine:: strategyType = {new AggressivePlayerStrategy
 
 // Default constructor
 GameEngine::GameEngine() : MAP_DIRECTORY("../Map/maps/"), MIN_NUM_PLAYERS(2), MAX_NUM_PLAYERS(6) {
+    map_ = nullptr;
     phase = new Phases(Phases::START);
     mode = new Modes(Modes::STARTUP);
     commandProcessor = new FileCommandProcessorAdapter("../GameEngine/GECommands.txt");
