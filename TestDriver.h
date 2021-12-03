@@ -12,6 +12,7 @@
 #include "CommandProcessing/CommandProcessingDriver.h"
 #include "Logging/LoggingDriver.h"
 #include "CommandProcessing/TournamentCommandDriver.h"
+#include "PlayerStrategy/HumanStrategyDriver.h"
 using namespace std;
 
 

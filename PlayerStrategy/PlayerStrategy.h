@@ -29,7 +29,11 @@ public:
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
     virtual void print(Player *player);
+private:
+    void deployReinforcements_(Player *player, std::vector<Territory *> territoriesToDefend);
 
+    void issueAdvance_(Player *player, std::vector<Territory *> territoriesToDefend);
+    bool playCard_(Player* player);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {

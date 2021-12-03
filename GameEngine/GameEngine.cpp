@@ -623,11 +623,18 @@ void GameEngine::printPlayerStrategy(){
  */
 void GameEngine::mainGameLoop() {
     for (int i = 0 ; i<playingOrder.size(); i++){
-        playingOrder.at(i)->setStrategy(i);
+        /////////// for demo purpose only -> avoid human player so that we can show the functionality of the game
+        if (i==1){
+            playingOrder.at(i)->setStrategy(i-1);
+        } else {
+            playingOrder.at(i)->setStrategy(i);
+        }
+
     }
+    printPlayerStrategy();
     while (playingOrder.size()!=1) {
         int rounds =0;
-        while (rounds <2 && playingOrder.size()!=1) {
+        while (rounds <1 && playingOrder.size()!=1) {
             // add armies to each player Reinforcement Pool
             cout << "***********************************" << endl;
             cout << "**\t REINFORCEMENT PHASE\t**" << endl;
@@ -664,10 +671,11 @@ void GameEngine::mainGameLoop() {
                 int randnum = std::rand()%5;
                 player->setStrategy(randnum);
 
-                if (player->getStrategy()==playerStrategy){
+                while (player->getStrategy()==playerStrategy){
                     int randnum = std::rand()%5;
                     player->setStrategy(randnum);
                 }
+                /////////// for demo purpose only -> avoid human player so that we can show the functionality of the game
             }
             printPlayerStrategy();
         }

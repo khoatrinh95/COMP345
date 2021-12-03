@@ -366,6 +366,20 @@ int Player::getReinforcementPool() const {
         territories.clear();
     }
 
+    // Get a list of territories with available armies for moving
+    std::vector<Territory*> Player::getOwnTerritoriesWithMovableArmies() const
+    {
+        std::vector<Territory*> territories_;
+        for (const auto &territory : territories)
+        {
+            if (territory->getNumberOfMovableArmies() > 0)
+            {
+                territories_.push_back(territory);
+            }
+        }
+
+        return territories_;
+    }
 
 
 
