@@ -249,7 +249,7 @@ void HumanPlayerStrategy::issueAdvance_(Player* player, std::vector<Territory*> 
         int selection;
         std::cin >> selection;
 
-        if (std::cin.fail() || selection - 1 < 0 || selection - 1 >= possibleSources.size())
+        if (std::cin.fail() || selection - 1 < 0 )
         {
             std::cout << "That was not a valid option. Please try again:" << std::endl;
             std::cin.clear();
@@ -387,6 +387,8 @@ void HumanPlayerStrategy::issueOrder(Player *player)  {
     std::vector<Territory*> territoriesToAttack = toAttack(player);
     std::vector<Territory*> territoriesToDefend = toDefend(player);
 
+    cout<<"There are 4 options: "<<endl;
+
     // Only allow deploy if the player still has reinforcements
     if (player->getReinforcementPool() > 0)
     {
@@ -426,53 +428,43 @@ vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player) {
     return territoriesToDefend;
 }
 
+// return a vector that has the player's strongest territory
 vector<Territory *> AggressivePlayerStrategy::toAttack(Player *player) {
     std::vector<Territory*> sources = toDefend(player);
     std::vector<Territory*> territoriesToAttack;
     std::unordered_set<Territory*> territoriesSeen;
 
+    Territory* strongest;
+    int strongestArmy = 0;
     for (const auto &territory : sources)
     {
-
-        auto sortLambda = [&player](auto t1, auto t2){ return compareTerritoriesByEnemiesAndArmies(t1, t2, *player); };
-        if (territory->getNumAdjTerritories() >0) {
-            sort(territory->getAdjTerritories()[0], territory->getAdjTerritories()[territory->getNumAdjTerritories()-1],
-                 sortLambda);
-            int i=0;
-            for(;i<territory->getNumAdjTerritories();i++){
-                bool isEnemyOwned = find(sources.begin(),sources.end(),territory->getAdjTerritories()[i])==sources.end();
-                bool alreadySeen = territoriesSeen.find(territory->getAdjTerritories()[i]) != territoriesSeen.end();
-                if(isEnemyOwned && !alreadySeen){
-                    territoriesToAttack.push_back(territory->getAdjTerritories()[i]);
-                    territoriesSeen.insert(territory->getAdjTerritories()[i]);
-                }
-
-            }
+        if (territory->getNumberOfArmies()>=strongestArmy){
+            strongestArmy= territory->getNumberOfArmies();
+            strongest = territory;
         }
     }
+    territoriesToAttack.push_back(strongest);
 
     return territoriesToAttack;
 }
 
 void AggressivePlayerStrategy::issueOrder(Player *player)  {
-//    std::vector<Territory*> territoriesToAttack = toAttack(player);
-//    std::vector<Territory*> territoriesToDefend = toDefend(player);
+
+    std::vector<Territory*> territoriesToAttack = toAttack(player);
+    Territory* strongest = territoriesToAttack.at(0);
+
+    for (int i =0; i<strongest->getNumAdjTerritories(); i++){
+        int playerArmies = player->getReinforcementPool();
+        if (playerArmies>3){
+            int armies = ceil(double(playerArmies) / 3);
+            AdvanceOrder* advanceOrder = new AdvanceOrder(player, armies, strongest, strongest->getAdjTerritories()[i]);
+            player->getPlayerOrdersList()->add(advanceOrder);
+            player->setReinforcementPool(playerArmies - armies);
+        }
+    }
+
 //
-//    bool finishedDeploying = deployToTopTerritory_(player, territoriesToDefend);
-//    if (finishedDeploying)
-//    {
-//        bool finishedPlayingCards = playCard_(player, territoriesToDefend);
-//        if (finishedPlayingCards)
-//        {
-//            bool finishedAttacking = attackFromTopTerritory_(player, territoriesToDefend.front(), territoriesToAttack);
-//            if (finishedAttacking)
-//            {
-//                bool finishedIssuingOrders = advanceToRandomTerritory_(player, territoriesToDefend);
-//                player->committed_ = finishedIssuingOrders;
-//            }
-//        }
-//
-//    }
+
 }
 
 void AggressivePlayerStrategy::print(Player *player) {
