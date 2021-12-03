@@ -85,9 +85,5 @@ private:
     string tournamentPlay(int numberOfMaxTurns);
     void gameReset();
 
-    //////////////// for debugging to delete later
-    Map *map2;
-    static bool mapMatching(Map *map1, Map *map2);
-    bool checkForNullOwnerOfTerritory();
 };
 #endif //COMP345_N11_GAMEENGINE_H
