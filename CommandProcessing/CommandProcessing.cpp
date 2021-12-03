@@ -392,13 +392,39 @@ bool CommandProcessor::validate(Command* command, Phases* phase) {
                     }
                     substrPStrats = trim(substrPStrats);
                     substrPStrats.erase(std::remove(substrPStrats.begin(), substrPStrats.end(), ','), substrPStrats.end());
-                    playerStrategiesList.push_back(substrPStrats);
+                    string validStrat = substrPStrats;
+                    std::transform(validStrat.begin(), validStrat.end(), validStrat.begin(),
+                                   [](unsigned char c){ return std::tolower(c); }); //convert input to lowercase for easier handling
+                    if (validStrat.compare("human") == 0) {
+                        cout << "A player strategy may not be 'human' for the tournament command. " << endl;
+                        command->saveEffect("A player strategy may not be 'human' for the tournament command. ");
+                        return false;
+                    } else if (validStrat.compare("neutral") != 0 && validStrat.compare("benevolent") != 0 && validStrat.compare("aggressive") != 0 && validStrat.compare("cheater") != 0) {
+                        cout << "An invalid player strategy was entered for the tournament command. " << endl;
+                        command->saveEffect("An invalid player strategy was entered for the tournament command. ");
+                        return false;
+                    }
+                    validStrat[0] = toupper(validStrat[0]);
+                    playerStrategiesList.push_back(validStrat);
                     playerStrategiesCounter += 1;
                     while (ssPlayerStrats.good()) { //extracting additional player strats
                         getline( ssPlayerStrats, substrPStrats, ',' );
                         substrPStrats = trim(substrPStrats);
                         if (substrPStrats == "") continue;
-                        playerStrategiesList.push_back(substrPStrats);
+                        string validStrat = substrPStrats;
+                        std::transform(validStrat.begin(), validStrat.end(), validStrat.begin(),
+                                       [](unsigned char c){ return std::tolower(c); }); //convert input to lowercase for easier handling
+                        if (validStrat.compare("human") == 0) {
+                            cout << "A player strategy may not be 'human' for the tournament command. " << endl;
+                            command->saveEffect("A player strategy may not be 'human' for the tournament command. ");
+                            return false;
+                        } else if (validStrat.compare("neutral") != 0 && validStrat.compare("benevolent") != 0 && validStrat.compare("aggressive") != 0 && validStrat.compare("cheater") != 0) {
+                            cout << "An invalid player strategy was entered for the tournament command. " << endl;
+                            command->saveEffect("An invalid player strategy was entered for the tournament command. ");
+                            return false;
+                        }
+                        validStrat[0] = toupper(validStrat[0]);
+                        playerStrategiesList.push_back(validStrat);
                         playerStrategiesCounter += 1;
                         if (playerStrategiesCounter > 4) {
                             cout << "More than 4 player stategies were given in the map argument of the tournament command. " << endl;
