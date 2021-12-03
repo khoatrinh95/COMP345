@@ -214,6 +214,8 @@ public:
     static strategy parsePlayerStrategy(string strStrategy);
     Player(string name, strategy playingStrategy);
     void removeAllTerritories();
+    std::vector<Territory*> getOwnTerritoriesWithMovableArmies() const;
+
 };
 
 
