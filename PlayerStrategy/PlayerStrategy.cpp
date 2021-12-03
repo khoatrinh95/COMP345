@@ -180,7 +180,10 @@ void CheaterPlayerStrategy::issueOrder(Player *player) {
     for (auto &territory : territories_of_this_player){
         Territory** adjTerritories = territory->getAdjTerritories();
         for (int i = 0; i<territory->getNumAdjTerritories(); i++){
-            int armyToAttack = adjTerritories[i]->getNumberOfArmies()*2;
+            int armyToAttack = (adjTerritories[i]->getNumberOfArmies()*2);
+            if (armyToAttack == 0) {
+                armyToAttack =5;
+            }
             AdvanceOrder *advanceOrder = new AdvanceOrder(player, armyToAttack, territory, adjTerritories[i]);
             player->getPlayerOrdersList()->add(advanceOrder);
             player->setReinforcementPool(player->getReinforcementPool()+armyToAttack);
