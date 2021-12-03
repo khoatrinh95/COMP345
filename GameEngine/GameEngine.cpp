@@ -274,6 +274,7 @@ void GameEngine::startupPhase() {
                                 if(player->getPlayerCards() != nullptr) {
                                     player->getPlayerCards()->removeAllCards();
                                 }
+                                // clear all player's ordersList
                                 OrdersList* ol = player -> getPlayerOrdersList();
                                 int size = ol->size();
                                 for (int k =0 ; k<size; k++){
@@ -282,6 +283,7 @@ void GameEngine::startupPhase() {
                                 player->removeAllTerritories();
                             }
                         }
+                        resetPlayerStrategy();
                     }
                     tournamentResult += "\n" + tournamentMapResult[i];
                 }
@@ -435,6 +437,8 @@ string GameEngine::startupGameInitialization() {
 string GameEngine::tournamentPlay(int numberOfMaxTurns) {
     int turnCount = 0;
     while (playingOrder.size() > 1 && turnCount < numberOfMaxTurns) {
+        printPlayerStrategy();
+
         turnCount++;
         // add armies to each player Reinforcement Pool
         cout << "***********************************"<<endl;
@@ -604,6 +608,13 @@ void GameEngine::printPlayPhaseGreeting() {
     cout << ("****************************************") << endl << endl;
 }
 
+void GameEngine::printPlayerStrategy(){
+    cout<<"STRATEGY: " << endl;
+    for (auto &player : playingOrder){
+        player->getStrategy()->print(player);
+    }
+    cout << endl << endl;
+}
 
 // ----------------------------------PLAY----------------------------------------------//
 
@@ -650,7 +661,7 @@ void GameEngine::mainGameLoop() {
         transition(Phases::EXECUTEORDERS);
         executeOrdersPhase();
         cout << endl;
-//        n--;
+    printPlayerStrategy();
     }
     transition(Phases::WIN);
     cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<" ownes ";
@@ -883,6 +894,24 @@ void GameEngine::gamePlay() {
             return;
         } else if(instruction == "replay"  && *phase == Phases::WIN) {
             gameReset();
+        }
+    }
+}
+
+void GameEngine::resetPlayerStrategy(){
+    cout << "\tResetting players' strategy..." << endl;
+    for (auto &player : players_) {
+        string name = player ->getName();
+        if(name.find("Aggressive") != string::npos ) {
+            player->setStrategy(strategy::Aggressive);
+        } else if(name.find("Human") != string::npos) {
+            player->setStrategy(strategy::Human);
+        } else if(name.find("Neutral") != string::npos) {
+            player->setStrategy(strategy::Neutral);
+        } else if(name.find("Cheater") != string::npos) {
+            player->setStrategy(strategy::Cheater);
+        } else if(name.find("Benevolent") != string::npos) {
+            player->setStrategy(strategy::Benevolent);
         }
     }
 }

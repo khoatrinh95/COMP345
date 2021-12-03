@@ -84,5 +84,7 @@ private:
     string startupGameInitialization();
     string tournamentPlay(int numberOfMaxTurns);
     void gameReset();
+    void printPlayerStrategy();
+    void resetPlayerStrategy();
 };
 #endif //COMP345_N11_GAMEENGINE_H

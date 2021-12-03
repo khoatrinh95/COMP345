@@ -355,7 +355,9 @@ void AdvanceOrder::execute_() {
         movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
     }
     if(movableArmiesFromSource>0  && defender->getStrategy() == GameEngine::strategyType.at(strategy::Neutral)){
-        cout<< "an attack happen to one of the neutral player territories....Now neutral player becomes aggressive player"<<endl;
+        cout<<"**" << endl;
+        cout<< "STRATEGY CHANGE: an attack happen to one of the neutral player territories....Now neutral player becomes aggressive player"<<endl;
+        cout<<"**" << endl;
         defender->setStrategy(strategy::Aggressive);
     }
 
@@ -388,7 +390,7 @@ void AdvanceOrder::execute_() {
         }
             // Successful attack: If all the defender's armies are eliminated, the attacker captures the territory
         else {
-            std::cout << "=======Successful Attack: (2) Ownership of a territory is transferred to the attacking player if a territory is conquered. ========";
+            std::cout << "=======Successful Attack: (2) Ownership of a territory is transferred to the attacking player if a territory is conquered. ========" << endl;
             defender->transferTerritory(destination_, issuer_);
             destination_->addArmies(survivingAttackers);
             std::cout << "Attack is successful on the " << destination_->getName() << ". " << survivingAttackers
