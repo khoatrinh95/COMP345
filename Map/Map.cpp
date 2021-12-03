@@ -48,7 +48,7 @@ Map* MapLoader::loadMapFile(std::string fileName) {
         bool regexFlag(false);
         string section;
         string prevSection;
-        int prevContntId = 0;
+        int prevContntId = 1;
         int cntryInContnt = 0;
         if (mapFile.eof()) {
             mapFile.clear();
