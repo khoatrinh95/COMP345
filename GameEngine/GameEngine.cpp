@@ -660,8 +660,14 @@ void GameEngine::mainGameLoop() {
         if (playingOrder.size()>1) {
             cout << "Changing players strategy" << endl;
             for (auto &player :playingOrder){
+                PlayerStrategy* playerStrategy = player->getStrategy();
                 int randnum = std::rand()%5;
                 player->setStrategy(randnum);
+
+                if (player->getStrategy()==playerStrategy){
+                    int randnum = std::rand()%5;
+                    player->setStrategy(randnum);
+                }
             }
             printPlayerStrategy();
         }
