@@ -17,7 +17,7 @@ void PlayerStrategiesDriver()
     player3->setStrategy(Benevolent);
     player4->setStrategy(Neutral);
 
-    gameEngine.loadMap("../Maps/maps/canada.map");
+    gameEngine.loadMap("/canada.map");
     gameEngine.addPlayersToList(player1);
     gameEngine.addPlayersToList(player2);
     gameEngine.addPlayersToList(player3);
