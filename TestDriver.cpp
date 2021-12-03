@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
 //    cout << "\n****************************************************************************" << endl;
 //    cout << "Testing game initialization and main loop" << endl;
 //    cout << "****************************************************************************" << endl;
-    PlayerStrategiesDriver();
+    PSDriver();
   //  GameEngineDriver();
 
 //    cout << "\n****************************************************************************" << endl;
