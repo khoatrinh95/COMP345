@@ -373,7 +373,7 @@ void GameEngine::startupPhase() {
 string GameEngine::startupMapLoading(string map) {
     // delete map
     if(map_ != nullptr) {
-//        delete map_;
+        delete map_;
         map_ = nullptr;
     }
 
@@ -730,7 +730,7 @@ void GameEngine::executeOrdersPhase() {
                     break;
                 }
             }
-            if (player->getPlayerOrdersList()->size() == 0 || (i>player->getPlayerOrdersList()->size() && player == playingOrder.at(playingOrder.size()-1))){
+            if (player->getPlayerOrdersList()->size() == 0 || (i>=player->getPlayerOrdersList()->size() && player == playingOrder.at(playingOrder.size()-1))){
                 reach_end = true;
             }
         }
