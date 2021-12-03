@@ -176,245 +176,86 @@ vector<Territory *> HumanPlayerStrategy::toAttack(Player *player) {
     return territoriesToAttack;
 }
 
-// Deploy player's reinforcements to specified territory
-void HumanPlayerStrategy::deployReinforcements_(Player* player, std::vector<Territory*> territoriesToDefend)
-{
-    std::cout << "You have " << player->getReinforcementPool() << " reinforcements left." << std::endl;
-    std::cout << "\nWhere would you like to deploy to?" << std::endl;
-    for (int i = 0; i < territoriesToDefend.size(); i++)
-    {
-        Territory* territory = territoriesToDefend.at(i);
-        std::cout << "[" << i+1 << "] " << territory->getName() << " (" << territory->getNumberOfArmies() << " present, " << territory->getPendingIncomingArmies() << " pending)" << std::endl;
-    }
-
-    Territory* deployTarget = nullptr;
-    std::cout << "\nEnter the territory to deploy to: ";
-    while (deployTarget == nullptr)
-    {
-        int selection;
-        std::cin >> selection;
-
-        if (std::cin.fail() || selection - 1 < 0 || selection - 1 >= territoriesToDefend.size())
-        {
-            std::cout << "That was not a valid option. Please try again:" << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-
-        deployTarget = territoriesToDefend.at(selection - 1);
-    }
-
-    int armiesToDeploy = 0;
-    std::cout << "How many reinforcements do you want to deploy? ";
-    while (armiesToDeploy == 0)
-    {
-        int selection;
-        std::cin >> selection;
-
-        if (std::cin.fail() || selection < 1 || selection > player->getReinforcementPool())
-        {
-            std::cout << "Please enter a number between 1 and " << player->getReinforcementPool() << ": " << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-
-        armiesToDeploy = selection;
-    }
-
-    DeployOrder* order = new DeployOrder(player, armiesToDeploy, deployTarget);
-    player->getPlayerOrdersList()->add(order);
-    deployTarget->addPendingIncomingArmies(armiesToDeploy);
-    player->setReinforcementPool(armiesToDeploy);
-
-    std::cout << "Issued: " << *order << std::endl << std::endl;
-}
-// Issue an advance order to either fortify or attack a territory
-void HumanPlayerStrategy::issueAdvance_(Player* player, std::vector<Territory*> territoriesToDefend)
-{
-    std::vector<Territory*> possibleSources = player->getOwnTerritoriesWithMovableArmies();
-
-    std::cout << "\nWhich territory would you like to advance from?" << std::endl;
-    for (int i = 0; i < possibleSources.size(); i++)
-    {
-        Territory* territory = possibleSources.at(i);
-        std::cout << "[" << i+1 << "] " << territory->getName() << " (" << territory->getNumberOfMovableArmies() << " armies available)" << std::endl;
-    }
-
-    Territory* source = nullptr;
-    std::cout << "\nEnter the territory to advance from: ";
-    while (source == nullptr)
-    {
-        int selection;
-        std::cin >> selection;
-
-        if (std::cin.fail() || selection - 1 < 0 )
-        {
-            std::cout << "That was not a valid option. Please try again:" << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-
-        source = possibleSources.at(selection - 1);
-    }
-
-    // Display adjacent territories as either attackable or defendable
-    std::vector<Territory*> attackable;
-    std::vector<Territory*> defendable;
-    int index=0;
-    for(;index<source->getNumAdjTerritories();index++){
-        if (find(territoriesToDefend.begin(), territoriesToDefend.end(), source->getAdjTerritories()[index]) != territoriesToDefend.end())
-        {
-            defendable.push_back(source->getAdjTerritories()[index]);
-        }
-        else
-        {
-            attackable.push_back(source->getAdjTerritories()[index]);
-        }
-    }
 
 
-    int i = 0;
-    std::cout << "\nWhich territory would you like to advance to?" << std::endl;
-    if (!defendable.empty())
-    {
-        std::cout << "~~~ To Defend ~~~" << std::endl;
-        for (; i < defendable.size(); i++)
-        {
-            Territory* territory = defendable.at(i);
-            std::cout << "[" << i+1 << "] " << territory->getName() << " (" << territory->getNumberOfArmies() << " armies present)" << std::endl;
-        }
-        std::cout << std::endl;
-    }
-    if (!attackable.empty())
-    {
-        std::cout << "~~~ To Attack ~~~" << std::endl;
-        for (; i < defendable.size() + attackable.size(); i++)
-        {
-            int idx = i - defendable.size();
-            Territory* territory = attackable.at(idx);
-            std::cout << "[" << i+1 << "] " << territory->getName() << " (" << territory->getNumberOfArmies() << " armies present)" << std::endl;
-        }
-    }
-
-    Territory* destination = nullptr;
-    std::cout << "\nEnter the territory to advance to: ";
-    while (destination == nullptr)
-    {
-        int selection;
-        std::cin >> selection;
-
-        if (std::cin.fail() || selection - 1 < 0 || selection - 1 >= defendable.size() + attackable.size())
-        {
-            std::cout << "That was not a valid option. Please try again:" << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-
-        if (selection <= defendable.size())
-        {
-            destination = defendable.at(selection - 1);
-        }
-        else
-        {
-            destination = attackable.at(selection - 1 - defendable.size());
-        }
-    }
-
-    int armiesToMove = 0;
-    int movableArmies = source->getNumberOfMovableArmies();
-    std::cout << "How many armies do you want to move? ";
-    while (armiesToMove == 0)
-    {
-        int selection;
-        std::cin >> selection;
-
-        if (std::cin.fail() || selection < 1 || selection > movableArmies)
-        {
-            std::cout << "Please enter a number between 1 and " << movableArmies << ": " << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-
-        armiesToMove = selection;
-    }
-
-    AdvanceOrder* order = new AdvanceOrder(player, armiesToMove, source, destination);
-    player->getPlayerOrdersList()->add(order);
-    source->addPendingOutgoingArmies(armiesToMove);
-
-    std::cout << "Issued: " << *order << std::endl << std::endl;
-}
-//// Helper method to play a random Card from the Player's hand, if any.
-//// Returns `true` if the Player has no more cards to play/no new order was issued.
-//// Returns `false` if there was an order issued.
-//bool AggressivePlayerStrategy::playCard_(Player* player, std::vector<Territory*> territoriesToDefend)
-//{
-//    Hand playerHand = player->getPlayerCards()->getHand();
-//    if (playerHand.getSize() == 0)
-//    {
-//        return true;
-//    }
-//
-//    // Play a random card from hand
-//    int randomCardIndex = rand() % playerHand.getSize();
-//    Card* card = playerHand->removeCard(randomCardIndex);
-//    Order* order = card->play();
-//    std::cout << "Played: " << *card << std::endl;
-//
-//    // Return the played card back to the deck
-//    card->setOwner(nullptr);
-//    GameEngine::getDeck()->addCard(card);
-//
-//    if (order != nullptr)
-//    {
-//        player->addOrder(order);
-//        std::cout << "Issued: " << *order << std::endl;
-//    }
-//    else if (player->reinforcements_ > 0)
-//    {
-//        // Reinforcement card played: deploy the additional reinforcements
-//        deployToTopTerritory_(player, territoriesToDefend);
-//    }
-//
-//    return false;
-//}
 void HumanPlayerStrategy::issueOrder(Player *player)  {
     std::vector<Territory*> territoriesToAttack = toAttack(player);
     std::vector<Territory*> territoriesToDefend = toDefend(player);
+    vector<Territory*> another_territories;
+    Continent *continent = new Continent(9,"Africa",10);
+    Territory *china = new Territory(99,"China",3,continent);
+    vector<Territory*> territories;
+    territories.push_back(new Territory(99,"Kenya",3,continent));
+    territories.push_back(new Territory(98,"Morocco",1,continent));
+    territories.push_back(new Territory(97,"Egypt",4,continent));
+    china->setAdjTerritories(territories.size(), &(*territories.begin()));
+    another_territories.push_back(china);
+    another_territories.push_back(new Territory(98,"Japan",1,continent));
+    another_territories.push_back(new Territory(97,"India",4,continent));
 
-    cout<<"There are 4 options: "<<endl;
-
-    // Only allow deploy if the player still has reinforcements
-    if (player->getReinforcementPool() > 0)
-    {
-        deployReinforcements_(player, territoriesToDefend);
+    string name1,name2;
+    string strategy1,strategy2;
+    cout<<"Enter name player 1: ";
+    cin >> name1;
+    Player* player1 = new Player(name1);
+    cout<<"Enter name player 2: ";
+    cin >>name2;
+    Player* player2 = new Player(name2);
+    cout<<"Enter a strategy for "<<player1->getName()<<"(Aggressive,"
+                                                       "    Human,"
+                                                       "    Neutral,"
+                                                       "    Cheater,"
+                                                       "    Benevolent: ";
+    cin>>strategy1;
+    if(strategy1=="Human") {
+        player1->setStrategy(Human);
     }
-    else
-    {
-        std::cout << "What would you like to do?" << std::endl;
-        if (player->getOwnTerritoriesWithMovableArmies().size() > 0)
-        {
-            std::cout << "[A] Advance" << std::endl;
-        }
-
-        while (true)
-        {
-            std::string selection;
-            std::cin >> selection;
-            std::transform(selection.begin(), selection.end(), selection.begin(), ::toupper);
-
-            if (selection == "A")
-            {
-                issueAdvance_(player, territoriesToDefend);
-                break;
-            }
-        }
+    if(strategy1=="Aggressive"){
+        player1->setStrategy(Aggressive);
     }
+    cout<<"Enter a strategy for "<<player2->getName()<<"(Aggressive,"
+                                                       "    Human,"
+                                                       "    Neutral,"
+                                                       "    Cheater,"
+                                                       "    Benevolent: ";
+    cin>>strategy2;
+    if(strategy2=="Human") {
+        player2->setStrategy(Human);
+    }
+    if(strategy2=="Aggressive"){
+        player2->setStrategy(Aggressive);
+    }
+    int option;
+    cout<<"Enter the option. There are 4 options: "<<endl;
+    cout<<"1. "+player1->getName()+" attacks "+player2->getName()<<endl;
+    cout<<"2. "+player1->getName()+" defends "+player2->getName()<<endl;
+    cout<<"3. "+player2->getName()+" attacks "+player1->getName()<<endl;
+    cout<<"4. "+player2->getName()+" defends "+player1->getName()<<endl;
+
+    cout<<"Enter your option: ";
+    cin>>option;
+    cout<<endl;
+    ;
+    if(option == 1){
+        player1->getStrategy()->toAttack(player2);
+        std::cout << "\n"<<player1->getName()<<" attacked "<<player2->getName()<<"\n" << std::endl;
+    }
+    if(option == 2){
+        player1->getStrategy()->toDefend(player2);
+        std::cout << "\n"<<player1->getName()<<" defended "<<player2->getName()<<"\n" << std::endl;
+
+    }
+    if(option == 3){
+        player2->getStrategy()->toAttack(player1);
+        std::cout << "\n"<<player2->getName()<<" attacked "<<player1->getName()<<"\n" << std::endl;
+    }
+    if(option == 4){
+        player2->getStrategy()->toDefend(player1);
+        std::cout << "\n"<<player2->getName()<<" defended "<<player1->getName()<<"\n" << std::endl;
+    }
+
+    cout<<"This is the end of HumanPlayerStrategy IssueOrder "<<endl;
+
 }
 
 void HumanPlayerStrategy::print(Player *player) {

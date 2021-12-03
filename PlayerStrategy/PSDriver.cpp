@@ -50,6 +50,8 @@ void PSDriver()
     cout<<"human attacked aggressive"<<endl;
 
     aggressivePlayer->getStrategy()->toDefend(humanPlayer);
+    AggressivePlayerStrategy aggressivePlayerStrategy;
+    aggressivePlayer->issueOrder();
     HumanPlayerStrategy humanPlayerStrategy;
     humanPlayer->issueOrder();
 
