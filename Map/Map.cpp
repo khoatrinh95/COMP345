@@ -38,7 +38,7 @@ Map* MapLoader::loadMapFile(std::string fileName) {
     int indexContinents = 0;
     int indexCountries = 0;
     int* borders = nullptr;
-    int* numCntryInContnt;
+    int* numCntryInContnt = nullptr;
 
     // looping on map file twice:
     // iter. no.1 - to get number of continents, territories ...
