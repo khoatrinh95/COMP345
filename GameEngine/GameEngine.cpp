@@ -275,6 +275,11 @@ void GameEngine::startupPhase() {
                                 if(player->getPlayerCards() != nullptr) {
                                     player->getPlayerCards()->removeAllCards();
                                 }
+                                OrdersList* ol = player -> getPlayerOrdersList();
+                                int size = ol->size();
+                                for (int i =0 ; i<size; i++){
+                                    ol->popTopOrder();
+                                }
                                 player->removeAllTerritories();
                             }
                         }
