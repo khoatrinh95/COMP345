@@ -8,6 +8,7 @@
 #include "../Orders/Orders.h"
 #include <vector>
 #include <algorithm>
+#include <unordered_set>
 using namespace std;
 
 
@@ -133,14 +134,48 @@ void HumanPlayerStrategy::print(Player *player) {
 }
 
 vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player) {
-    return vector<Territory *>();
+    std::vector<Territory*> territoriesToDefend = player->getTerritories();
+    auto sortLambda = [](auto t1, auto t2){ return t1->getNumberOfArmies() > t2->getNumberOfArmies(); };
+    sort(territoriesToDefend.begin(), territoriesToDefend.end(), sortLambda);
+    return territoriesToDefend;
 }
 
+// return a vector that has the player's strongest territory
 vector<Territory *> AggressivePlayerStrategy::toAttack(Player *player) {
-    return vector<Territory *>();
+    std::vector<Territory*> sources = toDefend(player);
+    std::vector<Territory*> territoriesToAttack;
+    std::unordered_set<Territory*> territoriesSeen;
+
+    Territory* strongest;
+    int strongestArmy = 0;
+    for (const auto &territory : sources)
+    {
+        if (territory->getNumberOfArmies()>=strongestArmy){
+            strongestArmy= territory->getNumberOfArmies();
+            strongest = territory;
+        }
+    }
+    territoriesToAttack.push_back(strongest);
+
+    return territoriesToAttack;
 }
 
 void AggressivePlayerStrategy::issueOrder(Player *player)  {
+
+    std::vector<Territory*> territoriesToAttack = toAttack(player);
+    Territory* strongest = territoriesToAttack.at(0);
+
+    for (int i =0; i<strongest->getNumAdjTerritories(); i++){
+        int playerArmies = player->getReinforcementPool();
+        if (playerArmies>3){
+            int armies = ceil(double(playerArmies) / 3);
+            AdvanceOrder* advanceOrder = new AdvanceOrder(player, armies, strongest, strongest->getAdjTerritories()[i]);
+            player->getPlayerOrdersList()->add(advanceOrder);
+            player->setReinforcementPool(playerArmies - armies);
+        }
+    }
+
+//
 
 }
 

@@ -375,7 +375,7 @@ void GameEngine::startupPhase() {
 string GameEngine::startupMapLoading(string map) {
     // delete map
     if(map_ != nullptr) {
-        delete map_;
+//        delete map_;
         map_ = nullptr;
     }
 
