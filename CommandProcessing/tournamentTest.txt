@@ -8,5 +8,10 @@ tournament -M a, b, c, d, e -P Cheater -G 32 35 -D 11.12
 tournament -M a, b, c, d, e -P Cheater, Cheater, Cheater, Cheater, Cheater -G 32 35 -D 11.12
 tournament -M a, b, c, d, e -P Benevolent, Cheater -G 32 35 -D 11.12
 tournament -M a, b, c, d, e -P Benevolent, Cheater -G 32 -D 11.12
+tournament -P Aggressive, Benevolent, Human, Cheater -D 30 -M Map1, Map2, Map3 -G 4
 tournament -P Aggressive, Benevolent, Neutral, Cheater -D 30 -M Map1, Map2, Map3 -G 4
-quit
+replay
+tournament -P agGRessive, BenevOLent, Neutral, Cheater -D 30 -M Map1, Map2, Map3 -G 4
+replay
+tournament -P Aggro, Bennie, New, Cheetah -D 30 -M Map1, Map2, Map3 -G 4
+tournament -P agGRessive, BenevOLent, New, Cheetah -D 30 -M Map1, Map2, Map3 -G 4
