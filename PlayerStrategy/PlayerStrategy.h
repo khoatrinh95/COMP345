@@ -8,6 +8,7 @@
 class Player;
 
 #include <vector>
+#include <ostream>
 using namespace std;
 class Territory;
 class Player;
@@ -16,6 +17,8 @@ public:
     virtual vector<Territory*>  toDefend(Player *player) = 0;
     virtual vector<Territory*>  toAttack(Player *player) = 0;
     virtual void issueOrder(Player *player) = 0;
+    virtual void print(Player *player)=0;
+
 
 };
 //
@@ -25,6 +28,8 @@ public:
     virtual vector<Territory*> toDefend(Player *player);
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {
@@ -32,6 +37,8 @@ public:
     virtual vector<Territory*> toDefend(Player *player);
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
 };
 
 class BenevolentPlayerStrategy : public PlayerStrategy {
@@ -40,6 +47,8 @@ public:
     virtual vector<Territory*> toDefend(Player *player);
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
 };
 
 class NeutralPlayerStrategy : public PlayerStrategy {
@@ -47,6 +56,8 @@ public:
     virtual vector<Territory*>  toDefend(Player *player);
     virtual vector<Territory*>  toAttack(Player *player);
     virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
 };
 
 class CheaterPlayerStrategy : public PlayerStrategy {
@@ -54,6 +65,8 @@ public:
     virtual vector<Territory*> toDefend(Player *player);
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
+    virtual void print(Player *player);
+
 };
 
 #endif //COMP345_N11_PLAYERSTRATEGY_H
