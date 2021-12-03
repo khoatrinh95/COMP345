@@ -622,46 +622,55 @@ void GameEngine::printPlayerStrategy(){
  * Main game loop
  */
 void GameEngine::mainGameLoop() {
-    ////////////////////////////////////////////////////
-//    playingOrder.at(0)->setStrategy(strategy::Benevolent);
-//    playingOrder.at(1)->setStrategy(strategy::Neutral);
-////    playingOrder.at(2)->setStrategy(strategy::Benevolent);
-
-
-    ////////////////////////////////////////////////
+    for (int i = 0 ; i<playingOrder.size(); i++){
+        playingOrder.at(i)->setStrategy(i);
+    }
     while (playingOrder.size()!=1) {
-//        for (auto&player:playingOrder){
-//            player->getStrategy()->print(player);
-//        }
-//int n = 5;
-//    while (n >1){
-        // add armies to each player Reinforcement Pool
-        cout << "***********************************"<<endl;
-        cout << "**\t REINFORCEMENT PHASE\t**"<<endl;
-        cout << "***********************************"<<endl;
+        int rounds =0;
+        while (rounds <2 && playingOrder.size()!=1) {
+            // add armies to each player Reinforcement Pool
+            cout << "***********************************" << endl;
+            cout << "**\t REINFORCEMENT PHASE\t**" << endl;
+            cout << "***********************************" << endl;
 
-        transition(Phases::ASSIGNREINFORCEMENT);
-        reinforcementPhase();
+            transition(Phases::ASSIGNREINFORCEMENT);
+            reinforcementPhase();
 
-        // let each player decide his/her order list
-    cout << "***********************************"<<endl;
-    cout << "**\t ISSUE ORDER PHASE\t**"<<endl;
-    cout << "***********************************"<<endl;
+            // let each player decide his/her order list
+            cout << "***********************************" << endl;
+            cout << "**\t ISSUE ORDER PHASE\t**" << endl;
+            cout << "***********************************" << endl;
 
-        transition(Phases::ISSUEORDERS);
-        issueOrdersPhase();
-        cout << endl;
+            transition(Phases::ISSUEORDERS);
+            issueOrdersPhase();
+            cout << endl;
 
-        // execute each player orders from his/her order list
+            // execute each player orders from his/her order list
 
-    cout << "***********************************"<<endl;
-    cout << "**\t EXECUTE ORDER PHASE\t**"<<endl;
-    cout << "***********************************"<<endl;
+            cout << "***********************************" << endl;
+            cout << "**\t EXECUTE ORDER PHASE\t**" << endl;
+            cout << "***********************************" << endl;
 
-        transition(Phases::EXECUTEORDERS);
-        executeOrdersPhase();
-        cout << endl;
-    printPlayerStrategy();
+            transition(Phases::EXECUTEORDERS);
+            executeOrdersPhase();
+            cout << endl;
+            printPlayerStrategy();
+            rounds = rounds+1;
+        }
+        if (playingOrder.size()>1) {
+            cout << "Changing players strategy" << endl;
+            for (auto &player :playingOrder){
+                PlayerStrategy* playerStrategy = player->getStrategy();
+                int randnum = std::rand()%5;
+                player->setStrategy(randnum);
+
+                if (player->getStrategy()==playerStrategy){
+                    int randnum = std::rand()%5;
+                    player->setStrategy(randnum);
+                }
+            }
+            printPlayerStrategy();
+        }
     }
     transition(Phases::WIN);
     cout << "The winner of the game is : "<< playingOrder.at(0)->getName()<<" ownes ";
