@@ -18,6 +18,8 @@ public:
     virtual vector<Territory*>  toAttack(Player *player) = 0;
     virtual void issueOrder(Player *player) = 0;
     virtual void print(Player *player)=0;
+// NOTE: no copy, assignment and stream insertion operators for PlayerStrategy as it doesn't have any attribute
+// does not make sense to have those methods
 
 
 };
