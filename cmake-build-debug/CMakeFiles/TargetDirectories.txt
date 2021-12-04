@@ -1,3 +1,0 @@
-/Users/khoatrinh/Documents/SOFTWARE ENGINEER/YEAR 3.1/COMP345 - C++/COMP345_N11/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/khoatrinh/Documents/SOFTWARE ENGINEER/YEAR 3.1/COMP345 - C++/COMP345_N11/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/khoatrinh/Documents/SOFTWARE ENGINEER/YEAR 3.1/COMP345 - C++/COMP345_N11/cmake-build-debug/CMakeFiles/COMP345_N11.dir
