@@ -276,7 +276,6 @@ void HumanPlayerStrategy::issueOrder(Player *player)  {
 
     if (player->getOwnTerritoriesWithMovableArmies().size() > 0)
     {
-        cout<<"There are 4 options: "<<endl;
 
         std::cout << "What would you like to do?" << std::endl;
         std::cout << "[A] Advance" << std::endl;
