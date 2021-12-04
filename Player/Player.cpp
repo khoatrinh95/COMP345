@@ -175,14 +175,14 @@ vector<Territory*> Player::toDefend() {
  * @return list of territories
  */
 vector<Territory*> Player::toAttack() {
-    ps->toAttack(this);
+    return ps->toAttack(this);
 }
 
 /**
  * add an order to player orders list
  */
 void Player::issueOrder() {
-    ps->issueOrder(this);
+    return ps->issueOrder(this);
 }
 
 /**

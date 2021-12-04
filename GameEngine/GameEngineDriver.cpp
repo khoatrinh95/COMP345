@@ -13,9 +13,6 @@ void GameEngineDriver(){
     LogObserver *logObserver = new LogObserver(gameEngine);
     gameEngine->gamePlay();
 
-//    cout << *gameEngine;
-
-
     delete logObserver;
     delete gameEngine;
 }
