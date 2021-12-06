@@ -96,6 +96,11 @@ void BenevolentPlayerStrategy::print(Player *player) {
 
 }
 
+ostream &operator<<(ostream &out, const BenevolentPlayerStrategy &ps) {
+    out << "strategy is BENEVOLENT."<<endl;
+    return out;
+}
+
 
 vector<Territory*>  NeutralPlayerStrategy::toDefend(Player *player) {
     vector<Territory*>toDefend_Territories;
@@ -114,6 +119,11 @@ void NeutralPlayerStrategy::issueOrder(Player *player)  {
 void NeutralPlayerStrategy::print(Player *player) {
     cout<< "Player "<<player->getName()<<"'s strategy is NEUTRAL."<<endl;
 
+}
+
+ostream &operator<<(ostream &out, const NeutralPlayerStrategy &ps) {
+    out << "strategy is NEUTRAL."<<endl;
+    return out;
 }
 
 
@@ -495,6 +505,11 @@ void HumanPlayerStrategy::print(Player *player) {
     cout<< "Player "<<player->getName()<<"'s strategy is HUMAN."<<endl;
 }
 
+ostream &operator<<(ostream &out, const HumanPlayerStrategy &ps) {
+    out << "strategy is HUMAN."<<endl;
+    return out;
+}
+
 vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player) {
     std::vector<Territory*> territoriesToDefend = player->getTerritories();
     auto sortLambda = [](auto t1, auto t2){ return t1->getNumberOfArmies() > t2->getNumberOfArmies(); };
@@ -546,6 +561,11 @@ void AggressivePlayerStrategy::print(Player *player) {
 
 }
 
+ostream &operator<<(ostream &out, const AggressivePlayerStrategy &ps) {
+    out << "strategy is AGGRESSIVE."<<endl;
+    return out;
+}
+
 // KHOA
 
 /**
@@ -591,4 +611,14 @@ void CheaterPlayerStrategy::issueOrder(Player *player) {
 void CheaterPlayerStrategy::print(Player *player) {
     cout<< "Player "<<player->getName()<<"'s strategy is CHEATER."<<endl;
 
+}
+
+ostream &operator<<(ostream &out, const CheaterPlayerStrategy &ps) {
+    out << "strategy is CHEATER."<<endl;
+    return out;
+}
+
+ostream &operator<<(ostream &out, const PlayerStrategy &ps) {
+    out << "strategy is PlayerStrategy" << endl;
+    return out;
 }

@@ -18,10 +18,10 @@ public:
     virtual vector<Territory*>  toAttack(Player *player) = 0;
     virtual void issueOrder(Player *player) = 0;
     virtual void print(Player *player)=0;
-// NOTE: no copy, assignment and stream insertion operators for PlayerStrategy as it doesn't have any attribute
+// NOTE: no copy, assignment operators for PlayerStrategy as it doesn't have any attribute
 // does not make sense to have those methods
 
-
+    friend ostream &operator<<(ostream &out, const PlayerStrategy &ps);
 };
 //
 
@@ -31,6 +31,7 @@ public:
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
     virtual void print(Player *player);
+    friend ostream &operator<<(ostream &out, const HumanPlayerStrategy &ps);
 private:
     void deployReinforcements_(Player *player, std::vector<Territory *> territoriesToDefend);
 
@@ -44,7 +45,7 @@ public:
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
     virtual void print(Player *player);
-
+    friend ostream &operator<<(ostream &out, const AggressivePlayerStrategy &ps);
 };
 
 class BenevolentPlayerStrategy : public PlayerStrategy {
@@ -54,7 +55,7 @@ public:
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
     virtual void print(Player *player);
-
+    friend ostream &operator<<(ostream &out, const BenevolentPlayerStrategy &ps);
 };
 
 class NeutralPlayerStrategy : public PlayerStrategy {
@@ -63,7 +64,7 @@ public:
     virtual vector<Territory*>  toAttack(Player *player);
     virtual void issueOrder(Player *player);
     virtual void print(Player *player);
-
+    friend ostream &operator<<(ostream &out, const NeutralPlayerStrategy &ps);
 };
 
 class CheaterPlayerStrategy : public PlayerStrategy {
@@ -72,7 +73,7 @@ public:
     virtual vector<Territory*> toAttack(Player *player);
     virtual void issueOrder(Player *player);
     virtual void print(Player *player);
-
+    friend ostream &operator<<(ostream &out, const CheaterPlayerStrategy &ps);
 };
 
 #endif //COMP345_N11_PLAYERSTRATEGY_H
