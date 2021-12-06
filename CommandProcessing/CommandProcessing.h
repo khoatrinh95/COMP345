@@ -31,6 +31,7 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const Command& c);
 
     //Accessors and mutators
+
     void setCommand(string command);
     string getCommand();
     void saveEffect(string effect);
@@ -40,6 +41,15 @@ public:
     void setArgument(string argument);
     string getArgument();
 
+    vector<string> getMapList();
+    void setMapList(vector<string> mapList);
+    vector<string> getplayerStrategiesList();
+    void setplayerStrategiesList(vector<string> playerStrategiesList);
+    int getNumOfGames();
+    void setNumOfGames(int num);
+    int getNumOfTurns();
+    void setNumOfTurns(int num);
+
     // ILoggable
     virtual string stringToLog();
 private:
@@ -47,6 +57,12 @@ private:
     string effect; //effect of the command, a description
     string instruction; //first word of the command, tells engine what to do
     string argument; //second word of the command if any, an additional parameter such as file or name
+
+    //the following member attributes and functions are for the tournament command
+    vector<string> mapList;
+    vector<string> playerStrategiesList;
+    int numOfGames;
+    int numOfTurns;
 };
 
 class CommandProcessor : public Subject{

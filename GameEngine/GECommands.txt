@@ -1,19 +1,4 @@
-addplayer Fadi
-gamestart
-validatemap
-loadmap canada.map
-gamestart
-loadmap europe.map
-addplayer Fadi
-validatemap
-addplayer Fadi
-addplayer Ricky
-addplayer
-addplayer Sarah
-addplayer
-addplayer Khoa
-addplayer Thong
-addplayer Gina
-addplayer
-addplayer Philo
-gamestart
+tournament -M europe.map  -P Neutral, Aggressive, Benevolent, Cheater -G 5 -D 1
+replay
+tournament -M germany.map, europe.map, cow.map, aztec.map, canada.map  -P Neutral, Aggressive, Benevolent, Cheater -G 3 -D 15
+quit

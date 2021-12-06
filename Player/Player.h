@@ -13,6 +13,7 @@ using namespace std;
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
 #include "../Orders/Orders.h"
+#include "../PlayerStrategy/PlayerStrategy.h"
 
 class Territory;
 class Hand;
@@ -20,7 +21,13 @@ class Order;
 class OrdersList;
 class Card;
 
-
+enum strategy:int{
+    Aggressive,
+    Human,
+    Neutral,
+    Cheater,
+    Benevolent
+};
 class Player {
 private:
     string name;
@@ -30,9 +37,7 @@ private:
     vector<Player*> diplomaticRelations_;
     bool neutral;
     int reinforcement_pool;
-
-
-
+    PlayerStrategy* ps;
 public:
     /**
      * default constructor for Player object
@@ -57,6 +62,7 @@ public:
      * copy constructor for player
      * @param anotherPlayer
      */
+
     Player(const Player &anotherPlayer);
 
     /**
@@ -202,6 +208,13 @@ public:
      * @return true or false
      */
     bool isNeutral();
+
+    void setStrategy(int strategy );
+    PlayerStrategy * getStrategy()const;
+    static strategy parsePlayerStrategy(string strStrategy);
+    Player(string name, strategy playingStrategy);
+    void removeAllTerritories();
+    std::vector<Territory*> getOwnTerritoriesWithMovableArmies() const;
 };
 
 

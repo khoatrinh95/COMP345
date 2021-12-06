@@ -3,6 +3,7 @@
 #include <iterator>
 #include <math.h>
 #include <algorithm>
+#include "../PlayerStrategy/PlayerStrategy.h"
 
 namespace {
     // Orders are sorted by priority using a custom comparator.
@@ -349,7 +350,17 @@ void AdvanceOrder::execute_() {
     bool offensive = issuer_ != defender;
 
     // Recalculate what number of armies may want to truely be moved if the kingdom of the territory has modified because of an attack
-    int movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
+    int movableArmiesFromSource = numberOfArmies_;
+    if (issuer_->getStrategy() != GameEngine::strategyType.at(strategy::Cheater)) {
+        movableArmiesFromSource = std::min(source_->getNumberOfArmies(), numberOfArmies_);
+    }
+    if(movableArmiesFromSource>0  && defender->getStrategy() == GameEngine::strategyType.at(strategy::Neutral)){
+        cout<<"**" << endl;
+        cout<< "STRATEGY CHANGE: an attack happen to one of the neutral player territories....Now neutral player becomes aggressive player"<<endl;
+        cout<<"**" << endl;
+        defender->setStrategy(strategy::Aggressive);
+    }
+
     std::cout << "=======An Advanced Order is executed ========";
     if (offensive) {
         // Simulate battle
@@ -379,7 +390,7 @@ void AdvanceOrder::execute_() {
         }
             // Successful attack: If all the defender's armies are eliminated, the attacker captures the territory
         else {
-            std::cout << "=======Successful Attack: (2) Ownership of a territory is transferred to the attacking player if a territory is conquered. ========";
+            std::cout << "=======Successful Attack: (2) Ownership of a territory is transferred to the attacking player if a territory is conquered. ========" << endl;
             defender->transferTerritory(destination_, issuer_);
             destination_->addArmies(survivingAttackers);
             std::cout << "Attack is successful on the " << destination_->getName() << ". " << survivingAttackers

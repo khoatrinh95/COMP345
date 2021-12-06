@@ -38,7 +38,7 @@ Map* MapLoader::loadMapFile(std::string fileName) {
     int indexContinents = 0;
     int indexCountries = 0;
     int* borders = nullptr;
-    int* numCntryInContnt;
+    int* numCntryInContnt = nullptr;
 
     // looping on map file twice:
     // iter. no.1 - to get number of continents, territories ...
@@ -48,7 +48,7 @@ Map* MapLoader::loadMapFile(std::string fileName) {
         bool regexFlag(false);
         string section;
         string prevSection;
-        int prevContntId = 0;
+        int prevContntId = 1;
         int cntryInContnt = 0;
         if (mapFile.eof()) {
             mapFile.clear();
@@ -805,8 +805,11 @@ Continent::~Continent() {
                 territories[i] = nullptr;
             }
         }
-        delete[] territories;
-        territories = nullptr;
+        if(territories != nullptr) {
+            delete[] territories;
+            territories = nullptr;
+        }
+
     }
     owner = nullptr;
 }
